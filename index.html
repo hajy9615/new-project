@@ -1,0 +1,1879 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E1A2B">
+<!--ARTIFACT-START-->
+<title>LEAD QUEST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 한 열 모바일 퀘스트 앱(최대 760px) + 하단 탭. 전광판·대시보드만 와이드(1920×1080 대응). 고전 아카데미 × 현대 에디토리얼. */
+:root{
+  --bg:#0E1A2B; --bg2:#122238; --surface:#16294A; --surface2:#1C3256;
+  --fg:#F3EEE3; --muted:#AEB8C7; --line:rgba(201,169,97,.30); --line-soft:rgba(243,238,227,.10);
+  --gold:#D8BC7A; --gold-fill:#C9A961; --on-gold:#0E1A2B; --burg:#B4566A; --burg-fill:#7A2E3A; --on-burg:#F7F3EA;
+  --ok:#8CBF9E; --ok-fill:#6E9E7F; --bad:#E08C70; --bad-fill:#C46B4E; --warn:#E3C26F;
+  --shadow:0 10px 30px rgba(3,8,16,.45);
+  --serif:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;
+  --sans:"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:16px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#F7F3EA; --bg2:#EFE7D6; --surface:#FFFDF8; --surface2:#F4EEDF;
+    --fg:#17212F; --muted:#5A6372; --line:rgba(140,109,44,.32); --line-soft:rgba(23,33,47,.10);
+    --gold:#7E6125; --gold-fill:#C9A961; --on-gold:#17212F; --burg:#7A2E3A; --burg-fill:#7A2E3A; --on-burg:#F7F3EA;
+    --ok:#3D7353; --ok-fill:#6E9E7F; --bad:#A44D30; --bad-fill:#C46B4E; --warn:#8A6A12;
+    --shadow:0 8px 24px rgba(60,45,15,.12);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#F7F3EA; --bg2:#EFE7D6; --surface:#FFFDF8; --surface2:#F4EEDF;
+  --fg:#17212F; --muted:#5A6372; --line:rgba(140,109,44,.32); --line-soft:rgba(23,33,47,.10);
+  --gold:#7E6125; --gold-fill:#C9A961; --on-gold:#17212F; --burg:#7A2E3A; --burg-fill:#7A2E3A; --on-burg:#F7F3EA;
+  --ok:#3D7353; --ok-fill:#6E9E7F; --bad:#A44D30; --bad-fill:#C46B4E; --warn:#8A6A12;
+  --shadow:0 8px 24px rgba(60,45,15,.12);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(ellipse at 50% -10%,rgba(201,169,97,.10),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold-fill);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--serif);line-height:1.3;text-wrap:balance;margin:0}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:12px 120px}
+.wide .wrap{max-width:1440px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);min-width:0}
+.panel{background:var(--bg2);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);border-radius:12px;padding:10px 16px;font-weight:600;min-height:44px;transition:transform .12s,background .2s,border-color .2s}
+.btn:hover{border-color:var(--gold-fill)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.burg{background:var(--burg-fill);color:var(--on-burg);border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:14px;border-radius:10px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.block{width:100%}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:700;border:1px solid var(--line);color:var(--gold);background:transparent;white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:var(--ok)}
+.pill.bad{color:var(--bad);border-color:var(--bad)}
+.pill.burg{color:var(--burg);border-color:var(--burg)}
+.pill.muted{color:var(--muted);border-color:var(--line-soft)}
+input[type=text],input[type=number],textarea,select{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px}
+textarea{min-height:90px;resize:vertical}
+label{font-weight:600}
+hr{border:0;border-top:1px solid var(--line-soft);margin:6px 0}
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+.top .in{max-width:760px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.wide .top .in{max-width:1440px}
+.brand{font-family:var(--serif);font-weight:900;letter-spacing:.06em;font-size:17px;white-space:nowrap}
+.brand b{color:var(--gold)}
+.top .sp{flex:1}
+.xpchip{flex:none;white-space:nowrap;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 4px;font-size:13px;font-weight:700}
+.xpchip .medal{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F3E2B3,#C9A961 55%,#8C6D2C);display:grid;place-items:center;color:#0E1A2B;font-family:var(--serif);font-size:12px;font-weight:900}
+.iconbtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line-soft);background:transparent;display:grid;place-items:center}
+/* Bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.nav button{background:none;border:0;padding:9px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--muted);font-weight:600;min-height:56px}
+.nav button svg{width:22px;height:22px}
+.nav button[aria-current="page"]{color:var(--gold)}
+/* Hero/home */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.seal{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;text-align:center;font-family:var(--serif);font-weight:900;color:var(--on-gold);
+  background:radial-gradient(circle at 35% 28%,#F6E7BE,#C9A961 50%,#8C6D2C 100%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.25),inset 0 0 0 7px rgba(14,26,43,.18),0 6px 18px rgba(0,0,0,.35);font-size:15px;line-height:1.15;padding:8px;word-break:keep-all}
+.bar{height:10px;border-radius:999px;background:var(--line-soft);overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-fill),#E9D49B);border-radius:inherit;transition:width .6s}
+.bar.ok>i{background:var(--ok-fill)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{border:1px solid var(--line-soft);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:20px;font-family:var(--serif)}
+.stat span{font-size:12px;color:var(--muted)}
+.mission{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line-soft)}
+.mission:last-child{border-bottom:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;font-size:13px}
+.check.on{background:var(--ok-fill);border-color:var(--ok-fill);color:#fff}
+/* Quest path */
+.path{position:relative;display:flex;flex-direction:column;gap:14px;padding-left:34px}
+.path:before{content:"";position:absolute;left:15px;top:20px;bottom:20px;border-left:2px dashed var(--line)}
+.node{position:relative}
+.node .pin{position:absolute;left:-34px;top:18px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-weight:900;background:var(--surface2);border:1.5px solid var(--line);color:var(--gold);font-size:14px}
+.node.done .pin{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.node.locked{opacity:.55}
+.world{width:100%;text-align:left;display:block;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);padding:16px;box-shadow:var(--shadow);transition:transform .15s,border-color .2s}
+.world:hover{transform:translateY(-2px);border-color:var(--gold-fill)}
+.world h3{font-size:19px;margin:2px 0 4px}
+/* Activity tiles */
+.act{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1px solid var(--line-soft);background:var(--bg2);border-radius:14px;padding:14px;min-height:72px}
+.act:hover{border-color:var(--gold-fill)}
+.act .ic{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);color:var(--gold);font-family:var(--serif);font-weight:900}
+.act b{display:block}
+/* Flip card */
+.flip{perspective:1200px;min-height:290px}
+.flip .face{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow);min-height:290px;display:flex;flex-direction:column;gap:12px}
+.flip .front{align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(201,169,97,.16),transparent 70%),var(--surface)}
+.flip .front h2{font-size:clamp(24px,6vw,34px)}
+.flip-in{animation:flipin .45s ease}
+@keyframes flipin{from{transform:rotateY(80deg);opacity:.3}to{transform:none;opacity:1}}
+.dl{display:grid;gap:10px}
+.dl div{border-left:2px solid var(--gold-fill);padding-left:12px}
+.dl dt{font-size:12px;letter-spacing:.1em;color:var(--gold);font-weight:700}
+.dl dd{margin:0}
+.dl .mis{border-left-color:var(--bad-fill)}
+.dl .mis dt{color:var(--bad)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg button{border:1px solid var(--line);background:var(--bg2);border-radius:12px;padding:10px 6px;font-weight:700;min-height:44px}
+.seg button[aria-pressed="true"]{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.kw{display:inline-block;border-radius:8px;padding:1px 8px;margin:2px;font-size:13px;border:1px solid var(--line-soft)}
+.kw.hit{border-color:var(--ok);color:var(--ok)}
+.kw.miss{border-color:var(--bad);color:var(--bad)}
+/* Dialogue */
+.marble{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,0) 40%),repeating-linear-gradient(115deg,rgba(201,169,97,.05) 0 2px,transparent 2px 22px),var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}
+.bubble{display:flex;gap:10px;align-items:flex-start}
+.bubble .who{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-weight:900;background:var(--burg-fill);color:var(--on-burg)}
+.bubble .txt{background:var(--bg2);border:1px solid var(--line-soft);border-radius:4px 16px 16px 16px;padding:12px 14px;min-width:0}
+.bubble.me{flex-direction:row-reverse}
+.bubble.me .who{background:var(--gold-fill);color:var(--on-gold)}
+.bubble.me .txt{border-radius:16px 4px 16px 16px}
+.typing:after{content:"▍";animation:blink 1s steps(1) infinite;color:var(--gold)}
+@keyframes blink{50%{opacity:0}}
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.stages span{font-size:11.5px;text-align:center;padding:6px 2px;border-radius:8px;border:1px solid var(--line-soft);color:var(--muted)}
+.stages span.on{border-color:var(--gold-fill);color:var(--gold);font-weight:700}
+.stages span.done{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.opt{width:100%;text-align:left;border:1px solid var(--line);background:var(--bg2);border-radius:14px;padding:12px 14px;min-height:48px;display:flex;gap:10px;align-items:flex-start}
+.opt:hover{border-color:var(--gold-fill)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;border:1px solid var(--line);font-weight:700;font-size:13px;color:var(--gold)}
+.opt[aria-pressed="true"]{border-color:var(--gold-fill);background:color-mix(in srgb,var(--gold-fill) 18%,var(--bg2))}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok-fill) 18%,var(--bg2))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad-fill) 16%,var(--bg2))}
+.fb{border-radius:14px;padding:14px;border:1px solid}
+.fb.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok-fill) 12%,transparent)}
+.fb.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad-fill) 12%,transparent)}
+.fb.info{border-color:var(--line)}
+/* Quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.qtext{font-size:18px;font-weight:600;line-height:1.55}
+.ox{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ox button{font-family:var(--serif);font-size:44px;font-weight:900;min-height:110px;border-radius:18px;border:1px solid var(--line);background:var(--bg2)}
+.ox button[aria-pressed="true"]{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.matchrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line-soft)}
+.matchrow.ok select{border-color:var(--ok)}
+.matchrow.no select{border-color:var(--bad)}
+.quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:1fr 1fr 28px;gap:6px;max-width:560px}
+.quad .cell{border:1px dashed var(--line);border-radius:12px;min-height:118px;padding:8px;background:var(--bg2);display:flex;flex-direction:column;gap:6px;text-align:left}
+.quad .cell:hover{border-color:var(--gold-fill)}
+.quad .cell small{color:var(--muted);font-size:11.5px;font-weight:700}
+.quad .ax{display:grid;place-items:center;font-size:11.5px;color:var(--muted);font-weight:700}
+.quad .ax.y{writing-mode:vertical-rl;transform:rotate(180deg)}
+.chip{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:7px 10px;font-size:13.5px;text-align:left;line-height:1.4}
+.chip[aria-pressed="true"]{outline:2px solid var(--gold-fill)}
+.chip.ok{border-color:var(--ok)}.chip.no{border-color:var(--bad)}
+.gridwrap{display:grid;grid-template-columns:24px minmax(0,1fr);gap:6px;max-width:400px}
+.g9{display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);gap:3px;aspect-ratio:1;max-width:100%}
+.g9 button{border:1px solid var(--line-soft);background:var(--bg2);border-radius:5px;font-size:10px;color:var(--muted);padding:0}
+.g9 button.lm{background:color-mix(in srgb,var(--gold-fill) 12%,var(--bg2))}
+.g9 button[aria-pressed="true"]{background:var(--gold-fill);color:var(--on-gold)}
+.g9 button.ans{outline:2px solid var(--ok)}
+.sortrow{padding:10px 0;border-bottom:1px dashed var(--line-soft);display:flex;flex-direction:column;gap:6px}
+.sortrow .opts{display:flex;flex-wrap:wrap;gap:6px}
+.sortrow .opts button{border:1px solid var(--line-soft);background:var(--bg2);border-radius:999px;padding:5px 12px;font-size:13px;min-height:34px}
+.sortrow .opts button[aria-pressed="true"]{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.orderlist{display:flex;flex-direction:column;gap:8px;padding:0;margin:0;list-style:none}
+.orderlist li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--bg2)}
+.orderlist li .n{font-family:var(--serif);font-weight:900;color:var(--gold);width:22px;text-align:center}
+.orderlist li .t{flex:1;min-width:0}
+.orderlist li.ok{border-color:var(--ok)}.orderlist li.no{border-color:var(--bad)}
+.timer{font-family:var(--serif);font-weight:900;font-variant-numeric:tabular-nums}
+.timer.low{color:var(--bad)}
+/* Case */
+.case-scene{border-left:3px solid var(--burg-fill);padding:4px 0 4px 14px;font-size:15.5px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps4 span{font-size:12px;text-align:center;padding:6px 2px;border-radius:8px;border:1px solid var(--line-soft);color:var(--muted)}
+.steps4 span.on{border-color:var(--burg);color:var(--burg);font-weight:700}
+.steps4 span.done{background:var(--burg-fill);color:var(--on-burg);border-color:transparent}
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+/* Badges */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.badge{border:1px solid var(--line-soft);border-radius:14px;padding:12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.badge .m{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:18px;border:2px dashed var(--line);color:var(--muted)}
+.badge.on .m{border:0;color:var(--on-gold);background:radial-gradient(circle at 35% 28%,#F6E7BE,#C9A961 50%,#8C6D2C 100%);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.badge b{font-size:13.5px}
+.badge span{font-size:11.5px;color:var(--muted);line-height:1.4}
+/* Tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line-soft);text-align:left;white-space:nowrap}
+th{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700;background:var(--bg2)}
+table.wrapcells td{white-space:normal;min-width:90px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.heat{display:inline-block;min-width:44px;text-align:center;border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums;font-weight:700;font-size:13px}
+.lb{display:flex;flex-direction:column;gap:8px}
+.lbrow{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line-soft);border-radius:12px;padding:10px 12px;background:var(--bg2)}
+.lbrow .rk{font-family:var(--serif);font-weight:900;font-size:20px;color:var(--gold);text-align:center}
+.lbrow.me{border-color:var(--gold-fill)}
+.hbar{display:grid;grid-template-columns:minmax(80px,180px) minmax(0,1fr) 56px;gap:10px;align-items:center}
+.hbar .b{height:14px;border-radius:6px;background:var(--line-soft);overflow:hidden}
+.hbar .b i{display:block;height:100%;background:var(--gold-fill)}
+/* Live board */
+.live h1{font-size:clamp(26px,3.4vw,52px)}
+.live .bigq{font-family:var(--serif);font-size:clamp(22px,3vw,44px);font-weight:700;line-height:1.4}
+.live .lopt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--bg2);font-size:clamp(16px,1.6vw,26px)}
+.live .lopt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok-fill) 20%,var(--bg2))}
+.live .lopt .k{font-family:var(--serif);font-weight:900;color:var(--gold);font-size:1.3em;width:1.4em;text-align:center}
+.live .tally{display:flex;align-items:center;gap:6px}
+.live .tally b{min-width:2.2em;text-align:center;font-variant-numeric:tabular-nums}
+.distbar{height:10px;border-radius:5px;background:var(--line-soft);overflow:hidden;margin-top:6px;grid-column:2/4}
+.distbar i{display:block;height:100%;background:var(--gold-fill)}
+.distbar.r2 i{background:var(--burg-fill)}
+.cloud{min-height:300px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:center;padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--bg2)}
+.cloud span{font-family:var(--serif);font-weight:700;line-height:1.1}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;min-height:40px}
+.tabs button[aria-selected="true"]{background:var(--gold-fill);color:var(--on-gold);border-color:transparent}
+.bigtimer{font-size:clamp(56px,10vw,150px);text-align:center;line-height:1}
+.speaker{border:2px solid var(--line-soft);border-radius:20px;padding:20px;text-align:center}
+.speaker.on{border-color:var(--gold-fill);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold-fill) 25%,transparent)}
+/* Overlays */
+.toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--surface2);border:1px solid var(--gold-fill);color:var(--fg);padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);font-weight:700;font-size:14px;max-width:calc(100% - 32px);animation:tin .25s ease}
+@keyframes tin{from{opacity:0;transform:translate(-50%,8px)}}
+.overlay{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(6,12,22,.72);padding:16px}
+.overlay .box{background:var(--surface);border:1px solid var(--gold-fill);border-radius:24px;padding:28px 22px;text-align:center;max-width:380px;width:100%;display:flex;flex-direction:column;gap:12px;align-items:center}
+.overlay .seal{width:132px;height:132px;font-size:22px;animation:stamp .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stamp{0%{transform:scale(2.4) rotate(-18deg);opacity:0}60%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
+.spark{position:fixed;z-index:80;width:8px;height:8px;border-radius:50%;background:#E9D49B;box-shadow:0 0 8px #C9A961;pointer-events:none}
+.foot{margin-top:28px;text-align:center;font-size:11.5px;letter-spacing:.32em;color:var(--muted)}
+.foot b{color:var(--gold);font-family:var(--serif)}
+.note{font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:10px 12px}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;word-break:break-all;background:var(--bg2);border:1px solid var(--line-soft);border-radius:10px;padding:10px;max-height:140px;overflow:auto}
+.fadein{animation:fade .35s ease}
+@keyframes fade{from{opacity:.4;transform:translateY(6px)}}
+.reduce *,.reduce *:before,.reduce *:after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion: reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media (max-width:420px){.rkname{display:none}.top .in{gap:8px}.brand{font-size:15px}.qtext{font-size:16.5px}.hero{grid-template-columns:1fr;justify-items:center;text-align:center}.matchrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="layer"></div>
+<script>
+"use strict";
+/* =========================================================
+   CONTENT — 콘텐츠만 바꾸면 다른 단원으로 재사용 가능
+   ========================================================= */
+const COURSE = {
+  title: "LEAD QUEST",
+  subtitle: "원장실로 가는 길",
+  course: "교육행정학 · 리더십론",
+  sign: "UNBOX PEDAGOGY"
+};
+
+const RANKS = [
+  {name:"예비교사", xp:0}, {name:"신규교사", xp:150}, {name:"경력교사", xp:450},
+  {name:"수석교사", xp:900}, {name:"원감", xp:1400}, {name:"원장", xp:2000}
+];
+
+const WORLDS = [
+  {id:"w1", no:"I", name:"리더십의 개념", tag:"리더십은 직위인가, 과정인가",
+   goal:"리더십의 개념과 중요성, 연구의 역사적 흐름을 설명할 수 있다."},
+  {id:"w2", no:"II", name:"특성이론", tag:"타고난 리더는 존재하는가",
+   goal:"특성이론의 가정·주요 연구·한계를 설명할 수 있다."},
+  {id:"w3", no:"III", name:"행동이론", tag:"리더는 무엇을 하는가",
+   goal:"오하이오 주립대 연구와 관리망 이론을 비교·적용할 수 있다."},
+  {id:"w4", no:"IV", name:"상황이론", tag:"언제, 누구에게 효과적인가",
+   goal:"Fiedler 모형과 Hersey & Blanchard 모형으로 상황을 진단할 수 있다."},
+  {id:"w5", no:"V", name:"최근 교육리더십론", tag:"변혁·도덕·분산·초우량",
+   goal:"최근 교육리더십 이론을 학교·유아교육기관 사례에 적용할 수 있다."}
+];
+
+const CARDS = {
+ w1:[
+  {id:"c11", term:"리더십의 정의", sub:"Yukl(1989)",
+   def:"집단(조직)의 목표를 달성하기 위해 구성원의 활동에 영향을 미치는 과정.",
+   ex:"원장이 교사들과 함께 놀이중심 교육과정의 방향을 정하고, 교사들의 실천이 그 방향으로 모이도록 이끄는 일.",
+   mis:"리더십 = 직위·권한이라는 생각. 직위 없는 교사도 영향력 과정을 이끌면 리더십을 발휘한다.",
+   kw:["목표","구성원","영향","과정"]},
+  {id:"c12", term:"정의의 세 열쇠", sub:"영향력 · 목표 · 과정",
+   def:"리더십은 ① 영향력을 매개로 ② 집단의 목표를 향해 ③ 지속되는 과정이다.",
+   ex:"한 번의 지시가 아니라, 교사 협의·피드백·지원이 학기 내내 이어지는 흐름.",
+   mis:"리더십을 한 번의 명령이나 결정 같은 '사건'으로 보는 것.",
+   kw:["영향","목표","과정"]},
+  {id:"c13", term:"리더의 중요성", sub:"왜 리더를 연구하는가",
+   def:"리더는 조직의 목표 설정, 구성원의 동기와 사기, 조직문화 형성에 영향을 주어 교육기관의 효과성을 좌우한다.",
+   ex:"같은 조건의 두 유치원도 원장의 리더십에 따라 교사 이직률과 교육 분위기가 달라진다.",
+   mis:"유능한 교사가 많으면 리더는 중요하지 않다는 생각.",
+   kw:["목표","동기","문화","효과성"]},
+  {id:"c14", term:"리더십 연구의 흐름", sub:"특성 → 행동 → 상황 → 최근",
+   def:"리더는 누구인가(특성이론) → 무엇을 하는가(행동이론) → 언제 효과적인가(상황이론) → 변혁적·도덕적·분산적·초우량 리더십(최근 이론).",
+   ex:"각 이론은 앞선 이론이 설명하지 못한 부분을 보완하며 등장했다.",
+   mis:"새 이론이 이전 이론을 완전히 폐기했다는 생각. 각 이론의 통찰은 지금도 쓰인다.",
+   kw:["특성","행동","상황"]}
+ ],
+ w2:[
+  {id:"c21", term:"특성이론의 가정", sub:"리더는 누구인가",
+   def:"효과적인 리더에게는 비리더와 구별되는 고유한 개인 특성이 있으며, 그 특성은 상황과 무관하게 통한다고 본다.",
+   ex:"'훌륭한 원장은 어느 기관에 가도 성공한다'는 생각이 특성이론적 관점이다.",
+   mis:"특성이론 연구가 '특성만 갖추면 어디서나 성공한다'는 것을 증명했다는 생각.",
+   kw:["특성","비리더","구별"]},
+  {id:"c22", term:"Stogdill의 124편 종합", sub:"1904~1948년 연구",
+   def:"리더 특성을 다룬 124편의 연구를 종합해 능력·성취·책임·참여·지위의 범주를 정리했다.",
+   ex:"능력(지능·판단력), 성취(학식·지식), 책임(신뢰성·솔선력), 참여(사교성·협동성), 지위(사회경제적 지위·인기).",
+   mis:"이 특성을 갖추면 곧 리더가 된다는 생각. Stogdill은 특성이 상황과 관련될 때 의미가 있다고 보았다.",
+   kw:["능력","성취","책임","참여","지위"]},
+  {id:"c23", term:"Big Five", sub:"성격 5요인과 리더십",
+   def:"외향성·성실성·개방성·친화성·정서적 안정성의 다섯 요인으로 리더 성격을 설명한다.",
+   ex:"민원 상황에서도 침착함을 유지하는 원장 → 정서적 안정성.",
+   mis:"카리스마·지능도 Big Five 요인이라는 생각.",
+   kw:["외향성","성실성","개방성","친화성","정서적 안정성"]},
+  {id:"c24", term:"특성이론의 한계", sub:"왜 행동이론으로 넘어갔나",
+   def:"연구마다 특성 목록이 달라 일관성이 부족하고, 상황을 고려하지 않으며, 특성과 효과성의 인과가 불분명하고, 리더 육성에 대한 시사점이 약하다.",
+   ex:"같은 특성을 가진 원장이 어떤 기관에서는 성공하고 어떤 기관에서는 실패한다.",
+   mis:"특성 연구가 전부 쓸모없다는 생각. 리더 선발·자기이해의 참고 자료로는 여전히 유용하다.",
+   kw:["일관성","상황","인과"]}
+ ],
+ w3:[
+  {id:"c31", term:"행동이론의 가정", sub:"리더는 무엇을 하는가",
+   def:"보이지 않는 특성 대신 관찰 가능한 리더의 행동에 주목한다. 효과적인 행동은 학습·훈련할 수 있다고 본다.",
+   ex:"원장 연수에서 '회의 진행', '피드백 주기' 같은 행동을 훈련하는 근거.",
+   mis:"행동이론도 리더십이 타고난다고 본다는 생각.",
+   kw:["행동","관찰","학습"]},
+  {id:"c32", term:"오하이오 주립대 연구", sub:"구조성 · 배려성",
+   def:"리더 행동을 두 차원으로 구분했다. 구조성은 목표·역할·절차를 명확히 하는 행동, 배려성은 신뢰·존중·온정을 보이는 행동이다.",
+   ex:"업무분장표를 만드는 원장(구조성), 교사의 고충을 들어 주는 원장(배려성).",
+   mis:"배려성 = 업무를 대신 처리해 주는 것이라는 생각.",
+   kw:["구조성","배려성"]},
+  {id:"c33", term:"리더 행동 4사분면", sub:"구조성 × 배려성",
+   def:"고구조·고배려 / 고구조·저배려 / 저구조·고배려 / 저구조·저배려의 네 유형으로 리더 행동을 분류한다.",
+   ex:"연간 계획은 철저하지만 교사 의견은 묻지 않는 원장 → 고구조·저배려.",
+   mis:"고구조·고배려가 모든 상황에서 언제나 최선이라는 생각.",
+   kw:["구조성","배려성","사분면"]},
+  {id:"c34", term:"Blake & Mouton 관리망", sub:"생산 관심 × 인간 관심",
+   def:"생산(과업)에 대한 관심과 인간에 대한 관심을 9×9 격자로 나타낸다. (1,1) 무기력형, (1,9) 컨트리클럽형, (9,1) 과업형, (5,5) 중도형, (9,9) 팀형.",
+   ex:"'사람은 좋은데 일은 못한다'는 원감 → (1,9) 컨트리클럽형.",
+   mis:"좌표 순서를 (인간, 생산)으로 읽는 것. 앞의 수가 생산에 대한 관심이다.",
+   kw:["생산","인간","격자"]},
+  {id:"c35", term:"행동이론의 한계와 의의", sub:"한계 / 의의",
+   def:"한계: 상황을 고려하지 않고 '유일 최선'의 행동 유형을 가정했다. 의의: 과업과 관계(인간)라는 구분이 이후 리더십 연구의 기본 틀이 되었다.",
+   ex:"상황이론의 과업행동·관계행동 개념도 이 구분에서 나왔다.",
+   mis:"업무·관계 구분이 이후 연구의 기본 틀이 된 점을 한계로 오해하는 것. 이는 의의다.",
+   kw:["상황","최선","과업","관계"]}
+ ],
+ w4:[
+  {id:"c41", term:"상황이론의 가정", sub:"E = f(L × F × S)",
+   def:"모든 상황에 통하는 유일 최선의 리더십은 없다. 리더십 효과성(E)은 리더(L)·구성원(F)·상황(S)의 함수다.",
+   ex:"같은 원장이 신설 유치원과 오래된 유치원에서 다른 평가를 받는 이유.",
+   mis:"F를 '형식'이나 '기능'으로 읽는 것. F는 구성원(추종자)이다.",
+   kw:["리더","구성원","상황","함수"]},
+  {id:"c42", term:"Fiedler의 LPC", sub:"리더 스타일 측정",
+   def:"가장 함께 일하기 싫은 동료(LPC)를 얼마나 호의적으로 평가하는지로 리더 스타일을 측정한다. 높은 LPC는 관계지향, 낮은 LPC는 과업지향이다.",
+   ex:"싫은 동료도 '성실하다'고 평가하는 리더 → 높은 LPC → 관계지향.",
+   mis:"LPC가 높으면 과업지향이라는 생각.",
+   kw:["LPC","관계지향","과업지향"]},
+  {id:"c43", term:"상황 호의성", sub:"Fiedler 상황적합 모형",
+   def:"리더-구성원 관계, 과업구조, 지위권력의 세 요인으로 상황의 호의성을 판단한다. 매우 호의적이거나 매우 비호의적이면 과업지향, 중간이면 관계지향 리더가 효과적이다. 리더 스타일은 비교적 고정적이라 리더를 상황에 맞게 배치하거나 상황을 바꾼다.",
+   ex:"관계 좋음 + 과업구조 높음 + 지위권력 강함 → 매우 호의적 → 과업지향 리더.",
+   mis:"상황이 좋으면 관계지향 리더가 언제나 낫다는 생각.",
+   kw:["관계","과업구조","지위권력","호의"]},
+  {id:"c44", term:"Hersey & Blanchard", sub:"성숙도와 4유형",
+   def:"구성원 성숙도(능력 + 의지)에 따라 과업행동·관계행동을 조합한다. M1 지시형 → M2 설득형 → M3 참여형 → M4 위임형.",
+   ex:"능력은 높지만 의욕이 낮은 교사 → M3 → 참여형(의사결정 참여, 지원).",
+   mis:"성숙도를 나이나 경력만으로 판단하는 것. 성숙도는 직무 능력과 의지의 조합이다.",
+   kw:["성숙도","지시형","설득형","참여형","위임형"]},
+  {id:"c45", term:"두 모형 비교", sub:"Fiedler vs Hersey & Blanchard",
+   def:"Fiedler는 리더 스타일이 고정적이라 보고 상황을 바꾸거나 리더를 재배치하라고 처방한다. Hersey & Blanchard는 리더가 구성원 성숙도에 맞춰 행동을 유연하게 조정한다고 본다.",
+   ex:"교사 연수용으로는 행동 조정 처방이 있는 Hersey & Blanchard가 쓰기 쉽다.",
+   mis:"두 모형 모두 리더가 유연하게 스타일을 바꾼다고 본다는 생각.",
+   kw:["고정","유연","성숙도"]}
+ ],
+ w5:[
+  {id:"c51", term:"변혁적 리더십", sub:"거래적 리더십과 비교",
+   def:"구성원의 가치·신념·동기 수준을 변화시켜 기대 이상의 성과를 이끄는 리더십. 거래적 리더십은 보상과 성과의 교환에 기반한다.",
+   ex:"성과급 대신 '우리 반 아이들의 놀이가 바뀐다'는 비전으로 교사들의 헌신을 이끄는 원장.",
+   mis:"변혁적 리더십 = 조직 구조를 바꾸는 것이라는 생각. 핵심은 사람 안쪽의 변화다.",
+   kw:["가치","동기","비전","거래"]},
+  {id:"c52", term:"변혁적 리더십 4I", sub:"네 가지 구성요소",
+   def:"이상적 영향력(솔선수범으로 존경·신뢰 획득), 영감적 동기화(비전으로 열정 고취), 지적 자극(관행에 질문, 새로운 시도 격려), 개별적 배려(구성원 개개인의 성장 지원).",
+   ex:"교사마다 성장 목표를 함께 세우고 멘토링하는 원장 → 개별적 배려.",
+   mis:"조건적 보상도 4I에 포함된다는 생각. 조건적 보상은 거래적 리더십 요소다.",
+   kw:["이상적 영향력","영감적 동기화","지적 자극","개별적 배려"]},
+  {id:"c53", term:"도덕적 리더십", sub:"Sergiovanni 학교 유형",
+   def:"학교를 '성공(관리적 차원)'과 '선의(도덕적 차원)'의 두 축으로 본다. 도덕적 학교(성공↑·선의↑), 정략적 학교(성공↑·선의↓), 비정략적 학교(성공↓·선의↑), 비도덕적 학교(성공↓·선의↓).",
+   ex:"성과는 높지만 편법이 잦은 기관 → 정략적 학교.",
+   mis:"성과가 높으면 곧 좋은 학교라는 생각.",
+   kw:["성공","선의","도덕"]},
+  {id:"c54", term:"분산적 리더십", sub:"리더십의 공유",
+   def:"리더십이 공식 지위자 한 사람이 아니라 리더·구성원·상황의 상호작용 속에서 여러 사람에게 분산되어 실행된다고 본다. 구성원의 전문성을 리더십 자원으로 활용한다.",
+   ex:"교사 리더 팀이 교육과정·평가·생활지도 분야를 전문성에 따라 이끄는 학교.",
+   mis:"분산적 리더십 = 업무 떠넘기기라는 생각. 분산되는 것은 업무가 아니라 영향력과 책임 있는 실행이다.",
+   kw:["분산","상호작용","전문성"]},
+  {id:"c55", term:"초우량(슈퍼) 리더십", sub:"리더를 키우는 리더",
+   def:"구성원 각자가 스스로를 이끄는 셀프리더가 되도록 이끄는 리더십. 모델링·목표 설정 지원·코칭·자율 부여를 활용한다.",
+   ex:"교사 자율연구회를 키워 교사들이 스스로 수업 혁신을 이끌게 한 학교.",
+   mis:"리더가 뛰어난 성과를 내는 것이 초우량 리더십이라는 생각. 핵심은 구성원의 셀프리더십이다.",
+   kw:["셀프리더","자율","코칭"]}
+ ]
+};
+
+/* 소크라테스 문답: 5단계 질문 사슬(명료화·가정 탐색·근거 요구·관점 전환·함의 도출) */
+const STAGES = ["명료화","가정 탐색","근거 요구","관점 전환","함의 도출"];
+const DIALOGUES = {
+ w1:{topic:"리더십은 직위인가, 과정인가?", steps:[
+  {q:"Yukl(1989)은 리더십을 '과정'이라고 정의했습니다. 여기서 '과정'은 무엇을 뜻할까요?",
+   o:[{t:"목표를 향해 구성원의 활동에 지속적으로 영향을 미치는 흐름",s:2,f:"좋습니다. 일회성 명령이 아니라 목표를 향해 이어지는 영향력의 흐름이라는 점을 짚었군요."},
+      {t:"리더와 구성원이 함께 일하는 시간",s:1,f:"함께하는 시간만으로 충분할까요? 그 시간 동안 무엇이 오가야 리더십이라 부를 수 있을까요?"},
+      {t:"원장이 내리는 공식 지시",s:0,f:"지시는 영향력의 한 수단일 뿐입니다. 지시가 없을 때도 리더십이 작동할 수 있지 않을까요?"}],
+   h:["정의에 들어 있는 동사를 찾아보세요.","핵심 단어는 '영향'입니다.","목표를 향해 이어지는 영향력 = 과정"]},
+  {q:"'원장이니까 당연히 리더다'라는 말에는 어떤 가정이 숨어 있을까요?",
+   o:[{t:"원장은 경력이 많다는 가정",s:1,f:"그럴 수 있죠. 그런데 경력이 곧 영향력일까요? 더 근본적인 가정이 있습니다."},
+      {t:"직위가 곧 영향력을 보장한다는 가정",s:2,f:"정확합니다. 직위는 권한을 주지만, 구성원의 활동을 실제로 움직이는 영향력까지 보장하지는 않습니다."},
+      {t:"숨은 가정은 없다. 당연한 사실이다",s:0,f:"정말 그럴까요? 직위는 있지만 교사들이 따르지 않는 원장을 떠올려 보세요."}],
+   h:["'원장'과 '리더' 사이에 생략된 연결 고리를 찾아보세요.","직위와 영향력은 같은가요?","직위 = 영향력이라는 가정"]},
+  {q:"직위 없는 교사도 리더십을 발휘할 수 있다고 주장하려면 어떤 근거가 필요할까요?",
+   o:[{t:"동료들이 그 교사를 좋아한다는 설문 결과",s:1,f:"호감은 영향력의 바탕이 될 수 있습니다. 하지만 활동의 변화까지 보여 주나요?"},
+      {t:"그 교사의 근무 연수",s:0,f:"근무 연수는 '누구인가'에 대한 정보입니다. 무엇이 일어났는지를 보여 주는 근거가 필요합니다."},
+      {t:"그 교사의 제안으로 동료들의 실천이 실제로 바뀐 사례",s:2,f:"좋습니다. 정의의 핵심(구성원 활동에 미친 영향)을 직접 보여 주는 근거입니다."}],
+   h:["정의의 어느 부분을 증명해야 할까요?","'구성원의 활동'이 바뀌었는지가 관건입니다.","실천 변화 사례 = 영향력 과정의 증거"]},
+  {q:"특성이론가라면 '리더십은 과정이다'라는 주장에 어떻게 반응할까요?",
+   o:[{t:"상황이 더 중요하다고 할 것이다",s:1,f:"그건 상황이론가의 목소리에 가깝습니다. 특성이론가는 무엇에 주목했을까요?"},
+      {t:"과정보다 그 과정을 이끄는 사람의 고유한 특성이 먼저라고 볼 것이다",s:2,f:"맞습니다. 특성이론은 '리더는 누구인가'를 묻습니다. 관점에 따라 질문 자체가 달라지죠."},
+      {t:"완전히 동의할 것이다",s:0,f:"특성이론의 초점이 '과정'이었을까요, '사람'이었을까요?"}],
+   h:["특성이론의 핵심 질문을 떠올려 보세요.","특성이론은 '리더는 ○○인가'를 묻습니다.","사람(특성) 중심 관점"]},
+  {q:"그렇다면 유치원에서 리더십을 키우려면 무엇에 투자해야 할까요?",
+   o:[{t:"카리스마 있는 원장을 영입하는 것",s:0,f:"한 사람에 대한 투자만으로 '과정'이 만들어질까요?"},
+      {t:"원장 한 사람만이 아니라, 구성원 사이의 영향력이 목표를 향해 흐르도록 하는 구조와 경험",s:2,f:"훌륭합니다. 리더십을 과정으로 보면 투자 대상이 사람에서 관계와 구조로 넓어집니다."},
+      {t:"교사 연수 시간을 늘리는 것",s:1,f:"좋은 출발입니다. 그 연수가 '영향력의 흐름'을 어떻게 바꾸도록 설계해야 할까요?"}],
+   h:["'과정'으로서의 리더십을 다시 떠올려 보세요.","한 사람 vs 관계와 구조","영향력이 흐르는 구조에 투자"]}
+ ]},
+ w2:{topic:"타고난 리더는 존재하는가?", steps:[
+  {q:"특성이론이 말하는 '특성'이란 무엇일까요?",
+   o:[{t:"리더를 비리더와 구별하는 비교적 안정된 개인 자질(지능·성실성 등)",s:2,f:"정확합니다. 상황에 따라 바뀌는 행동이 아니라 비교적 안정된 개인 자질입니다."},
+      {t:"리더가 상황에 따라 바꾸는 행동",s:0,f:"그건 행동이론·상황이론의 관심사입니다. 특성은 얼마나 안정적인가요?"},
+      {t:"리더가 이룬 성과",s:1,f:"성과는 특성의 결과일 수 있지만 특성 자체는 아닙니다."}],
+   h:["'특성'의 일상적 의미를 떠올려 보세요.","잘 변하지 않는 개인 자질입니다.","리더와 비리더를 구별하는 안정된 자질"]},
+  {q:"특성이론은 무엇을 전제하고 있을까요?",
+   o:[{t:"리더 특성은 측정 가능하다",s:1,f:"맞는 전제입니다. 그런데 더 근본적인 전제는 '그 특성이 어디서나 통한다'는 것 아닐까요?"},
+      {t:"리더십은 훈련으로 길러진다",s:0,f:"그건 행동이론이 열어 준 가능성입니다."},
+      {t:"효과적인 리더에게는 상황과 무관하게 공통된 특성이 있다",s:2,f:"좋습니다. 이 '상황 무관' 전제가 이후 비판의 표적이 됩니다."}],
+   h:["특성이론이 '상황'을 어떻게 다루었나요?","공통된 특성 + 상황 ○○","상황과 무관한 공통 특성"]},
+  {q:"Stogdill이 124편의 연구를 종합해 얻은 결론은 그 전제를 지지할까요?",
+   o:[{t:"완전히 지지한다",s:0,f:"연구마다 특성 목록이 달랐다는 점을 떠올려 보세요."},
+      {t:"완전히 반박했다. 특성은 무의미하다",s:1,f:"너무 멀리 갔습니다. 능력·성취·책임·참여·지위 같은 범주는 남았죠."},
+      {t:"부분적으로만. 일부 특성은 반복 확인됐지만, 특성은 상황과 맞물릴 때 의미가 있었다",s:2,f:"정확합니다. 그래서 연구의 초점이 서서히 이동합니다."}],
+   h:["Stogdill이 정리한 범주를 떠올려 보세요.","범주는 남았지만 조건이 붙었습니다.","특성 + 상황"]},
+  {q:"행동이론가는 특성이론의 어떤 점을 문제 삼았을까요?",
+   o:[{t:"보이지 않는 특성 대신, 관찰·학습 가능한 리더의 행동을 봐야 한다",s:2,f:"좋습니다. 질문이 '누구인가'에서 '무엇을 하는가'로 바뀝니다."},
+      {t:"상황을 무시했다",s:1,f:"그 비판은 상황이론가에게서 더 강하게 나옵니다. 행동이론가는 '무엇을 관찰할 것인가'에 주목했죠."},
+      {t:"특성의 수가 너무 적다",s:0,f:"오히려 목록이 너무 많고 제각각이었습니다."}],
+   h:["행동이론의 이름에 답이 있습니다.","관찰할 수 있는 것은 무엇인가요?","특성 → 행동으로의 전환"]},
+  {q:"원장 임용 면접에서 특성이론을 활용한다면 무엇을 조심해야 할까요?",
+   o:[{t:"성격검사 점수가 높은 사람을 선발한다",s:0,f:"점수가 높은 사람이 우리 기관의 상황에서도 효과적일까요?"},
+      {t:"특성 평가를 참고하되 기관의 상황·구성원과의 적합성을 함께 본다",s:2,f:"훌륭합니다. 특성이론의 유용성과 한계를 함께 다룬 답입니다."},
+      {t:"특성은 무시하고 경력만 본다",s:1,f:"경력도 중요하지만, 특성 정보를 버리는 것은 아깝습니다."}],
+   h:["특성이론의 한계 하나를 떠올려 보세요.","상황을 고려하지 않는다는 한계","특성 + 상황 적합성"]}
+ ]},
+ w3:{topic:"고구조·고배려는 언제나 최선인가?", steps:[
+  {q:"배려성이 높다는 건 구체적으로 어떤 행동인가요?",
+   o:[{t:"업무 기준과 절차를 명확히 정하는 행동",s:0,f:"그건 구조성의 모습입니다. 배려성은 관계의 질과 관련됩니다."},
+      {t:"교사의 의견을 경청하고 신뢰·존중·온정을 보이는 행동",s:2,f:"정확합니다. 배려성은 구성원과의 관계의 질을 높이는 행동입니다."},
+      {t:"교사의 업무를 대신 처리해 주는 행동",s:1,f:"돕는 마음은 맞지만, 배려성의 핵심은 업무 대행이 아니라 신뢰와 존중입니다."}],
+   h:["오하이오 연구의 두 차원 중 '관계' 쪽입니다.","신뢰·존중·온정","경청과 존중의 행동"]},
+  {q:"구조성과 배려성이 둘 다 높으면 늘 최선이라고 가정하고 있지 않나요?",
+   o:[{t:"아니다. 고구조·고배려는 실제로 언제나 최선이다",s:0,f:"'언제나'라는 말이 걸립니다. 예외 상황은 없을까요?"},
+      {t:"잘 모르겠다. 연구에 따라 다르다",s:1,f:"좋은 의심입니다. 무엇이 결과를 달라지게 만들까요?"},
+      {t:"그렇다. 그 '보편적 최선' 가정이 행동이론의 약점이다",s:2,f:"정확합니다. 상황을 고려하지 않은 보편성 가정이 행동이론의 한계입니다."}],
+   h:["'언제나'라는 단어에 주목하세요.","행동이론이 고려하지 않은 변수는?","보편적 최선 가정 = 한계"]},
+  {q:"그 판단을 뒷받침하는 근거는 무엇인가요?",
+   o:[{t:"같은 고구조·고배려 리더라도 구성원과 과업 상황에 따라 효과가 달랐고, 이것이 상황이론으로 이어졌다",s:2,f:"좋습니다. 이론의 흐름 자체가 근거가 됩니다."},
+      {t:"내가 겪은 좋은 원장님이 고구조·고배려였다",s:1,f:"경험은 좋은 출발점입니다. 하나의 사례로 일반화할 수 있을까요?"},
+      {t:"고구조·고배려는 이름부터 최고이기 때문이다",s:0,f:"이름은 근거가 될 수 없습니다."}],
+   h:["행동이론 다음에 어떤 이론이 나왔나요?","결과가 상황마다 달랐습니다.","상황에 따라 다른 효과 → 상황이론"]},
+  {q:"상황이론가라면 이 주장을 어떻게 반박할까요?",
+   o:[{t:"리더의 특성이 더 중요하다",s:0,f:"그건 특성이론으로 되돌아가는 답입니다."},
+      {t:"효과적인 행동은 구성원 성숙도·과업구조 같은 상황에 따라 달라진다",s:2,f:"훌륭합니다. 이제 상황이론의 언어로 말하고 있습니다."},
+      {t:"고구조·고배려가 대체로 좋지만 예외가 있다",s:1,f:"그 예외가 어떤 조건에서 생기는지 말할 수 있다면 상황이론가의 답이 됩니다."}],
+   h:["상황이론의 공식을 떠올려 보세요.","E = f(L × F × S)","상황 변수에 따라 최적 행동이 달라진다"]},
+  {q:"그렇다면 유치원 원장은 신규교사에게 어떻게 행동해야 할까요?",
+   o:[{t:"친절하게 대해 주면 충분하다",s:1,f:"배려성은 갖췄습니다. 신규교사에게 부족한 것은 무엇일까요?"},
+      {t:"무조건 자율에 맡긴다",s:0,f:"경험이 부족한 신규교사에게 자율만 주면 어떤 일이 생길까요?"},
+      {t:"업무 절차와 기대를 명확히 안내(구조성)하면서 적응을 정서적으로 지지(배려성)하고, 성장에 따라 조정한다",s:2,f:"훌륭합니다. 두 차원을 쓰되 성장(상황)에 따라 조정한다는 점까지 담았습니다."}],
+   h:["신규교사에게 부족한 것과 필요한 것을 나눠 보세요.","절차 안내 + 정서 지지","그리고 시간이 지나면?"]}
+ ]},
+ w4:{topic:"최선의 리더십은 상황에 따라 다른가?", steps:[
+  {q:"E = f(L × F × S)는 무엇을 말하나요?",
+   o:[{t:"리더와 구성원의 관계가 효과성을 정한다",s:1,f:"관계는 중요합니다. 그런데 S, 상황은 어디로 갔나요?"},
+      {t:"리더십 효과성은 리더·구성원·상황의 함수다",s:2,f:"정확합니다. 세 변수가 함께 효과성을 결정합니다."},
+      {t:"효과성은 리더의 능력에 비례한다",s:0,f:"그건 L 하나만 본 해석입니다."}],
+   h:["E, L, F, S가 각각 무엇인지 적어 보세요.","F는 Follower입니다.","세 변수의 함수"]},
+  {q:"Fiedler는 리더의 스타일(LPC)을 어떻게 보았을까요?",
+   o:[{t:"비교적 고정적이어서 쉽게 바뀌지 않는다",s:2,f:"정확합니다. 그래서 Fiedler는 리더를 바꾸기보다 상황을 바꾸거나 리더를 재배치하라고 했습니다."},
+      {t:"상황마다 자유롭게 바꿀 수 있다",s:0,f:"그건 Hersey & Blanchard의 가정에 가깝습니다."},
+      {t:"어느 정도 바뀌지만 느리게 바뀐다",s:1,f:"근접했습니다. Fiedler의 처방을 떠올리면 더 분명해집니다."}],
+   h:["Fiedler의 처방이 '리더 교육'이었나요?","리더를 상황에 맞게 배치하라고 했습니다.","스타일은 고정적"]},
+  {q:"관계 좋음, 과업구조 높음, 지위권력 강함인 상황에서 과업지향 리더가 효과적이라는 주장의 논리는?",
+   o:[{t:"구성원이 리더를 좋아하니까",s:1,f:"관계가 좋다는 조건은 맞습니다. 그럼 리더는 무엇에 집중하면 될까요?"},
+      {t:"과업지향 리더는 원래 우수하니까",s:0,f:"Fiedler는 어느 스타일이 '원래 우수하다'고 보지 않았습니다."},
+      {t:"상황이 매우 호의적이면 관계 관리보다 과업 추진에 집중하는 편이 효과적이다",s:2,f:"훌륭합니다. 매우 호의적인 상황에서는 이미 관계가 확보되어 있습니다."}],
+   h:["세 요인이 모두 좋으면 상황은?","매우 호의적인 상황","관계는 확보됨 → 과업에 집중"]},
+  {q:"Hersey & Blanchard라면 Fiedler의 처방(리더를 상황에 맞게 배치)을 어떻게 보완할까요?",
+   o:[{t:"리더가 구성원 성숙도를 진단해 자신의 행동 유형을 조정할 수 있다",s:2,f:"정확합니다. 리더의 유연성이 두 모형의 핵심 차이입니다."},
+      {t:"상황 호의성을 더 세분화한다",s:1,f:"그것도 하나의 발전 방향이지만, H&B의 초점은 '구성원'과 '리더의 행동 조정'입니다."},
+      {t:"리더를 교체하는 것이 유일한 답이다",s:0,f:"그건 오히려 Fiedler에 가까운 처방입니다."}],
+   h:["H&B 모형의 핵심 변수는?","구성원 성숙도","리더가 행동을 조정한다"]},
+  {q:"유능하지만 의욕이 낮은 교사들이 모인 학교(A중학교)에서 교장은 어떻게 해야 할까요?",
+   o:[{t:"지시형: 업무를 명확히 지시하고 점검한다",s:0,f:"이 교사들은 이미 유능합니다. 지시가 의욕을 살릴까요?"},
+      {t:"위임형: 알아서 하도록 맡긴다",s:1,f:"능력은 충분하니 반은 맞습니다. 그런데 의지가 낮다면?"},
+      {t:"참여형: 의사결정에 참여시키고 지원하며 동기를 회복시킨다",s:2,f:"훌륭합니다. 능력↑·의지↓(M3)에는 관계행동 중심의 참여형이 맞습니다."}],
+   h:["능력과 의지를 따로 진단해 보세요.","능력↑, 의지↓ = M3","M3 → 참여형"]}
+ ]},
+ w5:{topic:"좋은 학교를 만드는 리더십은 무엇인가?", steps:[
+  {q:"변혁적 리더십에서 '변혁'되는 것은 무엇인가요?",
+   o:[{t:"보상 체계",s:0,f:"보상과 성과의 교환은 거래적 리더십의 핵심입니다."},
+      {t:"조직도와 직위 체계",s:1,f:"구조도 바뀔 수 있지만, 핵심은 사람 안쪽의 변화입니다."},
+      {t:"구성원의 가치·신념·동기 수준",s:2,f:"정확합니다. 변혁은 구성원 내면에서 일어납니다."}],
+   h:["거래적 리더십과 대비해 보세요.","교환이 아니라 ○○","가치와 동기의 변화"]},
+  {q:"'성과만 좋으면 좋은 학교다'라는 말에는 어떤 가정이 있나요?",
+   o:[{t:"학교의 성공을 선의(도덕적 차원) 없이 성과만으로 판단할 수 있다는 가정",s:2,f:"좋습니다. Sergiovanni는 바로 이 가정을 문제 삼았습니다."},
+      {t:"학부모는 성과만 원한다는 가정",s:1,f:"그런 가정도 있죠. 더 근본적으로는 '학교의 좋음'을 무엇으로 판단하는가의 문제입니다."},
+      {t:"숨은 가정은 없다",s:0,f:"'좋은 학교'의 기준이 하나뿐일까요?"}],
+   h:["도덕적 리더십의 두 축을 떠올려 보세요.","성공 + ○○","선의를 빼고 판단하는 가정"]},
+  {q:"Sergiovanni가 성공과 선의를 함께 보자고 한 근거는?",
+   o:[{t:"교육청 지침이기 때문이다",s:0,f:"외부 지침이 아니라 학교 유형에서 근거를 찾아보세요."},
+      {t:"성과가 높아도 선의가 낮으면 '정략적 학교'가 되어 장기적인 헌신과 신뢰를 잃기 쉽다",s:2,f:"훌륭합니다. 두 축이 만드는 학교 유형으로 설명했습니다."},
+      {t:"도덕이 성과보다 언제나 중요하기 때문이다",s:1,f:"가치 판단으로 끝내지 말고, 두 차원이 만드는 학교 유형으로 설명해 볼까요?"}],
+   h:["성공↑·선의↓인 학교의 이름은?","정략적 학교","정략적 학교의 장기적 위험"]},
+  {q:"분산적 리더십 관점에서 '영웅적 교장 1인'의 리더십을 다시 보면?",
+   o:[{t:"교장이 강할수록 좋다",s:0,f:"분산적 리더십은 리더십이 어디에 있다고 보나요?"},
+      {t:"리더십은 교장·교사·상황의 상호작용 속에 분산되어 실행되므로, 1인 의존은 소진과 취약성을 낳는다",s:2,f:"정확합니다. 리더십을 '실행'의 관점에서 다시 보았습니다."},
+      {t:"교사에게 업무를 나눠 주면 된다",s:1,f:"업무 분담과 리더십 분산은 다릅니다. 무엇이 분산되어야 할까요?"}],
+   h:["분산적 리더십에서 리더십은 어디에 있나요?","상호작용 속","1인 의존의 위험"]},
+  {q:"초우량(슈퍼) 리더십을 유치원에 적용한다면 원장의 역할은?",
+   o:[{t:"교사 연구회를 만들어 준다",s:1,f:"좋은 장치입니다. 그 안에서 교사가 '스스로 이끄는' 힘을 기르게 하는 것이 핵심이죠."},
+      {t:"교사 각자가 스스로 목표를 세우고 이끄는 셀프리더가 되도록 모델링·코칭·자율을 제공한다",s:2,f:"훌륭합니다. 리더를 키우는 리더, 그것이 초우량 리더십입니다."},
+      {t:"모든 결정을 직접 내려 혼란을 줄인다",s:0,f:"그러면 교사들이 스스로 이끄는 힘은 어떻게 자랄까요?"}],
+   h:["'슈퍼'는 누구를 슈퍼로 만드나요?","구성원의 셀프리더십","리더를 키우는 리더"]}
+ ]}
+};
+
+/* 문항 은행: t = ox | mc | match | quad | grid | order | sort ; b = recall | understand | apply | analyze */
+const QUESTIONS = [
+ // w1
+ {id:"q101",w:"w1",c:"c11",t:"ox",b:"understand",q:"Yukl(1989)의 정의에 따르면 리더십은 공식 직위를 가진 사람만 발휘할 수 있다.",a:false,
+  ex:"정의의 핵심은 '목표 달성을 위해 구성원의 활동에 영향을 미치는 과정'입니다. 직위가 아니라 영향력 과정이 기준입니다."},
+ {id:"q102",w:"w1",c:"c12",t:"mc",b:"understand",q:"Yukl(1989)의 리더십 정의에 포함된 요소가 아닌 것은?",
+  o:["영향력의 과정","집단·조직의 목표 달성","구성원의 활동","리더의 타고난 성격 특성"],a:3,
+  ex:"정의는 영향력·목표·과정을 말합니다. 타고난 성격 특성은 특성이론의 관심사입니다."},
+ {id:"q103",w:"w1",c:"c11",t:"mc",b:"apply",q:"직위가 없는 3년차 교사가 놀이중심 교육과정 연구모임을 제안했고, 동료 교사들이 참여해 수업이 바뀌었다. 이 상황에 대한 판단으로 가장 적절한 것은?",
+  o:["직위가 없으므로 리더십으로 볼 수 없다","구성원의 활동에 영향을 미친 과정이므로 리더십을 발휘한 것이다","원장의 승인이 있었을 때만 리더십이다","결과가 성공해야만 리더십이다"],a:1,
+  ex:"동료들의 활동(수업)에 실제로 영향을 미쳤으므로 정의상 리더십입니다."},
+ {id:"q104",w:"w1",c:"c14",t:"order",b:"recall",q:"리더십 연구의 흐름을 시대 순서대로 배열하세요.",
+  items:["특성이론: 리더는 누구인가","행동이론: 리더는 무엇을 하는가","상황이론: 언제 효과적인가","최근 리더십론: 변혁·도덕·분산·초우량"],
+  ex:"특성 → 행동 → 상황 → 최근 이론 순입니다. 각 이론은 앞선 이론의 한계를 보완하며 등장했습니다."},
+ {id:"q105",w:"w1",c:"c14",t:"mc",b:"understand",q:"행동이론이 등장한 주된 배경으로 가장 적절한 것은?",
+  o:["상황 변수가 지나치게 강조되었기 때문","특성이론이 리더와 비리더를 일관되게 구별하는 특성을 찾지 못했기 때문","변혁적 리더십이 실패했기 때문","교육현장에 리더가 부족했기 때문"],a:1,
+  ex:"특성 목록이 연구마다 달라 일관성이 부족했고, 그래서 관찰 가능한 행동으로 초점이 옮겨졌습니다."},
+ {id:"q106",w:"w1",c:"c14",t:"mc",b:"understand",q:"상황이론이 등장한 배경으로 가장 적절한 것은?",
+  o:["행동이론이 '모든 상황에 최선인 행동 유형'을 가정했기 때문","특성이론이 행동을 너무 중시했기 때문","리더의 직위를 설명하지 못했기 때문","도덕적 차원을 무시했기 때문"],a:0,
+  ex:"같은 행동이라도 상황에 따라 효과가 달랐습니다. 그래서 '유일 최선'을 버리고 상황 변수를 도입했습니다."},
+ {id:"q107",w:"w1",c:"c14",t:"ox",b:"understand",q:"리더십 연구의 초점은 '리더는 누구인가 → 리더는 무엇을 하는가 → 어떤 상황에서 효과적인가' 순으로 이동해 왔다.",a:true,
+  ex:"특성이론 → 행동이론 → 상황이론의 핵심 질문입니다."},
+ {id:"q109",w:"w1",c:"c13",t:"mc",b:"apply",q:"리더의 중요성을 보여 주는 근거로 가장 적절한 것은?",
+  o:["같은 조건의 두 유치원에서 원장의 운영 방식에 따라 교사 사기와 이직률이 달랐다","원아 수가 많은 유치원일수록 행사가 많았다","교사 경력이 길수록 서류 작업이 빨랐다","시설이 좋은 유치원일수록 학부모 상담이 많았다"],a:0,
+  ex:"다른 조건이 같을 때 리더의 차이가 구성원의 동기·사기와 조직 성과의 차이로 이어진다는 점이 리더 중요성의 근거입니다."},
+ {id:"q110",w:"w1",c:"c14",t:"ox",b:"understand",q:"새로운 리더십 이론이 등장하면 이전 이론의 통찰은 더 이상 쓰이지 않는다.",a:false,
+  ex:"각 이론은 앞 이론의 한계를 보완하며 축적되었습니다. 특성 정보는 지금도 리더 선발과 자기이해에 쓰입니다."},
+ {id:"q108",w:"w1",c:"c13",t:"mc",b:"analyze",q:"'훌륭한 원장은 어느 기관에 가도 똑같이 성공한다'는 진술은 어느 관점에 가장 가깝고, 어느 이론이 이를 가장 강하게 반박하는가?",
+  o:["행동이론 / 특성이론","특성이론 / 상황이론","상황이론 / 행동이론","분산적 리더십 / 특성이론"],a:1,
+  ex:"상황과 무관한 보편적 리더 특성을 가정하므로 특성이론적 진술이고, 상황이론이 가장 강하게 반박합니다."},
+ // w2
+ {id:"q201",w:"w2",c:"c21",t:"ox",b:"recall",q:"특성이론은 상황 요인을 중시한다.",a:false,
+  ex:"특성이론은 상황과 무관한 리더 특성을 찾으려 했습니다. 상황을 고려하지 않은 것이 한계입니다."},
+ {id:"q202",w:"w2",c:"c23",t:"mc",b:"recall",q:"Big Five(성격 5요인)에 속하지 않는 것은?",
+  o:["외향성","성실성","개방성","카리스마"],a:3,
+  ex:"Big Five는 외향성·성실성·개방성·친화성·정서적 안정성입니다."},
+ {id:"q203",w:"w2",c:"c22",t:"sort",b:"understand",q:"Stogdill(1948)이 정리한 리더 특성 범주로 각 특성을 분류하세요.",
+  cats:["능력","성취","책임","참여","지위"],
+  items:[{t:"지능",c:0},{t:"판단력",c:0},{t:"학식",c:1},{t:"지식",c:1},{t:"신뢰성",c:2},{t:"솔선력",c:2},{t:"사교성",c:3},{t:"협동성",c:3},{t:"사회경제적 지위",c:4},{t:"인기",c:4}],
+  ex:"능력(지능·판단력), 성취(학식·지식), 책임(신뢰성·솔선력), 참여(사교성·협동성), 지위(사회경제적 지위·인기)."},
+ {id:"q204",w:"w2",c:"c22",t:"mc",b:"understand",q:"Stogdill이 124편의 특성 연구를 종합한 결과로 가장 적절한 것은?",
+  o:["특정 특성만 갖추면 누구나 리더가 된다","리더 특성은 존재하지 않는다","리더 특성은 상황과 관련될 때 의미를 가진다","리더 특성은 성별로 결정된다"],a:2,
+  ex:"일부 특성 범주는 반복 확인되었지만, 특성은 상황과 맞물릴 때 의미가 있다는 점이 드러났습니다."},
+ {id:"q205",w:"w2",c:"c24",t:"mc",b:"understand",q:"특성이론의 한계가 아닌 것은?",
+  o:["연구마다 특성 목록이 달라 일관성이 부족하다","상황 요인을 고려하지 않는다","특성과 리더십 효과성 사이의 인과관계가 불분명하다","리더의 행동을 관찰 가능한 단위로 측정했다"],a:3,
+  ex:"관찰 가능한 행동 측정은 행동이론의 특징입니다."},
+ {id:"q206",w:"w2",c:"c24",t:"ox",b:"analyze",q:"원장 선발 시 성실성·외향성 검사 점수만으로 기관의 효과성을 보장할 수 있다.",a:false,
+  ex:"특성과 효과성의 인과가 불분명하고 상황을 고려하지 않는다는 한계 때문에 보장할 수 없습니다."},
+ {id:"q207",w:"w2",c:"c21",t:"mc",b:"apply",q:"원장 채용 면접위원회가 '타고난 리더 자질'만 평가한다. 특성이론의 한계에 비추어 가장 큰 위험은?",
+  o:["면접 시간이 길어진다","기관 규모·교사 특성 등 상황과의 적합성을 놓친다","지원자 수가 줄어든다","행동 훈련이 지나치게 강조된다"],a:1,
+  ex:"상황을 고려하지 않는 것이 특성이론의 핵심 한계입니다."},
+ {id:"q208",w:"w2",c:"c23",t:"match",b:"understand",q:"Big Five 요인과 원장의 행동을 연결하세요.",
+  pairs:[["외향성","학부모 설명회에서 적극적으로 소통한다"],["성실성","계획과 기한을 꼼꼼히 지킨다"],["개방성","새로운 교수법을 먼저 시도한다"],["친화성","동료 교사를 배려하고 협조한다"],["정서적 안정성","민원 상황에서도 침착함을 유지한다"]],
+  ex:"각 요인의 대표 행동을 떠올리면 연결됩니다."},
+ {id:"q209",w:"w2",c:"c21",t:"ox",b:"recall",q:"특성이론은 효과적인 리더에게 비리더와 구별되는 고유한 특성이 있다고 가정한다.",a:true,
+  ex:"'리더는 누구인가'를 묻는 특성이론의 핵심 가정입니다."},
+ {id:"q210",w:"w2",c:"c22",t:"mc",b:"understand",q:"Stogdill이 정리한 범주 중 '책임'에 해당하는 특성은?",
+  o:["신뢰성·솔선력","사교성·협동성","학식·지식","지능·판단력"],a:0,
+  ex:"책임(신뢰성·솔선력), 참여(사교성·협동성), 성취(학식·지식), 능력(지능·판단력)입니다."},
+ // w3
+ {id:"q301",w:"w3",c:"c32",t:"mc",b:"recall",q:"오하이오 주립대 연구가 제시한 리더 행동의 두 차원은?",
+  o:["구조성과 배려성","과업지향과 관계지향(LPC)","지시형과 위임형","거래적과 변혁적"],a:0,
+  ex:"오하이오 주립대 연구는 구조성(initiating structure)과 배려성(consideration)을 제시했습니다."},
+ {id:"q302",w:"w3",c:"c32",t:"ox",b:"recall",q:"구조성은 리더가 목표·역할·절차를 명확히 하는 행동이다.",a:true,
+  ex:"구조성은 과업 수행을 위한 틀을 세우는 행동입니다."},
+ {id:"q303",w:"w3",c:"c33",t:"quad",b:"apply",q:"원장의 행동 묘사를 오하이오 4사분면에 배치하세요. (가로: 구조성, 세로: 배려성)",
+  ax:["구조성","배려성"],
+  items:[{t:"업무분장을 명확히 하고 교사 고충도 세심히 살핀다",a:"HH"},{t:"연간 계획·점검은 철저하지만 교사 의견은 묻지 않는다",a:"HL"},{t:"교사들과 친밀하지만 행사 일정·역할이 늘 모호하다",a:"LH"},{t:"계획도 관계도 교사에게 맡겨 두고 관여하지 않는다",a:"LL"}],
+  ex:"구조성은 계획·역할·절차, 배려성은 신뢰·존중·관계입니다. 두 차원을 따로 판단하세요."},
+ {id:"q304",w:"w3",c:"c34",t:"grid",b:"apply",q:"Blake & Mouton 관리망에서 '과업형'의 위치를 찍으세요.",a:[9,1],
+  ex:"과업형은 (9,1): 생산에 대한 관심 9, 인간에 대한 관심 1입니다."},
+ {id:"q305",w:"w3",c:"c34",t:"grid",b:"apply",q:"Blake & Mouton 관리망에서 '컨트리클럽형'의 위치를 찍으세요.",a:[1,9],
+  ex:"컨트리클럽형은 (1,9): 생산 관심은 낮고 인간 관심은 매우 높습니다."},
+ {id:"q306",w:"w3",c:"c34",t:"grid",b:"apply",q:"Blake & Mouton 관리망에서 '팀형'의 위치를 찍으세요.",a:[9,9],
+  ex:"팀형은 (9,9): 생산과 인간 모두에 높은 관심을 둡니다."},
+ {id:"q307",w:"w3",c:"c34",t:"mc",b:"recall",q:"Blake & Mouton 관리망의 두 축은?",
+  o:["구조성 × 배려성","생산에 대한 관심 × 인간에 대한 관심","능력 × 의지","성공 × 선의"],a:1,
+  ex:"관리망은 생산(과업)에 대한 관심과 인간에 대한 관심의 9×9 격자입니다."},
+ {id:"q308",w:"w3",c:"c34",t:"mc",b:"analyze",q:"'사람은 좋은데 일은 못한다'는 평을 듣는 원감은 관리망의 어느 유형에 가장 가까운가?",
+  o:["무기력형 (1,1)","컨트리클럽형 (1,9)","과업형 (9,1)","팀형 (9,9)"],a:1,
+  ex:"관계(인간)는 높고 과업(생산)은 낮으므로 컨트리클럽형입니다."},
+ {id:"q309",w:"w3",c:"c35",t:"mc",b:"understand",q:"행동이론의 한계로 가장 적절한 것은?",
+  o:["리더의 행동을 관찰하지 않았다","상황을 고려하지 않고 특정 유형이 언제나 최선이라고 가정했다","리더 특성을 지나치게 중시했다","구성원의 성숙도만 보았다"],a:1,
+  ex:"보편적 최선 가정이 한계이며, 이를 보완한 것이 상황이론입니다."},
+ {id:"q310",w:"w3",c:"c35",t:"ox",b:"understand",q:"리더 행동을 과업과 관계(인간) 두 차원으로 구분한 것은 이후 리더십 연구의 기본 틀이 되었다는 점에서 행동이론의 의의로 평가된다.",a:true,
+  ex:"이 구분은 상황이론의 과업행동·관계행동으로 이어집니다. 한계가 아니라 의의입니다."},
+ // w4
+ {id:"q401",w:"w4",c:"c41",t:"mc",b:"recall",q:"E = f(L × F × S)에서 F가 뜻하는 것은?",
+  o:["형식(Form)","구성원·추종자(Follower)","기능(Function)","피드백(Feedback)"],a:1,
+  ex:"리더십 효과성(E)은 리더(L)·구성원(F)·상황(S)의 함수입니다."},
+ {id:"q402",w:"w4",c:"c42",t:"ox",b:"recall",q:"Fiedler 모형에서 LPC 점수가 높은 리더는 관계지향적이다.",a:true,
+  ex:"가장 싫은 동료도 호의적으로 평가하는(높은 LPC) 리더는 관계지향적입니다."},
+ {id:"q403",w:"w4",c:"c43",t:"mc",b:"recall",q:"Fiedler가 제시한 상황 호의성의 3요인이 아닌 것은?",
+  o:["리더-구성원 관계","과업구조","지위권력","구성원 성숙도"],a:3,
+  ex:"구성원 성숙도는 Hersey & Blanchard 모형의 핵심 변수입니다."},
+ {id:"q404",w:"w4",c:"c43",t:"mc",b:"analyze",q:"리더-구성원 관계 좋음, 과업구조 높음, 지위권력 강함. 이 상황의 호의성과 효과적인 리더는?",
+  o:["매우 호의적 / 과업지향 리더","매우 호의적 / 관계지향 리더","중간 / 관계지향 리더","매우 비호의적 / 관계지향 리더"],a:0,
+  ex:"세 요인이 모두 유리하면 매우 호의적인 상황이고, 이때는 과업지향 리더가 효과적입니다."},
+ {id:"q405",w:"w4",c:"c43",t:"mc",b:"analyze",q:"리더-구성원 관계 좋음, 과업구조 낮음, 지위권력 약함. 이 상황의 호의성과 효과적인 리더는?",
+  o:["매우 호의적 / 과업지향 리더","중간 / 관계지향 리더","매우 비호의적 / 과업지향 리더","중간 / 과업지향 리더"],a:1,
+  ex:"유리한 요인과 불리한 요인이 섞인 중간 호의성 상황에서는 관계지향 리더가 효과적입니다."},
+ {id:"q406",w:"w4",c:"c43",t:"mc",b:"analyze",q:"리더-구성원 관계 나쁨, 과업구조 낮음, 지위권력 약함. 효과적인 리더는?",
+  o:["관계지향 리더","과업지향 리더","위임형 리더","어떤 리더도 효과 없음"],a:1,
+  ex:"매우 비호의적인 상황에서도 과업지향 리더가 효과적이라고 보았습니다."},
+ {id:"q407",w:"w4",c:"c44",t:"match",b:"understand",q:"구성원 성숙도와 Hersey & Blanchard의 리더십 유형을 연결하세요.",
+  pairs:[["M1: 능력 낮음 · 의지 낮음","지시형"],["M2: 능력 낮음 · 의지 높음","설득형"],["M3: 능력 높음 · 의지 낮음","참여형"],["M4: 능력 높음 · 의지 높음","위임형"]],
+  ex:"성숙도가 높아질수록 지시형 → 설득형 → 참여형 → 위임형으로 이동합니다."},
+ {id:"q408",w:"w4",c:"c44",t:"mc",b:"apply",q:"의욕은 높지만 경험이 부족한 신규교사 3명이 들어왔다. Hersey & Blanchard 모형에 따른 원장의 리더십 유형은?",
+  o:["지시형","설득형","참여형","위임형"],a:1,
+  ex:"능력 낮음·의지 높음(M2)에는 과업행동과 관계행동이 모두 높은 설득형이 적합합니다."},
+ {id:"q409",w:"w4",c:"c44",t:"mc",b:"apply",q:"A중학교의 유능한 교사들이 담임과 수업을 회피한다. Hersey & Blanchard 모형에 따른 교장의 리더십 유형은?",
+  o:["지시형","설득형","참여형","위임형"],a:2,
+  ex:"능력 높음·의지 낮음(M3)에는 의사결정 참여와 지원 중심의 참여형이 적합합니다."},
+ {id:"q410",w:"w4",c:"c45",t:"ox",b:"understand",q:"Fiedler는 리더 스타일이 비교적 고정적이므로 리더를 상황에 맞게 배치하거나 상황을 바꿔야 한다고 보았다.",a:true,
+  ex:"이 점이 리더의 유연한 행동 조정을 강조한 Hersey & Blanchard와의 차이입니다."},
+ {id:"q411",w:"w4",c:"c44",t:"mc",b:"recall",q:"Hersey & Blanchard 모형에서 구성원 성숙도를 판단하는 두 요소는?",
+  o:["나이와 경력","직무 능력과 의지(동기)","학력과 자격","관계와 지위권력"],a:1,
+  ex:"성숙도는 직무 능력과 의지(동기)의 조합입니다."},
+ // w5
+ {id:"q501",w:"w5",c:"c52",t:"match",b:"understand",q:"변혁적 리더십의 4I와 교장의 행동을 연결하세요.",
+  pairs:[["이상적 영향력","솔선수범하여 교사들의 존경과 신뢰를 얻는다"],["영감적 동기화","학교의 비전을 생생하게 제시해 열정을 끌어낸다"],["지적 자극","기존 관행에 질문하고 새로운 수업 방법을 시도하도록 격려한다"],["개별적 배려","교사 한 명 한 명의 성장 요구에 맞춰 멘토링한다"]],
+  ex:"4I는 이상적 영향력·영감적 동기화·지적 자극·개별적 배려입니다."},
+ {id:"q502",w:"w5",c:"c51",t:"ox",b:"understand",q:"거래적 리더십은 보상과 성과의 교환에 기반하고, 변혁적 리더십은 구성원의 가치·신념 변화를 통해 기대 이상의 성과를 이끈다.",a:true,
+  ex:"교환(거래) vs 내면의 변화(변혁)가 핵심 차이입니다."},
+ {id:"q503",w:"w5",c:"c53",t:"quad",b:"apply",q:"Sergiovanni의 학교 유형으로 분류하세요. (가로: 성공, 세로: 선의)",
+  ax:["성공","선의"],
+  items:[{t:"높은 성과와 구성원의 도덕적 헌신을 함께 갖춘 학교",a:"HH"},{t:"학업성취는 높지만 편법·실적 위주 운영이 잦은 학교",a:"HL"},{t:"교사들의 헌신과 신뢰는 높지만 성과로 이어지지 못하는 학교",a:"LH"},{t:"성과도 낮고 구성원의 선의도 낮은 학교",a:"LL"}],
+  ex:"도덕적 학교(성공↑·선의↑), 정략적 학교(성공↑·선의↓), 비정략적 학교(성공↓·선의↑), 비도덕적 학교(성공↓·선의↓)."},
+ {id:"q504",w:"w5",c:"c54",t:"mc",b:"understand",q:"분산적 리더십에 대한 설명으로 옳은 것은?",
+  o:["교장 한 사람의 강한 리더십을 강조한다","리더십이 여러 구성원과 상황의 상호작용 속에서 실행된다","업무를 교사에게 균등하게 나누는 것이다","리더의 타고난 특성을 중시한다"],a:1,
+  ex:"분산적 리더십은 리더십 '실행'이 리더·구성원·상황의 상호작용 속에 분산되어 있다고 봅니다."},
+ {id:"q505",w:"w5",c:"c55",t:"mc",b:"recall",q:"초우량(슈퍼) 리더십의 핵심으로 가장 적절한 것은?",
+  o:["리더가 탁월한 성과를 직접 낸다","구성원 각자가 스스로를 이끄는 셀프리더가 되도록 이끈다","보상과 처벌을 명확히 한다","리더가 모든 결정을 내린다"],a:1,
+  ex:"초우량 리더십은 '리더를 키우는 리더십'입니다."},
+ {id:"q506",w:"w5",c:"c54",t:"mc",b:"apply",q:"평가 대비로 갈등이 크고, 교장이 업무를 독점하다 소진된 학교. 가장 적절한 처방의 근거 이론은?",
+  o:["특성이론","분산적 리더십","과업형(9,1) 리더십","지시형 리더십"],a:1,
+  ex:"교사 리더 팀을 구성해 전문성에 따라 리더십을 나누는 분산적 리더십이 처방의 근거가 됩니다."},
+ {id:"q507",w:"w5",c:"c53",t:"ox",b:"understand",q:"Sergiovanni의 도덕적 리더십은 학교의 '성공'뿐 아니라 '선의(도덕적 차원)'를 함께 중시한다.",a:true,
+  ex:"두 축을 함께 볼 때 도덕적 학교를 지향할 수 있습니다."},
+ {id:"q508",w:"w5",c:"c55",t:"mc",b:"analyze",q:"교사 자율연구회를 키워 교사들이 스스로 수업 혁신을 이끌게 하고 혁신학교로 전환했다. 가장 잘 설명하는 이론은?",
+  o:["특성이론","초우량(슈퍼) 리더십","과업형 리더십","거래적 리더십"],a:1,
+  ex:"교사들이 스스로를 이끄는 셀프리더가 되도록 한 사례입니다. 변혁적 리더십 요소도 함께 볼 수 있습니다."},
+ {id:"q510",w:"w5",c:"c53",t:"mc",b:"understand",q:"Sergiovanni의 학교 유형 중 '비정략적 학교'의 특징은?",
+  o:["성공도 높고 선의도 높다","성공은 높지만 선의는 낮다","선의는 높지만 성공은 낮다","성공도 낮고 선의도 낮다"],a:2,
+  ex:"비정략적 학교는 구성원의 선의(도덕적 헌신)는 높지만 관리적 성공으로 이어지지 못한 학교입니다."},
+ {id:"q509",w:"w5",c:"c52",t:"mc",b:"recall",q:"변혁적 리더십의 4I에 해당하지 않는 것은?",
+  o:["이상적 영향력","지적 자극","조건적 보상","개별적 배려"],a:2,
+  ex:"조건적 보상은 거래적 리더십의 요소입니다."}
+];
+
+/* 사례 랩: 모두 가공 사례 */
+const CASES = [
+ {id:"k1",w:"w4",title:"담임을 피하는 유능한 교사들",theory:"Hersey & Blanchard · 변혁적",
+  scene:"A중학교는 교사 대부분이 수업 전문성이 높고 경력도 충분하다. 그런데 새 학년 업무분장 때마다 담임과 수업 시수 배정을 두고 교사들이 회피한다. 교무회의는 침묵으로 흐르고, 교장은 '능력 있는 사람들이 왜 이러는지 모르겠다'고 말한다.",
+  facts:["교사 능력: 높음","교사 의지: 낮음(회피, 침묵)","교장의 현재 방식: 업무 지시와 점검"],
+  dx:{q:"구성원 성숙도 진단으로 가장 적절한 것은?",o:["M1: 능력 낮음 · 의지 낮음","M2: 능력 낮음 · 의지 높음","M3: 능력 높음 · 의지 낮음","M4: 능력 높음 · 의지 높음"],a:2},
+  rx:{q:"교장에게 가장 적절한 처방은?",o:["지시형: 담임 배정을 강제하고 점검을 강화한다","참여형: 업무분장 기준을 교사와 함께 정하고, 의견을 반영하며 지원한다","위임형: 교사들이 알아서 정하도록 손을 뗀다","설득형: 담임의 중요성을 반복해서 설명한다"],a:1},
+  model:"능력↑·의지↓(M3) 집단이다. 지시·점검(현재 방식)은 의지를 더 떨어뜨린다. 참여형으로 업무분장 기준을 함께 만들고, 변혁적 리더십의 개별적 배려(교사별 부담 사정 파악)와 영감적 동기화(학교 비전과 담임 역할 연결)를 더하면 회피의 원인인 동기 문제를 다룰 수 있다."},
+ {id:"k2",w:"w4",title:"신규교사 세 명이 온 공립유치원",theory:"Hersey & Blanchard",
+  scene:"공립 B유치원에 임용 첫해 신규교사 3명이 한꺼번에 배치되었다. 세 사람 모두 의욕이 넘치지만 학부모 상담, 관찰기록, 행사 운영은 처음이다. 3월 첫 주부터 실수가 잦고, 한 교사는 '무엇을 먼저 해야 할지 모르겠다'고 털어놓았다.",
+  facts:["교사 능력: 낮음(첫 경험)","교사 의지: 처음엔 높음, 실수가 반복되면 흔들릴 수 있음","시점: 첫 학기 초"],
+  dx:{q:"학기 초 신규교사들의 상태와 가장 거리가 먼 것은?",o:["직무 경험이 부족해 능력이 아직 낮다","의욕은 높다","능력과 의지가 모두 높아 위임이 가능하다","시행착오가 반복되면 의지가 흔들릴 수 있다"],a:2},
+  rx:{q:"원장의 첫 학기 리더십 운영으로 가장 적절한 것은?",o:["처음부터 위임형으로 자율을 준다","학기 초에는 절차를 명확히 안내하는 지시형으로 시작하고, 익숙해지면 설명·지지를 더한 설득형으로 옮긴다","참여형으로 모든 결정을 함께 내린다","실수를 줄이기 위해 학기 내내 지시형을 유지한다"],a:1},
+  model:"학기 초에는 능력이 낮아 구체적 절차 안내(지시형)가 필요하다. 업무에 익숙해지면 왜 그렇게 하는지 설명하고 정서적으로 지지하는 설득형으로 이동해 의욕을 지킨다. 핵심은 성숙도 변화에 맞춰 리더 행동을 '움직이는' 것이다."},
+ {id:"k3",w:"w3",title:"사람은 좋은데 일은 못한다는 원감",theory:"오하이오 4사분면 · Blake & Mouton",
+  scene:"C유치원 원감은 교사들 사이에서 '천사'로 불린다. 고민을 잘 들어 주고 갈등을 부드럽게 넘긴다. 그러나 행사 준비 일정이 늘 늦고, 역할 분담이 모호해 같은 일을 두 사람이 하거나 아무도 하지 않는 일이 잦다. 교사들은 '좋은 분인데 일이 안 굴러간다'고 말한다.",
+  facts:["관계(배려성·인간 관심): 매우 높음","과업(구조성·생산 관심): 낮음","결과: 일정 지연, 역할 혼선"],
+  dx:{q:"원감의 리더 행동 진단으로 가장 적절한 것은?",o:["고구조·고배려 / 팀형(9,9)","저구조·고배려 / 컨트리클럽형(1,9)","고구조·저배려 / 과업형(9,1)","저구조·저배려 / 무기력형(1,1)"],a:1},
+  rx:{q:"가장 적절한 처방은?",o:["배려 행동을 줄이고 엄격하게 관리한다","배려는 유지하면서 일정표·역할 분담·점검 같은 구조성 행동을 보강한다","원감 역할에서 행사 업무를 모두 뺀다","교사들이 알아서 정하도록 둔다"],a:1},
+  model:"저구조·고배려, 관리망 (1,9) 컨트리클럽형이다. 강점인 배려는 유지하고 구조성(목표·역할·절차)을 보강해 팀형(9,9) 방향으로 이동해야 한다. 다만 상황이론 관점에서 '언제나 9,9'가 정답은 아니므로, 행사처럼 마감이 있는 과업에서 구조성을 우선 강화하는 식으로 처방을 상황에 맞춘다."},
+ {id:"k4",w:"w5",title:"모든 일을 혼자 쥔 교장",theory:"분산적 리더십",
+  scene:"D초등학교는 학교평가를 앞두고 갈등이 크다. 교장은 '내가 책임진다'며 평가 보고서, 교육과정 협의, 학부모 민원까지 직접 처리한다. 교사들은 결정에서 소외되었다고 느끼고, 교장은 밤늦게까지 일하다 건강이 나빠졌다.",
+  facts:["교장 1인에 업무·결정 집중","교사들의 전문성 활용 낮음","결과: 교장 소진, 교사 소외, 갈등"],
+  dx:{q:"이 학교의 핵심 문제를 가장 잘 설명하는 것은?",o:["교장의 특성이 부족하다","리더십이 교장 1인에게 집중되어 구성원의 전문성이 리더십 자원으로 쓰이지 않는다","교사들의 능력이 낮다","보상 체계가 없다"],a:1},
+  rx:{q:"가장 적절한 처방은?",o:["교장이 더 강하게 통제한다","교육과정·평가·민원 대응 분야에 전문성을 가진 교사 리더 팀을 구성하고, 결정과 실행을 함께 나눈다","업무를 교사들에게 똑같이 나누어 떠넘긴다","평가가 끝날 때까지 현 체제를 유지한다"],a:1},
+  model:"리더십을 지위가 아닌 '실행'으로 보면 교장 1인 체제는 소진과 취약성을 낳는다. 분산적 리더십은 교사의 전문성에 따라 리더 역할을 나누고, 상호작용 속에서 결정과 실행을 공유한다. 단순한 업무 분담(떠넘기기)과 구별하려면 결정 권한과 지원이 함께 가야 한다."},
+ {id:"k5",w:"w5",title:"성과는 높고 민원도 많은 사립유치원",theory:"도덕적 리더십(Sergiovanni)",
+  scene:"E사립유치원은 원아 모집률과 평가 점수가 지역 최고 수준이다. 그러나 실적을 위해 서류를 사후 보완하거나, 행사 사진을 연출하는 일이 관행이 되었다. 학부모 민원이 늘고, 교사들은 '성과를 위해 눈감는 일이 많다'며 하나둘 떠나고 있다.",
+  facts:["성공(관리적 차원): 높음","선의(도덕적 차원): 낮음","결과: 민원 증가, 교사 이탈"],
+  dx:{q:"Sergiovanni의 학교 유형으로 진단하면?",o:["도덕적 학교","정략적 학교","비정략적 학교","비도덕적 학교"],a:1},
+  rx:{q:"가장 적절한 처방은?",o:["성과가 높으니 현 방식을 유지한다","성과 관리는 유지하되, 편법을 멈추고 교육적 가치·신뢰를 운영 원칙으로 세워 선의를 회복한다","성과 목표를 모두 없앤다","민원을 제기한 학부모를 관리한다"],a:1},
+  model:"성공↑·선의↓의 정략적 학교다. 단기 성과는 높지만 신뢰와 헌신이 무너져 교사 이탈과 민원이 늘고 있다. 도덕적 리더십은 성과를 버리라는 것이 아니라, 선의를 회복해 도덕적 학교(성공↑·선의↑)로 이동하라는 처방이다."},
+ {id:"k6",w:"w5",title:"교사 연구회가 바꾼 학교",theory:"초우량(슈퍼) · 변혁적",
+  scene:"F중학교 교장은 부임 후 지시 대신 교사 자율연구회를 지원했다. 처음 5명이던 연구회는 2년 만에 교사 절반이 참여하는 모임이 되었고, 교사들이 스스로 수업 공개와 평가 방법 개선을 이끌었다. 학교는 혁신학교로 지정되었다.",
+  facts:["교장: 모델링·자원 지원·자율 부여","교사: 스스로 목표를 세우고 이끎","결과: 자발적 수업 혁신"],
+  dx:{q:"이 교장의 리더십을 가장 잘 설명하는 것은?",o:["과업형(9,1) 리더십","거래적 리더십","초우량(슈퍼) 리더십","지시형 리더십"],a:2},
+  rx:{q:"이 성공을 지속하려면 교장이 다음으로 할 일은?",o:["연구회를 교장 직속으로 바꿔 직접 관리한다","새로 온 교사도 셀프리더로 성장하도록 선배 교사의 코칭과 자율 구조를 제도화한다","성과급으로 참여를 보상한다","연구회 활동을 중단하고 평가에 집중한다"],a:1},
+  model:"구성원이 스스로를 이끄는 셀프리더가 되도록 한 초우량(슈퍼) 리더십 사례이며, 지적 자극·개별적 배려 같은 변혁적 요소도 함께 작동했다. 지속하려면 리더를 키우는 구조(코칭, 자율)를 제도화해 교장이 바뀌어도 유지되게 해야 한다."}
+];
+
+const HAVRUTA = {
+ w1:["리더십과 관리는 어떻게 다를까? 각자 예를 하나씩 들어 설명해 보자.","내가 존경하는 리더는 어떤 '영향력 과정'을 보여 주었나?","직위 없는 리더십이 유치원에서 가능하려면 어떤 조건이 필요할까?"],
+ w2:["타고난 리더 vs 길러지는 리더. 한 사람씩 한쪽 입장을 맡아 주장해 보자.","Big Five 중 유아교육기관장에게 가장 중요한 요인 하나를 골라 이유를 말해 보자.","성격검사로 원장을 뽑는다면 어떤 문제가 생길까?"],
+ w3:["고구조·고배려가 오히려 역효과를 낼 상황을 찾아보자.","최근 팀 과제에서 나는 관리망의 어디에 있었나? 근거가 되는 내 행동을 말해 보자.","배려성과 '봐주기'는 어떻게 다른가?"],
+ w4:["같은 원장이 두 기관에서 다른 평가를 받는다면, 그 이유를 E = f(L × F × S)로 설명해 보자.","신규교사가 2년차가 되면 원장의 리더십 유형은 어떻게 바뀌어야 할까?","Fiedler와 Hersey & Blanchard 중 원장 연수에 더 쓸모 있는 모형은 무엇일까?"],
+ w5:["4I 중 내가 교수님이나 선배에게서 본 것은 무엇인가?","성과는 높은데 편법이 잦은 기관에서 교사로 일한다면 어떻게 하겠는가?","분산적 리더십이 '책임 떠넘기기'가 되지 않으려면 무엇이 필요할까?"]
+};
+
+const TIMELINE = [
+ "Stogdill, 124편의 특성 연구 종합(1904~1948년 연구)",
+ "오하이오 주립대 연구: 구조성·배려성",
+ "Blake & Mouton의 관리망",
+ "Fiedler의 상황적합 모형",
+ "Hersey & Blanchard의 상황적 리더십",
+ "변혁적 리더십(4I)",
+ "분산적 리더십"
+];
+
+const PRE = [
+ {t:"ox",q:"리더십은 공식 직위를 가진 사람만 발휘할 수 있다.",a:false},
+ {t:"ox",q:"구조성과 배려성이 모두 높은 리더가 모든 상황에서 최선이다.",a:false},
+ {t:"mc",q:"능력은 충분하지만 의욕이 낮은 교사에게 적합한 리더십 유형은?",o:["지시형","설득형","참여형","위임형"],a:2}
+];
+
+/* 나의 리더십 스타일 자기점검: 자체 개발 12문항(표준화 검사 아님) */
+const SELFCHECK = [
+ {k:"T",t:"팀 활동을 시작하기 전에 목표와 할 일을 분명히 정한다."},
+ {k:"R",t:"팀원의 의견을 끝까지 듣고 반영하려 한다."},
+ {k:"T",t:"마감 기한과 역할 분담을 구체적으로 정해 두는 편이다."},
+ {k:"R",t:"힘들어 보이는 팀원에게 먼저 말을 건다."},
+ {k:"T",t:"과제의 진행 상황을 자주 점검한다."},
+ {k:"R",t:"갈등이 생기면 관계가 상하지 않도록 조율한다."},
+ {k:"T",t:"정한 기준과 절차가 지켜지지 않으면 바로잡는다."},
+ {k:"R",t:"팀원의 노력을 구체적으로 칭찬한다."},
+ {k:"T",t:"결과물의 질을 높이기 위해 계획을 세밀하게 짠다."},
+ {k:"R",t:"팀원 각자의 강점과 사정을 알고 있으려 한다."},
+ {k:"T",t:"성과가 나지 않으면 방법을 바꾸자고 먼저 제안한다."},
+ {k:"R",t:"결정할 때 팀원들이 편하게 말할 수 있는 분위기를 만든다."}
+];
+
+const BADGES = [
+ {id:"b_w1",n:"정의의 설계자",d:"'리더십의 개념' 보스전 통과",m:"정"},
+ {id:"b_w2",n:"특성 감별사",d:"'특성이론' 보스전 통과",m:"특"},
+ {id:"b_w3",n:"관리망 측량사",d:"'행동이론' 보스전 통과",m:"망"},
+ {id:"b_w4",n:"상황 판독관",d:"'상황이론' 보스전 통과",m:"상"},
+ {id:"b_w5",n:"4I 마스터",d:"'최근 교육리더십론' 보스전 통과",m:"4I"},
+ {id:"b_dist",n:"분산의 지혜",d:"사례 '모든 일을 혼자 쥔 교장' 진단",m:"분"},
+ {id:"b_socr",n:"끈질긴 질문자",d:"소크라테스 문답 5회 완주",m:"問"},
+ {id:"b_mis",n:"오개념 사냥꾼",d:"확신 있게 틀린 문항 5개 교정",m:"猎"},
+ {id:"b_streak",n:"7일 연속",d:"7일 연속 학습",m:"7"},
+ {id:"b_hav",n:"하브루타 파트너",d:"하브루타 질문 카드 3회 완료",m:"짝"},
+ {id:"b_case",n:"사례 진단관",d:"사례 랩 6건 모두 진단",m:"診"},
+ {id:"b_self",n:"거울 앞의 리더",d:"나의 리더십 스타일 점검 완료",m:"鏡"},
+ {id:"b_time",n:"연대기 탐험가",d:"리더십 연대기 완성",m:"史"},
+ {id:"b_flaw",n:"무결점 보스",d:"히든 배지",m:"★",hidden:true,hd:"보스전 힌트 없이 만점"},
+ {id:"b_dawn",n:"새벽의 학자",d:"히든 배지",m:"曉",hidden:true,hd:"새벽 0~5시 학습"},
+ {id:"b_top",n:"원장실 입성",d:"직급 '원장' 달성",m:"院"}
+];
+
+const XP = {easy:10, hard:20, conf:5, dialogue:50, hint:10, caseLab:60, explain:15, boss:100, exit:10, timeline:20, self:30, havruta:15, mission:20};
+const DAILY_CAP = 600;
+const BOSS_TIME = 8*60;
+const BOSS_PASS = 70;
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const KEY = "leadquest.v1", TKEY = "leadquest.teacher.v1";
+const store = {
+  get(k){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+function blank(){
+  return {v:1,id:rid(),nick:"",team:"",created:Date.now(),onboarded:false,pre:null,
+    xp:0,day:{d:"",xp:0},week:{w:"",xp:0,prev:0},streak:{last:"",count:0,shield:""},
+    cards:{},answered:{},wrong:{},misFixed:0,dialogues:{},cases:{},boss:{},explains:{},exits:[],
+    havruta:0,selfcheck:null,timeline:false,badges:{},missions:{d:"",q:0,dlg:0,cards:0,done:false},
+    settings:{theme:"system",reduce:false,free:false},league:null,lastRank:0};
+}
+let S = Object.assign(blank(), store.get(KEY) || {});
+let T = Object.assign({roster:{},teams:[],cloud:{},cloudQ:"유아교육기관장에게 요구되는 리더십 요인은?"}, store.get(TKEY) || {});
+function save(){ store.set(KEY,S); }
+function saveT(){ store.set(TKEY,T); }
+function rid(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+
+let R = {name: S.onboarded ? "home" : "onboard", p:{}};
+let Q = null;      // 퀴즈 세션
+let D = null;      // 문답 세션
+let timers = [];
+function clearTimers(){ timers.forEach(clearInterval); timers = []; }
+
+/* ---------- 날짜 유틸 ---------- */
+function ymd(d){ d = d||new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function weekKey(d){ d = new Date(d||Date.now()); const k=(d.getDay()+6)%7; d.setDate(d.getDate()-k); return ymd(d); }
+function addDays(s,n){ const d=new Date(s+"T00:00:00"); d.setDate(d.getDate()+n); return ymd(d); }
+function rollover(){
+  const t = ymd(), w = weekKey();
+  if(S.day.d!==t){ S.day={d:t,xp:0}; }
+  if(S.week.w!==w){ const last = addDays(w,-7); S.week = {w, xp:0, prev: S.week.w===last ? S.week.xp : 0}; }
+  if(S.missions.d!==t){ S.missions={d:t,q:0,dlg:0,cards:0,done:false}; }
+}
+
+/* ---------- 계산 ---------- */
+const QBY = Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+const CBY = {}; Object.values(CARDS).flat().forEach(c=>CBY[c.id]=c);
+function rankIdx(xp){ let i=0; RANKS.forEach((r,k)=>{ if(xp>=r.xp) i=k; }); return i; }
+function rankOf(xp){ return RANKS[rankIdx(xp)]; }
+function nextRank(xp){ return RANKS[rankIdx(xp)+1] || null; }
+function wIdx(w){ return WORLDS.findIndex(x=>x.id===w); }
+function unlocked(w){ const i=wIdx(w); if(i<=0 || S.settings.free) return true; return !!(S.boss[WORLDS[i-1].id]||{}).passed; }
+function worldQs(w){ return QUESTIONS.filter(q=>q.w===w); }
+function mastery(w){
+  const qs = worldQs(w); let c=0,n=0;
+  qs.forEach(q=>{ const a=S.answered[q.id]; if(a){ n++; if(a.first) c++; } });
+  return {c,n,total:qs.length,pct: n? Math.round(c/n*100):null};
+}
+function worldProgress(w){
+  const parts = [];
+  const cards = CARDS[w]; parts.push(cards.filter(c=>S.cards[c.id]).length/cards.length);
+  parts.push((S.dialogues[w]||{}).done?1:0);
+  const qs = worldQs(w); parts.push(qs.filter(q=>S.answered[q.id]).length/qs.length);
+  const cs = CASES.filter(k=>k.w===w); if(cs.length) parts.push(cs.filter(k=>(S.cases[k.id]||{}).done).length/cs.length);
+  parts.push((S.boss[w]||{}).passed?1:0);
+  return Math.round(parts.reduce((a,b)=>a+b,0)/parts.length*100);
+}
+function dueCards(){
+  const now = Date.now();
+  return Object.values(CARDS).flat().filter(c=>{ const s=S.cards[c.id]; return s && s.next<=now && unlocked(c.id.replace(/^c(\d).*/,"w$1")); });
+}
+function openMis(){ return Object.entries(S.wrong).filter(([id,v])=>v.mis && !v.fixed).map(([id])=>id); }
+
+/* =========================================================
+   GAME ENGINE: XP · 직급 · 배지 · 미션 · 스트릭
+   ========================================================= */
+function touchStreak(){
+  const t = ymd(); const st = S.streak;
+  if(st.last===t) return;
+  const y = addDays(t,-1), yy = addDays(t,-2), wk = weekKey();
+  if(st.last===y) st.count++;
+  else if(st.last===yy && st.shield!==wk){ st.count++; st.shield=wk; toast("스트릭 보호권 사용: 연속 학습일이 유지되었습니다"); }
+  else st.count=1;
+  st.last=t;
+  const h = new Date().getHours(); if(h<5) award("b_dawn");
+}
+function gain(n, why, from){
+  rollover();
+  if(n<=0){ return 0; }
+  const room = Math.max(0, DAILY_CAP - S.day.xp);
+  const g = Math.min(n, room);
+  touchStreak();
+  if(g<=0){ toast("오늘의 XP 상한("+DAILY_CAP+")에 도달했습니다. 학습 기록은 계속 남습니다."); save(); return 0; }
+  const before = rankIdx(S.xp);
+  S.xp += g; S.day.xp += g; S.week.xp += g;
+  save();
+  toast("+"+g+" XP · "+why + (g<n ? " (일일 상한 적용)" : ""));
+  sparks(from);
+  const after = rankIdx(S.xp);
+  if(after>before){ setTimeout(()=>levelUp(after), 700); if(after===RANKS.length-1) award("b_top"); }
+  return g;
+}
+function award(id){
+  if(S.badges[id]) return;
+  S.badges[id]=Date.now(); save();
+  const b = BADGES.find(x=>x.id===id);
+  setTimeout(()=>overlay(`<div class="seal" aria-hidden="true">${esc(b.m)}</div><div class="eyebrow">새 배지</div><h2>${esc(b.n)}</h2><p class="muted">${esc(b.hidden?b.hd:b.d)}</p><button class="btn primary" data-act="closeOverlay">진열장에 넣기</button>`), 900);
+}
+function checkBadges(){
+  WORLDS.forEach(w=>{ if((S.boss[w.id]||{}).passed) award("b_"+w.id); });
+  if((S.cases.k4||{}).done) award("b_dist");
+  if(Object.values(S.dialogues).filter(d=>d.done).length>=5) award("b_socr");
+  if(S.misFixed>=5) award("b_mis");
+  if(S.streak.count>=7) award("b_streak");
+  if(S.havruta>=3) award("b_hav");
+  if(CASES.every(k=>(S.cases[k.id]||{}).done)) award("b_case");
+  if(S.selfcheck) award("b_self");
+  if(S.timeline) award("b_time");
+  if(Object.values(S.boss).some(b=>b.perfect)) award("b_flaw");
+}
+function mission(kind, n){
+  rollover();
+  S.missions[kind] = (S.missions[kind]||0) + (n||1);
+  const m = S.missions;
+  if(!m.done && m.q>=10 && m.dlg>=1 && m.cards>=5){ m.done=true; save(); gain(XP.mission,"오늘의 미션 3개 완료"); }
+  save();
+}
+
+/* =========================================================
+   UI HELPERS
+   ========================================================= */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function $(s){ return document.querySelector(s); }
+function toast(msg){
+  const l = document.createElement("div"); l.className="toast"; l.setAttribute("role","status"); l.textContent=msg;
+  document.querySelectorAll(".toast").forEach(t=>t.remove());
+  document.body.appendChild(l); setTimeout(()=>l.remove(), 2600);
+}
+function reduced(){ return S.settings.reduce || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches); }
+function sparks(from){
+  if(reduced()) return;
+  const chip = document.querySelector(".xpchip"); if(!chip) return;
+  const to = chip.getBoundingClientRect();
+  const r = from && from.getBoundingClientRect ? from.getBoundingClientRect() : {left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+  for(let i=0;i<12;i++){
+    const s=document.createElement("div"); s.className="spark";
+    const x0=r.left+r.width/2+(Math.random()-.5)*60, y0=r.top+r.height/2+(Math.random()-.5)*30;
+    s.style.left=x0+"px"; s.style.top=y0+"px"; document.body.appendChild(s);
+    const dx=to.left+14-x0, dy=to.top+14-y0;
+    s.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${dx*.4+(Math.random()-.5)*80}px,${dy*.4-40}px) scale(1.2)`,opacity:1,offset:.45},{transform:`translate(${dx}px,${dy}px) scale(.3)`,opacity:.2}],{duration:560+Math.random()*120,easing:"cubic-bezier(.5,0,.7,1)"}).onfinish=()=>s.remove();
+  }
+}
+let OVQ = [];
+function overlay(html){
+  const L = $("#layer"); if(L.innerHTML){ OVQ.push(html); return; }
+  L.innerHTML = `<div class="overlay" role="dialog" aria-modal="true"><div class="box">${html}</div></div>`;
+  const b = L.querySelector("button"); if(b) b.focus();
+}
+function closeOverlay(){ $("#layer").innerHTML=""; if(OVQ.length) overlay(OVQ.shift()); }
+function levelUp(i){
+  overlay(`<div class="seal" aria-hidden="true">${esc(RANKS[i].name)}</div><div class="eyebrow">승진</div><h2>${esc(RANKS[i].name)}(으)로 승진했습니다</h2><p class="muted">${i<RANKS.length-1?"다음 직급 '"+esc(RANKS[i+1].name)+"'까지 "+(RANKS[i+1].xp-S.xp)+" XP":"원장실에 도착했습니다. 이제 다른 사람을 리더로 키울 차례입니다."}</p><button class="btn primary" data-act="closeOverlay">명패 받기</button>`);
+}
+async function copyText(text, okMsg){
+  try{ await navigator.clipboard.writeText(text); toast(okMsg||"복사했습니다"); }
+  catch(e){ toast("자동 복사가 막혀 있습니다. 코드 상자를 길게 눌러 직접 복사하세요."); }
+}
+function download(name, text, type){
+  try{
+    const blob = new Blob(["﻿"+text],{type:type||"text/csv;charset=utf-8"});
+    const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    toast("파일을 내려받았습니다. 내려받기가 막힌 화면이면 'CSV 복사'를 쓰세요.");
+  }catch(e){ toast("이 화면에서는 내려받기가 막혀 있습니다. 'CSV 복사'를 쓰세요."); }
+}
+function applyTheme(){
+  const t=S.settings.theme; const r=document.documentElement;
+  if(t==="system") r.removeAttribute("data-theme"); else r.setAttribute("data-theme",t);
+  document.body.classList.toggle("reduce", !!S.settings.reduce);
+}
+const ICON = {
+  map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
+  case:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/><path d="M8 10.5h5M10.5 8v5"/></svg>',
+  note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M9 11h6M9 15h6M9 7h3"/></svg>',
+  league:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>',
+  me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  sun:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg>',
+  back:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>'
+};
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function go(name, p){ clearTimers(); R={name, p:p||{}}; render(); window.scrollTo(0,0); }
+function shell(inner, opts){
+  opts = opts||{};
+  const rk = rankOf(S.xp);
+  const top = `<header class="top"><div class="in">
+    ${opts.back?`<button class="iconbtn" data-act="go" data-to="${opts.back}" ${opts.backP?`data-p='${esc(JSON.stringify(opts.backP))}'`:""} aria-label="뒤로">${ICON.back}</button>`:""}
+    <div class="brand">LEAD <b>QUEST</b></div><div class="sp"></div>
+    ${S.onboarded && !opts.noXp ? `<div class="xpchip num" title="현재 직급과 XP"><span class="medal">${esc(rk.name[0])}</span><span class="rkname">${esc(rk.name)} · </span>${S.xp} XP</div>`:""}
+    <button class="iconbtn" data-act="theme" aria-label="화면 테마 바꾸기">${ICON.sun}</button>
+  </div></header>`;
+  const tabs = [["home","퀘스트",ICON.map],["cases","사례 랩",ICON.case],["notes","오답노트",ICON.note],["league","리그",ICON.league],["me","나",ICON.me]];
+  const nav = opts.nav===false ? "" : `<nav class="nav" aria-label="주요 메뉴"><div class="in">${tabs.map(t=>`<button data-act="go" data-to="${t[0]}" ${R.name===t[0]||(opts.tab===t[0])?'aria-current="page"':""}>${t[2]}<span>${t[1]}</span></button>`).join("")}</div></nav>`;
+  return top + `<main class="wrap ${NEWROUTE?"fadein":""}">${inner}<div class="foot"><b>${esc(COURSE.sign)}</b> · ${esc(COURSE.course)}</div></main>` + nav;
+}
+let NEWROUTE = true, LASTROUTE = "";
+function render(){
+  const rk = R.name+JSON.stringify(R.p.w||R.p.k||"")+(R.name==="quiz"&&Q?Q.i:""); NEWROUTE = rk!==LASTROUTE; LASTROUTE = rk;
+  clearTimers(); rollover(); applyTheme();
+  document.body.classList.toggle("wide", R.name==="live"||R.name==="teacher");
+  const app = $("#app");
+  const f = VIEWS[R.name] || VIEWS.home;
+  app.innerHTML = f(R.p);
+  if(AFTER[R.name]) AFTER[R.name](R.p);
+}
+const AFTER = {};
+const VIEWS = {};
+
+/* ---------- 온보딩 ---------- */
+VIEWS.onboard = (p)=>{
+  const step = p.step||0;
+  if(step===0) return shell(`<section class="stack" style="padding-top:18px">
+    <div class="hero"><div class="seal" aria-hidden="true">예비<br>교사</div>
+      <div class="stack" style="gap:6px"><div class="eyebrow">${esc(COURSE.course)}</div><h1 style="font-size:clamp(28px,7vw,40px)">${esc(COURSE.title)}</h1><p class="muted">${esc(COURSE.subtitle)}. 예비교사로 출발해 다섯 개의 월드를 통과하며 원장실까지 승진하세요.</p></div></div>
+    <div class="card stack">
+      <div class="stack" style="gap:6px"><label for="nick">닉네임</label><input id="nick" type="text" maxlength="12" placeholder="2~12자, 실명 대신 닉네임 권장" value="${esc(S.nick)}"></div>
+      <div class="stack" style="gap:6px"><label for="team">수업 팀</label><select id="team">${["","1팀","2팀","3팀","4팀","5팀","6팀","7팀","8팀"].map(t=>`<option value="${t}" ${S.team===t?"selected":""}>${t||"팀을 고르세요"}</option>`).join("")}</select></div>
+      <p class="note">리더보드에는 닉네임만 표시됩니다. 앱 점수는 학습 동기용이며, 성적 반영 방식은 교수님 안내를 따릅니다.</p>
+      <button class="btn primary block" data-act="onb1">${S.onboarded?"저장":"사전 진단 시작(3문항, 1분)"}</button>
+    </div></section>`, S.onboarded?{back:"me",tab:"me"}:{nav:false, noXp:true});
+  if(step===1){
+    const i = p.i||0, item = PRE[i];
+    return shell(`<section class="stack" style="padding-top:12px">
+      <div class="eyebrow">사전 진단 ${i+1} / ${PRE.length}</div><p class="muted small">정답보다 지금 내 생각이 중요합니다. 점수는 출발점 확인용입니다.</p>
+      <div class="card stack"><p class="qtext">${esc(item.q)}</p>
+      ${item.t==="ox" ? `<div class="ox"><button data-act="pre" data-v="1" aria-label="O">O</button><button data-act="pre" data-v="0" aria-label="X">X</button></div>`
+        : item.o.map((o,k)=>`<button class="opt" data-act="pre" data-v="${k}"><span class="k">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}
+      </div></section>`, {nav:false, noXp:true});
+  }
+  const sc = S.pre||0;
+  return shell(`<section class="stack" style="padding-top:12px">
+    <div class="card stack" style="text-align:center;align-items:center">
+      <div class="seal" aria-hidden="true">${sc}/${PRE.length}</div>
+      <h2>출발점 확인 완료</h2>
+      <p class="muted">${sc===3?"이미 핵심 쟁점을 알고 있네요. 이제 '왜 그런지'를 설명할 수 있는지 확인해 봅시다.":"헷갈린 문항은 월드를 지나며 자연스럽게 다시 만납니다. 출발점이 낮을수록 성장 리그에서 유리합니다."}</p>
+      <button class="btn primary block" data-act="go" data-to="home">퀘스트 맵으로</button>
+    </div></section>`, {nav:false});
+};
+
+/* ---------- 홈: 퀘스트 맵 ---------- */
+VIEWS.home = ()=>{
+  const rk = rankIdx(S.xp), nx = nextRank(S.xp);
+  const pct = nx ? Math.round((S.xp-RANKS[rk].xp)/(nx.xp-RANKS[rk].xp)*100) : 100;
+  const m = S.missions, due = dueCards().length;
+  const mis = [
+    {on:m.dlg>=1, t:"소크라테스 문답 1회 완주", s:`${Math.min(m.dlg,1)}/1`},
+    {on:m.q>=10, t:"퀴즈 10문항 풀기", s:`${Math.min(m.q,10)}/10`},
+    {on:m.cards>=5, t:"개념 카드 5장 자기평정", s:`${Math.min(m.cards,5)}/5`}
+  ];
+  return shell(`<section class="stack">
+    <div class="card stack">
+      <div class="hero"><div class="seal" aria-hidden="true">${esc(RANKS[rk].name)}</div>
+        <div class="stack" style="gap:8px;min-width:0"><div class="eyebrow">${esc(S.nick||"학습자")} ${S.team?"· "+esc(S.team):""}</div>
+          <h1 style="font-size:24px">${nx?`'${esc(nx.name)}'까지 ${nx.xp-S.xp} XP`:"원장실 도착"}</h1>
+          <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="다음 직급까지 진척"><i style="width:${pct}%"></i></div>
+        </div></div>
+      <div class="stats num"><div class="stat"><b>${S.xp}</b><span>총 XP</span></div><div class="stat"><b>${S.week.xp}</b><span>이번 주 XP</span></div><div class="stat"><b>${S.streak.count}일</b><span>연속 학습</span></div></div>
+    </div>
+    <div class="card"><div class="row between"><h3 style="font-size:17px">오늘의 미션</h3><span class="pill ${m.done?"ok":""}">${m.done?"완료 +"+XP.mission+" XP":"3개 모두 +"+XP.mission+" XP"}</span></div>
+      ${mis.map(x=>`<div class="mission"><span class="check ${x.on?"on":""}" aria-hidden="true">${x.on?"✓":""}</span><span style="flex:1">${x.t}</span><span class="muted small num">${x.s}</span></div>`).join("")}
+      ${due?`<button class="btn sm" style="margin-top:8px" data-act="go" data-to="notes">복습할 카드 ${due}장 보기</button>`:""}
+    </div>
+    <div class="row between"><h2 style="font-size:20px">퀘스트 맵</h2><span class="muted small">보스전 통과 시 다음 월드 해금</span></div>
+    <div class="path">${WORLDS.map((w,i)=>{
+      const un = unlocked(w.id), done=(S.boss[w.id]||{}).passed, pr=worldProgress(w.id);
+      return `<div class="node ${done?"done":""} ${un?"":"locked"}"><span class="pin">${done?"✓":w.no}</span>
+        <button class="world" data-act="${un?"go":"locked"}" data-to="world" data-p='{"w":"${w.id}"}' ${un?"":'aria-disabled="true"'}>
+          <div class="row between"><span class="eyebrow">WORLD ${w.no}</span>${un?`<span class="pill ${done?"ok":""} num">${done?"통과":pr+"%"}</span>`:`<span class="pill muted">잠김</span>`}</div>
+          <h3>${esc(w.name)}</h3><p class="muted small">${esc(w.tag)}</p>
+          ${un?`<div class="bar" style="margin-top:10px"><i style="width:${pr}%"></i></div>`:""}
+        </button></div>`;}).join("")}</div>
+    <div class="grid2">
+      <button class="act" data-act="go" data-to="timeline"><span class="ic">史</span><span><b>리더십 연대기</b><span class="muted small">이론의 흐름을 순서대로 맞혀 보세요</span></span></button>
+      <button class="act" data-act="go" data-to="selfcheck"><span class="ic">鏡</span><span><b>나의 리더십 스타일</b><span class="muted small">12문항 자기점검 → 관리망 위 내 위치</span></span></button>
+    </div>
+  </section>`);
+};
+
+/* ---------- 월드 허브 ---------- */
+VIEWS.world = (p)=>{
+  const w = WORLDS.find(x=>x.id===p.w), cards=CARDS[w.id], d=S.dialogues[w.id]||{}, b=S.boss[w.id]||{}, ms=mastery(w.id);
+  const cs = CASES.filter(k=>k.w===w.id);
+  const rated = cards.filter(c=>S.cards[c.id]).length;
+  const tiles = [
+    ["카","개념 탐험",`개념 카드 ${cards.length}장 · 자기평정 ${rated}/${cards.length}`,"cards",{w:w.id,i:0}],
+    ["問","소크라테스 문답",d.done?`완주 · ${rubric(d.score).t}`:`질문 사슬 5단계 · +${XP.dialogue} XP`,"dialogue",{w:w.id}],
+    ["퀴","퀴즈 아레나",ms.n?`풀이 ${ms.n}/${ms.total} · 첫 시도 정답률 ${ms.pct}%`:`${ms.total}문항 · 확신도 채점`,"quizStart",{w:w.id}],
+    ["짝","하브루타 질문 카드","짝과 번갈아 묻고 답하기","havruta",{w:w.id}],
+    ["王","보스전",b.passed?`통과 · 최고 ${b.best}점`:`${Math.min(10,worldQs(w.id).length)}문항 · 8분 · ${BOSS_PASS}점 통과`,"bossStart",{w:w.id}],
+    ["省","출구 성찰","가장 헷갈린 것 1개 남기기","exit",{w:w.id}]
+  ];
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">WORLD ${w.no}</div><h1 style="font-size:28px">${esc(w.name)}</h1><p class="muted">${esc(w.goal)}</p></div>
+    <div class="panel row between"><span class="small">퀘스트 루프: 개념 탐험 → 문답 → 퀴즈 → ${cs.length?"사례 랩 → ":""}보스전 → 출구 성찰</span><span class="pill num">${worldProgress(w.id)}%</span></div>
+    <div class="grid2">${tiles.map(t=>`<button class="act" data-act="${t[3]==="quizStart"||t[3]==="bossStart"?t[3]:"go"}" data-to="${t[3]}" data-p='${JSON.stringify(t[4])}'><span class="ic">${t[0]}</span><span><b>${t[1]}</b><span class="muted small">${t[2]}</span></span></button>`).join("")}</div>
+    ${cs.length?`<h3 style="font-size:17px;margin-top:6px">이 월드의 사례 랩</h3><div class="stack">${cs.map(k=>caseTile(k)).join("")}</div>`:""}
+  </section>`, {back:"home", tab:"home"});
+};
+function caseTile(k){
+  const s=S.cases[k.id]||{};
+  return `<button class="act" data-act="go" data-to="case" data-p='{"k":"${k.id}","s":0}'><span class="ic">診</span><span style="min-width:0"><b>${esc(k.title)}</b><span class="muted small">${esc(k.theory)} ${s.done?"· 진단 완료":"· +"+XP.caseLab+" XP"}</span></span></button>`;
+}
+
+/* ---------- 개념 카드 ---------- */
+VIEWS.cards = (p)=>{
+  const list = CARDS[p.w], i = Math.min(p.i||0, list.length-1), c = list[i], st = S.cards[c.id]||{}, flipped = !!p.f;
+  const expl = S.explains[c.id]||"";
+  return shell(`<section class="stack">
+    <div class="row between"><div class="eyebrow">개념 카드 ${i+1} / ${list.length}</div><span class="muted small">${esc(WORLDS.find(w=>w.id===p.w).name)}</span></div>
+    <div class="flip">${!flipped?
+      `<div class="face front"><span class="pill">${esc(c.sub)}</span><h2>${esc(c.term)}</h2><p class="muted small">뜻을 먼저 떠올려 본 뒤 뒤집으세요</p><button class="btn primary" data-act="flip">카드 뒤집기</button></div>`:
+      `<div class="face flip-in"><div class="row between"><h2 style="font-size:22px">${esc(c.term)}</h2><span class="pill">${esc(c.sub)}</span></div>
+        <dl class="dl"><div><dt>정의</dt><dd>${esc(c.def)}</dd></div><div><dt>예시</dt><dd>${esc(c.ex)}</dd></div><div class="mis"><dt>흔한 오해</dt><dd>${esc(c.mis)}</dd></div></dl>
+        <button class="btn sm ghost" data-act="flip" style="align-self:flex-start">앞면 보기</button></div>`}
+    </div>
+    <div class="card stack"><b>지금 나는 이 개념을</b>
+      <div class="seg" role="group" aria-label="자기평정">${[["know","알아요"],["meh","애매해요"],["no","몰라요"]].map(r=>`<button data-act="rate" data-v="${r[0]}" aria-pressed="${st.r===r[0]}">${r[1]}</button>`).join("")}</div>
+      <p class="muted small">${st.next?"다음 복습: "+(st.next<=Date.now()?"지금":new Date(st.next).toLocaleDateString("ko-KR")):"평정에 따라 다음 복습일이 자동으로 정해집니다(간격 반복)."}</p>
+    </div>
+    <div class="card stack"><label for="expl">내 말로 설명하기 <span class="muted small">(1~2문장, 첫 작성 +${XP.explain} XP)</span></label>
+      <textarea id="expl" placeholder="교과서 문장을 베끼지 말고, 친구에게 설명하듯 써 보세요.">${esc(expl)}</textarea>
+      <div class="row"><button class="btn sm" data-act="explain">핵심 요소 점검</button><span id="kwout" class="small"></span></div>
+    </div>
+    <div class="row between"><button class="btn" data-act="cardNav" data-d="-1" ${i===0?"disabled":""}>이전</button>
+      ${i<list.length-1?`<button class="btn primary" data-act="cardNav" data-d="1">다음 카드</button>`:`<button class="btn primary" data-act="go" data-to="dialogue" data-p='{"w":"${p.w}"}'>소크라테스 문답으로</button>`}</div>
+  </section>`, {back:"world", backP:{w:p.w}, tab:"home"});
+};
+
+/* ---------- 소크라테스 문답 ---------- */
+function rubric(sc){
+  if(sc>=9) return {t:"깊은 이해", d:"개념을 정확히 쓰고, 가정과 반론까지 따져 보았습니다."};
+  if(sc>=6) return {t:"부분 이해", d:"핵심은 잡았지만, 일부 단계에서 근거나 관점 전환이 약했습니다."};
+  return {t:"재탐색 필요", d:"개념 카드를 다시 보고 문답에 재도전해 보세요."};
+}
+VIEWS.dialogue = (p)=>{
+  const dlg = DIALOGUES[p.w];
+  if(!D || D.w!==p.w) D = {w:p.w, step:0, score:0, hints:0, firstPick:{}, log:[], picked:null, hintLv:0, finished:false};
+  if(D.finished) return dialogueEnd(p);
+  const st = dlg.steps[D.step];
+  const log = D.log.map(l=>`<div class="bubble ${l.me?"me":""}"><span class="who" aria-hidden="true">${l.me?"나":"Σ"}</span><div class="txt">${esc(l.t)}</div></div>`).join("");
+  const picked = D.picked;
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">소크라테스 문답실</div><h1 style="font-size:22px">${esc(dlg.topic)}</h1></div>
+    <div class="stages">${STAGES.map((s,k)=>`<span class="${k<D.step?"done":k===D.step?"on":""}">${s}</span>`).join("")}</div>
+    <div class="marble stack">
+      ${log}
+      <div class="bubble"><span class="who" aria-hidden="true">Σ</span><div class="txt"><span class="small muted">${STAGES[D.step]}</span><br><span id="sq">${esc(st.q)}</span></div></div>
+    </div>
+    <div class="stack" role="group" aria-label="답 고르기">${st.o.map((o,k)=>{
+      let cls=""; if(picked!=null && picked===k) cls = o.s===2?"right":"wrong";
+      return `<button class="opt ${cls}" data-act="dpick" data-v="${k}" ${picked!=null&&st.o[picked].s===2?"disabled":""}><span class="k">${"ABC"[k]}</span><span>${esc(o.t)}</span></button>`;}).join("")}</div>
+    ${picked!=null?`<div class="fb ${st.o[picked].s===2?"ok":st.o[picked].s===1?"info":"bad"}"><b>소크라테스</b><p>${esc(st.o[picked].f)}</p></div>`:""}
+    ${D.hintLv>0?`<div class="fb info"><b>힌트 ${D.hintLv}</b>${st.h.slice(0,D.hintLv).map((h,k)=>`<p class="small">${k+1}. ${esc(h)}</p>`).join("")}</div>`:""}
+    <div class="row between">
+      <button class="btn sm ghost" data-act="dhint" ${D.hintLv>=3||(picked!=null&&st.o[picked].s===2)?"disabled":""}>힌트 사다리 (−${XP.hint} XP)</button>
+      ${picked!=null&&st.o[picked].s===2?`<button class="btn primary" data-act="dnext">${D.step<4?"다음 질문":"문답 마치기"}</button>`:`<span class="muted small">최선의 답을 찾을 때까지 다시 고를 수 있어요</span>`}
+    </div>
+  </section>`, {back:"world", backP:{w:p.w}, tab:"home"});
+};
+function dialogueEnd(p){
+  const rb = rubric(D.score), dlg = DIALOGUES[p.w];
+  const weak = dlg.steps.map((s,k)=>({k, sc:D.firstPick[k]})).filter(x=>x.sc<2).map(x=>STAGES[x.k]);
+  return shell(`<section class="stack">
+    <div class="card stack" style="align-items:center;text-align:center">
+      <div class="seal" aria-hidden="true">${esc(rb.t)}</div><div class="eyebrow">문답 완주</div>
+      <h2>${esc(dlg.topic)}</h2><p class="muted">${esc(rb.d)}</p>
+      <p class="small num">첫 선택 점수 ${D.score}/10 · 힌트 ${D.hints}회</p>
+    </div>
+    <div class="card stack"><h3 style="font-size:17px">이해 수준 루브릭</h3>
+      <div class="tablewrap"><table class="wrapcells"><thead><tr><th>수준</th><th>기준(첫 선택 점수)</th></tr></thead><tbody>
+      <tr><td>깊은 이해</td><td>9~10점: 개념·가정·반론을 정확히 다룸</td></tr><tr><td>부분 이해</td><td>6~8점: 핵심은 맞으나 일부 단계가 약함</td></tr><tr><td>재탐색 필요</td><td>0~5점: 개념 카드 복습 후 재도전</td></tr></tbody></table></div>
+      <p class="small">${weak.length?"다시 볼 단계: <b>"+weak.map(esc).join(", ")+"</b>":"모든 단계에서 첫 선택이 최선이었습니다."}</p>
+    </div>
+    <div class="row"><button class="btn" data-act="dreset">다시 문답하기</button><button class="btn primary" data-act="quizStart" data-p='{"w":"${p.w}"}'>퀴즈 아레나로</button></div>
+  </section>`, {back:"world", backP:{w:p.w}, tab:"home"});
+}
+
+/* ---------- 퀴즈 엔진 ---------- */
+function startQuiz(ids, mode, w){
+  clearTimers();
+  Q = {mode, w, ids, i:0, temp:null, conf:"mid", results:[], submitted:false, start:Date.now(), deadline: mode==="boss"? Date.now()+BOSS_TIME*1000 : null, hintsUsed:0};
+  initTemp(); go("quiz");
+}
+function initTemp(){
+  const q = QBY[Q.ids[Q.i]]; Q.conf="mid"; Q.submitted=false; Q.last=null;
+  if(q.t==="match") { Q.order = shuffle(q.pairs.map((_,k)=>k)); Q.temp = q.pairs.map(()=>-1); }
+  else if(q.t==="order") Q.temp = shuffle(q.items.map((_,k)=>k));
+  else if(q.t==="quad") { Q.temp = q.items.map(()=>null); Q.sel=null; Q.qorder = shuffle(q.items.map((_,k)=>k)); }
+  else if(q.t==="sort") Q.temp = q.items.map(()=>-1);
+  else if(q.t==="mc") { Q.optOrder = q.o.map((_,k)=>k); Q.temp=null; }
+  else Q.temp=null;
+}
+function ready(q){
+  const t=Q.temp;
+  if(q.t==="ox"||q.t==="mc") return t!=null;
+  if(q.t==="grid") return Array.isArray(t);
+  if(q.t==="match"||q.t==="sort") return t.every(x=>x>=0);
+  if(q.t==="quad") return t.every(x=>x);
+  return true;
+}
+function grade(q){
+  const t=Q.temp;
+  if(q.t==="ox") return {ok: t===q.a};
+  if(q.t==="mc") return {ok: t===q.a};
+  if(q.t==="grid") return {ok: t[0]===q.a[0]&&t[1]===q.a[1]};
+  if(q.t==="match"){ const per=t.map((v,k)=>v===k); return {ok:per.every(Boolean), per, n:per.filter(Boolean).length}; }
+  if(q.t==="sort"){ const per=t.map((v,k)=>v===q.items[k].c); return {ok:per.every(Boolean), per, n:per.filter(Boolean).length}; }
+  if(q.t==="quad"){ const per=t.map((v,k)=>v===q.items[k].a); return {ok:per.every(Boolean), per, n:per.filter(Boolean).length}; }
+  if(q.t==="order"){ const per=t.map((v,k)=>v===k); return {ok:per.every(Boolean), per, n:per.filter(Boolean).length}; }
+}
+function submitQ(btn){
+  const q = QBY[Q.ids[Q.i]]; if(!ready(q)) { toast("답을 모두 고른 뒤 제출하세요"); return; }
+  const g = grade(q); Q.submitted=true; Q.last=g;
+  const prev = S.answered[q.id];
+  let xp = 0;
+  if(!prev) S.answered[q.id] = {first:g.ok, ok:g.ok, n:1};
+  else { prev.n++; if(g.ok && !prev.ok){ prev.ok=true; } }
+  if(g.ok && !S.answered[q.id].paid){
+    xp = (q.b==="apply"||q.b==="analyze") ? XP.hard : XP.easy;
+    if(Q.conf==="high") xp += XP.conf;
+    S.answered[q.id].paid = true;
+  }
+  if(!g.ok){
+    const w = S.wrong[q.id] || {n:0};
+    w.n++; w.at=Date.now(); w.fixed=false; if(Q.conf==="high") w.mis=true; S.wrong[q.id]=w;
+  } else if(S.wrong[q.id] && !S.wrong[q.id].fixed){
+    if(Q.mode==="retry"){ S.wrong[q.id].fixed=true; if(S.wrong[q.id].mis) S.misFixed++; }
+  }
+  Q.results.push({id:q.id, ok:g.ok, conf:Q.conf});
+  mission("q");
+  save();
+  if(Q.mode!=="boss" && xp) gain(xp, g.ok&&Q.conf==="high"?"확신 있는 정답":"정답", btn);
+  if(Q.mode==="boss" && xp){ Q.bossXp=(Q.bossXp||0)+xp; }
+  checkBadges();
+  render();
+}
+function nextQ(){
+  if(Q.i < Q.ids.length-1){ Q.i++; initTemp(); render(); window.scrollTo(0,0); }
+  else finishQuiz();
+}
+function finishQuiz(timeout){
+  clearTimers();
+  const n = Q.mode==="boss" ? Q.ids.length : Math.max(1,Q.results.length), c = Q.results.filter(r=>r.ok).length;
+  const score = Math.round(c/n*100);
+  Q.score = score; Q.timeout=!!timeout;
+  if(Q.mode==="boss"){
+    const b = S.boss[Q.w] || {passed:false,best:0};
+    const firstPass = !b.passed && score>=BOSS_PASS;
+    b.best = Math.max(b.best||0, score);
+    if(score>=BOSS_PASS) b.passed = true;
+    if(score===100 && !Q.hintsUsed) b.perfect = true;
+    S.boss[Q.w]=b; save();
+    if(Q.bossXp) gain(Q.bossXp, "보스전 문항 정답");
+    if(firstPass) setTimeout(()=>gain(XP.boss, "보스전 첫 통과"), 400);
+    checkBadges();
+  }
+  go("quizEnd");
+}
+VIEWS.quiz = ()=>{
+  if(!Q) return VIEWS.home();
+  const q = QBY[Q.ids[Q.i]], w = WORLDS.find(x=>x.id===q.w);
+  const head = `<div class="qhead"><span class="eyebrow">${Q.mode==="boss"?"보스전":Q.mode==="retry"?"오답 재도전":"퀴즈 아레나"} · ${Q.i+1}/${Q.ids.length}</span>
+    <span class="row" style="gap:6px"><span class="pill muted">${esc(w.name)}</span><span class="pill">${{recall:"회상",understand:"이해",apply:"적용",analyze:"분석"}[q.b]}</span>
+    ${Q.deadline?`<span class="pill burg timer num" id="bt">--:--</span>`:""}</span></div>
+    <div class="bar"><i style="width:${Math.round(Q.i/Q.ids.length*100)}%"></i></div>`;
+  let body = "";
+  const sub = Q.submitted, g = Q.last;
+  if(q.t==="ox") body = `<div class="ox">${[[true,"O"],[false,"X"]].map(([v,l])=>`<button data-act="qset" data-v="${v}" aria-pressed="${Q.temp===v}" ${sub?"disabled":""} class="${sub&&q.a===v?"right":""}" style="${sub&&q.a===v?"outline:3px solid var(--ok)":""}">${l}</button>`).join("")}</div>`;
+  if(q.t==="mc") body = `<div class="stack">${Q.optOrder.map(k=>{ let cls=""; if(sub){ if(k===q.a) cls="right"; else if(k===Q.temp) cls="wrong"; }
+    return `<button class="opt ${cls}" data-act="qset" data-v="${k}" aria-pressed="${Q.temp===k}" ${sub?"disabled":""}><span class="k">${"ABCD"[Q.optOrder.indexOf(k)]}</span><span>${esc(q.o[k])}</span></button>`;}).join("")}</div>`;
+  if(q.t==="match") body = `<div>${q.pairs.map((p,k)=>`<div class="matchrow ${sub?(g.per[k]?"ok":"no"):""}"><b class="small">${esc(p[0])}</b>
+    <select id="m_${k}" data-act="qmatch" data-k="${k}" ${sub?"disabled":""} aria-label="${esc(p[0])}와 연결할 항목"><option value="-1">선택하세요</option>${Q.order.map(j=>`<option value="${j}" ${Q.temp[k]===j?"selected":""}>${esc(q.pairs[j][1])}</option>`).join("")}</select></div>
+    ${sub&&!g.per[k]?`<p class="small" style="color:var(--ok);padding:0 0 6px">정답: ${esc(p[1])}</p>`:""}`).join("")}</div>`;
+  if(q.t==="sort") body = `<div>${q.items.map((it,k)=>`<div class="sortrow"><b>${esc(it.t)} ${sub?(g.per[k]?'<span class="pill ok">정답</span>':`<span class="pill bad">정답: ${esc(q.cats[it.c])}</span>`):""}</b>
+    <div class="opts" role="group" aria-label="${esc(it.t)} 범주">${q.cats.map((c,ci)=>`<button data-act="qsort" data-k="${k}" data-v="${ci}" aria-pressed="${Q.temp[k]===ci}" ${sub?"disabled":""}>${esc(c)}</button>`).join("")}</div></div>`).join("")}</div>`;
+  if(q.t==="order") body = `<ol class="orderlist">${Q.temp.map((v,k)=>`<li class="${sub?(g.per[k]?"ok":"no"):""}"><span class="n">${k+1}</span><span class="t">${esc(q.items[v])}</span>
+    ${sub?"":`<button class="btn sm" data-act="qmove" data-k="${k}" data-d="-1" aria-label="위로" ${k===0?"disabled":""}>↑</button><button class="btn sm" data-act="qmove" data-k="${k}" data-d="1" aria-label="아래로" ${k===Q.temp.length-1?"disabled":""}>↓</button>`}</li>`).join("")}</ol>
+    ${sub&&!g.ok?`<p class="small" style="color:var(--ok)">정답 순서: ${q.items.map((x,i)=>(i+1)+". "+esc(x)).join(" → ")}</p>`:""}`;
+  if(q.t==="quad"){
+    const cells = [["LH","저"+q.ax[0]+" · 고"+q.ax[1]],["HH","고"+q.ax[0]+" · 고"+q.ax[1]],["LL","저"+q.ax[0]+" · 저"+q.ax[1]],["HL","고"+q.ax[0]+" · 저"+q.ax[1]]];
+    const chip = k=>{ const it=q.items[k]; const cls = sub?(g.per[k]?"ok":"no"):""; return `<button class="chip ${cls}" data-act="qchip" data-k="${k}" aria-pressed="${Q.sel===k}" ${sub?"disabled":""}>${esc(it.t)}${sub&&!g.per[k]?` <span class="small" style="color:var(--bad)">→ ${cells.find(c=>c[0]===it.a)[1]}</span>`:""}</button>`; };
+    const pool = Q.qorder.filter(k=>!Q.temp[k]);
+    body = `<p class="small muted">${sub?"":"① 아래 묘사를 누르고 ② 알맞은 칸을 누르세요. 칸 안의 묘사를 누르면 다시 꺼낼 수 있어요."}</p>
+      <div class="stack" style="gap:6px">${pool.map(chip).join("")}</div>
+      <div class="quad" role="group" aria-label="사분면">
+        <div class="ax y" style="grid-row:1/3">${esc(q.ax[1])} →</div>
+        ${cells.map(([key,lab])=>`<div class="cell" ${sub?"":`role="button" tabindex="0" data-act="qcell" data-v="${key}"`} aria-label="${lab} 칸"><small>${lab}</small>${q.items.map((it,k)=>Q.temp[k]===key?chip(k):"").join("")}</div>`).join("")}
+        <div></div><div class="ax" style="grid-column:2/4">${esc(q.ax[0])} →</div>
+      </div>`;
+  }
+  if(q.t==="grid"){
+    let cells=""; const lm = {"1,1":1,"1,9":1,"9,1":1,"5,5":1,"9,9":1};
+    for(let y=9;y>=1;y--) for(let x=1;x<=9;x++){
+      const on = Q.temp && Q.temp[0]===x && Q.temp[1]===y; const ans = sub && q.a[0]===x && q.a[1]===y;
+      cells += `<button data-act="qgrid" data-x="${x}" data-y="${y}" aria-pressed="${!!on}" aria-label="생산 ${x}, 인간 ${y}" class="${lm[x+","+y]?"lm":""} ${ans?"ans":""}" ${sub?"disabled":""}>${on||ans?x+","+y:""}</button>`;
+    }
+    body = `<div class="gridwrap"><div class="ax y" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:12px;color:var(--muted);text-align:center;font-weight:700">인간에 대한 관심 →</div><div class="g9">${cells}</div><div></div><div style="text-align:center;font-size:12px;color:var(--muted);font-weight:700">생산에 대한 관심 →</div></div>
+    <p class="small muted num">선택: ${Q.temp?"("+Q.temp[0]+","+Q.temp[1]+")":"없음"} · 좌표는 (생산, 인간) 순서</p>`;
+  }
+  const conf = !sub ? `<div class="stack" style="gap:6px"><span class="small"><b>확신도</b> <span class="muted">확신 있는 정답 +${XP.conf} XP · 확신 있는 오답은 오개념으로 표시</span></span>
+    <div class="seg" role="group" aria-label="확신도">${[["high","확신 상"],["mid","중"],["low","하"]].map(c=>`<button data-act="qconf" data-v="${c[0]}" aria-pressed="${Q.conf===c[0]}">${c[1]}</button>`).join("")}</div></div>` : "";
+  let fb = "";
+  if(sub){
+    const showEx = Q.mode!=="boss";
+    fb = `<div class="fb ${g.ok?"ok":"bad"}"><b>${g.ok?"정답입니다":"아쉽습니다"}${g.n!=null&&!g.ok?` (${g.n}/${g.per.length} 맞음)`:""}</b>
+      ${!g.ok&&Q.conf==="high"?`<p class="small"><span class="pill bad">오개념 의심</span> 확신했지만 틀린 문항입니다. 오답노트 맨 위에 올렸습니다.</p>`:""}
+      ${showEx?`<p>${esc(q.ex)}</p><p class="small muted">관련 개념: ${esc(CBY[q.c].term)}</p>`:`<p class="small muted">해설은 보스전이 끝난 뒤 공개됩니다.</p>`}</div>`;
+  }
+  return shell(`<section class="stack">${head}
+    <div class="card stack"><p class="qtext">${esc(q.q)}</p>${body}</div>
+    ${conf}${fb}
+    <div class="row between">${!sub?`<button class="btn ghost sm" data-act="quitQuiz">그만하기</button><button class="btn primary" data-act="qsubmit">제출</button>`:
+      `<span></span><button class="btn primary" data-act="qnext">${Q.i<Q.ids.length-1?"다음 문항":"결과 보기"}</button>`}</div>
+  </section>`, {tab:"home"});
+};
+AFTER.quiz = ()=>{
+  if(Q && Q.deadline){
+    const tick=()=>{ const el=$("#bt"); const left=Math.max(0,Math.round((Q.deadline-Date.now())/1000)); if(el){ el.textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0"); el.classList.toggle("low",left<60);} if(left<=0){ while(Q.results.length<Q.ids.length){ Q.results.push({id:Q.ids[Q.results.length],ok:false}); } finishQuiz(true); } };
+    tick(); timers.push(setInterval(tick,1000));
+  }
+};
+VIEWS.quizEnd = ()=>{
+  if(!Q) return VIEWS.home();
+  const boss=Q.mode==="boss", n=boss?Q.ids.length:Q.results.length, c=Q.results.filter(r=>r.ok).length, pass=Q.score>=BOSS_PASS;
+  const misNow = Q.results.filter(r=>!r.ok && r.conf==="high").length;
+  const wN = Q.w ? WORLDS[wIdx(Q.w)] : null, nextW = Q.w ? WORLDS[wIdx(Q.w)+1] : null;
+  return shell(`<section class="stack">
+    <div class="card stack" style="align-items:center;text-align:center">
+      <div class="seal num" aria-hidden="true">${Q.score}점</div>
+      <div class="eyebrow">${boss?"보스전 결과":Q.mode==="retry"?"오답 재도전 결과":"퀴즈 아레나 결과"}</div>
+      <h2>${boss?(pass?"보스를 쓰러뜨렸습니다":"보스가 아직 버팁니다"):c+" / "+n+" 정답"}</h2>
+      <p class="muted">${boss?(pass?(nextW?"다음 월드 '"+esc(nextW.name)+"'가 열렸습니다.":"모든 월드를 통과했습니다."):"통과 기준은 "+BOSS_PASS+"점입니다. 오답노트로 약점을 보완한 뒤 재도전하세요. (XP는 첫 통과 때만 전액 지급)"):(misNow?"확신 있게 틀린 문항 "+misNow+"개가 오개념 레이더에 올라갔습니다.":"확신 있게 틀린 문항이 없습니다.")}${Q.timeout?" · 제한시간 종료":""}</p>
+    </div>
+    ${boss?`<div class="card stack"><h3 style="font-size:17px">문항별 해설</h3>${Q.results.map((r,k)=>{const q=QBY[r.id]; return `<div class="fb ${r.ok?"ok":"bad"}"><b class="small">${k+1}. ${esc(q.q)}</b><p class="small">${esc(q.ex)}</p></div>`;}).join("")}</div>`:""}
+    <div class="grid2">
+      ${Q.w?`<button class="btn" data-act="go" data-to="world" data-p='{"w":"${Q.w}"}'>월드로 돌아가기</button>`:`<button class="btn" data-act="go" data-to="notes">오답노트로</button>`}
+      ${boss&&pass?`<button class="btn primary" data-act="go" data-to="exit" data-p='{"w":"${Q.w}"}'>출구 성찰 남기기</button>`:boss?`<button class="btn primary" data-act="go" data-to="notes">오답노트로 보완하기</button>`:Q.w?`<button class="btn primary" data-act="bossStart" data-p='{"w":"${Q.w}"}'>보스전 도전</button>`:`<button class="btn primary" data-act="go" data-to="home">퀘스트 맵으로</button>`}
+    </div>
+  </section>`, {tab:"home"});
+};
+
+/* ---------- 사례 랩 ---------- */
+VIEWS.cases = ()=>{
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">CASE LAB</div><h1 style="font-size:26px">사례 랩</h1><p class="muted">상황 읽기 → 이론 진단 → 처방 → 모범 진단 비교. 모든 사례는 가공 사례입니다.</p></div>
+    <div class="stack">${CASES.map(k=>{ const un=unlocked(k.w); return un?caseTile(k):`<div class="act" aria-disabled="true" style="opacity:.55"><span class="ic">鎖</span><span><b>${esc(k.title)}</b><span class="muted small">'${esc(WORLDS[wIdx(k.w)].name)}' 월드가 열리면 도전할 수 있습니다</span></span></div>`; }).join("")}</div>
+  </section>`);
+};
+VIEWS.case = (p)=>{
+  const k = CASES.find(x=>x.id===p.k), s = p.s||0, st = S.cases[k.id]||{};
+  const dx = p.dx!=null?p.dx:st.dx, rx = p.rx!=null?p.rx:st.rx;
+  const steps = ["상황 읽기","이론 진단","처방","결과 확인"];
+  let body="";
+  if(s===0) body = `<div class="card stack"><p class="case-scene">${esc(k.scene)}</p><p class="small muted">밑줄 긋듯 핵심 단서를 찾아보세요. 다음 단계에서 단서 카드가 나옵니다.</p></div>
+    <button class="btn primary block" data-act="go" data-to="case" data-p='{"k":"${k.id}","s":1}'>이론으로 진단하기</button>`;
+  if(s===1||s===2){
+    const it = s===1?k.dx:k.rx, cur = s===1?dx:rx;
+    body = `<div class="panel stack" style="gap:6px"><b class="small">단서 카드</b>${k.facts.map(f=>`<span class="small">· ${esc(f)}</span>`).join("")}</div>
+      <div class="card stack"><p class="qtext">${esc(it.q)}</p>${it.o.map((o,j)=>`<button class="opt" data-act="cpick" data-v="${j}" aria-pressed="${cur===j}"><span class="k">${"ABCD"[j]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+      <button class="btn primary block" data-act="cnext" ${cur==null?"disabled":""}>${s===1?"처방 단계로":"제출하고 모범 진단 보기"}</button>`;
+  }
+  if(s===3){
+    const okD = dx===k.dx.a, okR = rx===k.rx.a;
+    body = `<div class="compare">
+      <div class="card stack"><div class="eyebrow">내 진단</div><p><span class="pill ${okD?"ok":"bad"}">진단</span> ${esc(k.dx.o[dx])}</p><p><span class="pill ${okR?"ok":"bad"}">처방</span> ${esc(k.rx.o[rx])}</p></div>
+      <div class="card stack"><div class="eyebrow">모범 진단 · ${esc(k.theory)}</div><p><b>진단</b> ${esc(k.dx.o[k.dx.a])}</p><p><b>처방</b> ${esc(k.rx.o[k.rx.a])}</p></div></div>
+      <div class="card stack"><b>해설</b><p>${esc(k.model)}</p></div>
+      <div class="fb info"><b>소크라테스의 되물음</b><p>${okD&&okR?"모범 진단과 같습니다. 그렇다면 이 처방이 실패할 수 있는 조건은 무엇일까요?":!okD?"진단이 달라졌습니다. 단서 카드 중 어떤 정보를 다르게 읽었나요?":"진단은 맞았는데 처방이 달라졌습니다. 진단과 처방을 잇는 이론의 연결 고리는 무엇일까요?"}</p></div>
+      <div class="card stack"><label for="cnote">내 진단 리포트 한 줄</label><textarea id="cnote" placeholder="예: 능력↑·의지↓이므로 참여형, 여기에 개별적 배려를 더한다">${esc(st.note||"")}</textarea>
+      <button class="btn sm" data-act="cnote" style="align-self:flex-start">리포트 저장</button></div>
+      <div class="row"><button class="btn" data-act="go" data-to="cases">사례 목록</button><button class="btn" data-act="go" data-to="case" data-p='{"k":"${k.id}","s":0}'>다시 진단하기</button></div>`;
+  }
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">CASE LAB · ${esc(k.theory)}</div><h1 style="font-size:24px">${esc(k.title)}</h1></div>
+    <div class="steps4">${steps.map((t,j)=>`<span class="${j<s?"done":j===s?"on":""}">${t}</span>`).join("")}</div>
+    ${body}</section>`, {back:"cases", tab:"cases"});
+};
+
+/* ---------- 오답노트 · 오개념 레이더 · 복습 ---------- */
+VIEWS.notes = ()=>{
+  const ws = Object.entries(S.wrong).filter(([id,v])=>!v.fixed).map(([id,v])=>({id,...v})).sort((a,b)=>(b.mis?1:0)-(a.mis?1:0)||b.at-a.at);
+  const mis = ws.filter(x=>x.mis);
+  const due = dueCards();
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">STUDY STUDIO</div><h1 style="font-size:26px">오답노트</h1><p class="muted">확신 있게 틀린 문항이 맨 위에 옵니다. 다시 맞히면 노트에서 빠집니다.</p></div>
+    <div class="card stack"><div class="row between"><h3 style="font-size:17px">오개념 레이더</h3><span class="pill bad num">${mis.length}개</span></div>
+      ${mis.length?mis.map(x=>{const q=QBY[x.id], c=CBY[q.c]; return `<div class="panel stack" style="gap:4px"><b class="small">${esc(c.term)}</b><span class="small">흔한 오해: ${esc(c.mis)}</span></div>`;}).join(""):`<p class="muted small">아직 오개념이 감지되지 않았습니다. 퀴즈에서 확신도를 솔직하게 고를수록 레이더가 정확해집니다.</p>`}
+      <p class="small muted">교정한 오개념 ${S.misFixed}개 · 5개 교정 시 '오개념 사냥꾼' 배지</p>
+    </div>
+    <div class="card stack"><div class="row between"><h3 style="font-size:17px">틀린 문항 ${ws.length}개</h3>${ws.length?`<button class="btn primary sm" data-act="retryAll">모두 재도전</button>`:""}</div>
+      ${ws.length?ws.slice(0,30).map(x=>{const q=QBY[x.id]; return `<div class="row between" style="border-bottom:1px dashed var(--line-soft);padding:8px 0;flex-wrap:nowrap"><span class="small" style="min-width:0">${x.mis?'<span class="pill bad">오개념</span> ':""}${esc(q.q)}</span><button class="btn sm" data-act="retryOne" data-v="${x.id}">재도전</button></div>`;}).join(""):`<p class="muted small">틀린 문항이 없습니다.</p>`}
+      <p class="small muted">이미 맞힌 문항을 다시 풀면 XP는 0입니다(점수 파밍 방지). 대신 오개념 교정 기록이 쌓입니다.</p>
+    </div>
+    <div class="card stack"><div class="row between"><h3 style="font-size:17px">오늘 복습할 카드</h3><span class="pill num">${due.length}장</span></div>
+      ${due.length?`<div class="row">${due.slice(0,12).map(c=>{ const w="w"+c.id[1]; const i=CARDS[w].findIndex(x=>x.id===c.id); return `<button class="btn sm" data-act="go" data-to="cards" data-p='{"w":"${w}","i":${i}}'>${esc(c.term)}</button>`;}).join("")}</div>`:`<p class="muted small">복습 시점이 된 카드가 없습니다. 카드 자기평정을 하면 간격 반복 일정이 잡힙니다.</p>`}
+    </div>
+  </section>`);
+};
+
+/* ---------- 리그 ---------- */
+VIEWS.league = ()=>{
+  const L = S.league;
+  const growth = S.week.prev ? Math.round((S.week.xp - S.week.prev)/S.week.prev*100) : null;
+  let mine = null; if(L && L.r) mine = L.r[S.id.slice(0,8)];
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">LEAGUE</div><h1 style="font-size:26px">리그</h1><p class="muted">주간 개인 리그는 매주 월요일 초기화됩니다. 전체 공개는 상위 5명뿐이고, 나머지는 자기 순위만 봅니다.</p></div>
+    <div class="card stack"><h3 style="font-size:17px">성장 리그: 지난주의 나와 겨루기</h3>
+      <div class="hbar"><span class="small">지난주</span><div class="b"><i style="width:${Math.min(100,(S.week.prev/Math.max(S.week.prev,S.week.xp,1))*100)}%"></i></div><b class="num small">${S.week.prev}</b></div>
+      <div class="hbar"><span class="small">이번 주</span><div class="b"><i style="width:${Math.min(100,(S.week.xp/Math.max(S.week.prev,S.week.xp,1))*100)}%"></i></div><b class="num small">${S.week.xp}</b></div>
+      <p class="small">${growth==null?"지난주 기록이 없습니다. 이번 주가 기준선이 됩니다.":growth>=0?"지난주보다 <b>"+growth+"%</b> 성장했습니다.":"지난주보다 "+Math.abs(growth)+"% 적습니다. 오늘의 미션부터 시작해 보세요."}</p>
+    </div>
+    <div class="card stack"><div class="row between"><h3 style="font-size:17px">우리 반 주간 리그</h3>${L?`<span class="muted small">${esc(new Date(L.at).toLocaleString("ko-KR"))} 기준</span>`:""}</div>
+      ${L?`<div class="lb">${L.top.map((p,i)=>`<div class="lbrow ${p.me?"me":""}"><span class="rk num">${i+1}</span><span style="min-width:0"><b>${esc(p.n)}</b> <span class="muted small">${esc(p.t||"")} · ${esc(p.lv)}</span></span><b class="num">${p.x} XP</b></div>`).join("")}</div>
+        ${mine?`<div class="panel row between"><span>나의 순위</span><b class="num">${mine[0]}위 / ${L.total}명 · ${mine[1]} XP</b></div>`:`<p class="small muted">이 스냅샷에는 내 기록이 없습니다. 성과 코드를 교수님께 제출하면 다음 스냅샷부터 반영됩니다.</p>`}
+        <h4 style="font-family:var(--serif);margin-top:6px">팀 리그(팀원 평균 주간 XP)</h4>
+        <div class="stack" style="gap:6px">${L.teams.map((t,i)=>`<div class="hbar"><span class="small">${i+1}. ${esc(t.t)} <span class="muted">(${t.n}명)</span></span><div class="b"><i style="width:${Math.round(t.a/Math.max(1,L.teams[0].a)*100)}%"></i></div><b class="num small">${t.a}</b></div>`).join("")}</div>`
+       :`<p class="muted small">아직 받은 리그 스냅샷이 없습니다.</p>`}
+      <div class="panel stack" style="gap:8px"><b class="small">반 리그에 참여하는 방법</b>
+        <span class="small">1) '나' 탭에서 성과 코드를 복사해 교수님이 안내한 곳(LMS·단체방 등)에 제출합니다.<br>2) 교수님이 전광판에 리그를 공개하고, 리그 스냅샷 코드를 공유합니다.<br>3) 아래에 스냅샷 코드를 붙여 넣으면 상위 5명과 내 순위가 보입니다.</span>
+        <textarea id="snap" placeholder="LQS. 로 시작하는 리그 스냅샷 코드"></textarea>
+        <button class="btn sm" data-act="loadSnap" style="align-self:flex-start">스냅샷 불러오기</button>
+      </div>
+    </div>
+  </section>`);
+};
+
+/* ---------- 나(마이페이지) ---------- */
+function makeCode(){
+  const m = {}; WORLDS.forEach(w=>{ const x=mastery(w.id); m[w.id]=[x.c,x.n]; });
+  const p = {v:1,id:S.id,n:S.nick,t:S.team,xp:S.xp,wk:S.week.w,wx:S.week.xp,px:S.week.prev,lv:rankOf(S.xp).name,
+    b:Object.keys(S.badges),m,mis:openMis(),ex:S.exits.slice(-3).map(e=>[e.w,e.t]),dl:Object.values(S.dialogues).filter(d=>d.done).length,
+    cs:Object.values(S.cases).filter(c=>c.done).length,bp:WORLDS.filter(w=>(S.boss[w.id]||{}).passed).length,pre:S.pre,st:S.streak.count,last:S.streak.last||ymd(),
+    sc:S.selfcheck?[S.selfcheck.T,S.selfcheck.R]:null,ts:Date.now()};
+  const json = JSON.stringify(p);
+  return "LQ1."+b64e(json)+"."+hash(json);
+}
+function b64e(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+function b64d(s){ s=s.replace(/-/g,"+").replace(/_/g,"/"); while(s.length%4) s+="="; return decodeURIComponent(escape(atob(s))); }
+function hash(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193)>>>0; } return h.toString(36); }
+VIEWS.me = ()=>{
+  const rk = rankIdx(S.xp);
+  const code = S.nick ? makeCode() : "";
+  return shell(`<section class="stack">
+    <div class="card stack"><div class="hero"><div class="seal" aria-hidden="true">${esc(RANKS[rk].name)}</div>
+      <div class="stack" style="gap:6px;min-width:0"><h1 style="font-size:24px">${esc(S.nick||"학습자")}</h1><p class="muted small">${esc(S.team||"팀 미정")} · 총 ${S.xp} XP · 연속 ${S.streak.count}일 · 사전 진단 ${S.pre==null?"-":S.pre+"/3"}</p>
+      <div class="row" style="gap:6px">${RANKS.map((r,i)=>`<span class="pill ${i<=rk?"":"muted"}">${esc(r.name)}</span>`).join("")}</div></div></div></div>
+    <div class="card stack"><h3 style="font-size:17px">학습 리포트</h3>
+      ${WORLDS.map(w=>{const m=mastery(w.id); return `<div class="hbar"><span class="small">${esc(w.name)}</span><div class="b"><i style="width:${m.pct||0}%;background:${m.pct==null?"transparent":m.pct>=70?"var(--ok-fill)":m.pct>=40?"var(--gold-fill)":"var(--bad-fill)"}"></i></div><b class="num small">${m.pct==null?"-":m.pct+"%"}</b></div>`;}).join("")}
+      <p class="small muted">숙달도 = 푼 문항 중 첫 시도에 맞힌 비율</p>
+      ${S.exits.length?`<hr><b class="small">나의 출구 성찰</b>${S.exits.slice(-5).reverse().map(e=>`<p class="small">· <span class="muted">${esc(WORLDS[wIdx(e.w)].name)}</span> ${esc(e.t)}</p>`).join("")}`:""}
+      ${S.selfcheck?`<hr><p class="small">리더십 스타일 자기점검: 관리망 (${S.selfcheck.T}, ${S.selfcheck.R}) · ${esc(gridStyle(S.selfcheck.T,S.selfcheck.R))}</p>`:""}
+      ${window.top===window?`<button class="btn sm" data-act="print" style="align-self:flex-start">리포트 인쇄·PDF</button>`:""}
+    </div>
+    <div class="card stack"><div class="row between"><h3 style="font-size:17px">배지 진열장</h3><span class="pill num">${Object.keys(S.badges).length}/${BADGES.length}</span></div>
+      <div class="badges">${BADGES.map(b=>{const on=!!S.badges[b.id]; return `<div class="badge ${on?"on":""}"><div class="m" aria-hidden="true">${on||!b.hidden?esc(b.m):"?"}</div><b>${on||!b.hidden?esc(b.n):"히든 배지"}</b><span>${on?esc(b.hidden?b.hd:b.d):esc(b.d)}</span></div>`;}).join("")}</div>
+    </div>
+    <div class="card stack"><h3 style="font-size:17px">성과 코드 제출</h3>
+      <p class="small muted">이 코드에는 닉네임·팀·XP·숙달도·오개념·출구 성찰이 담깁니다. 교수님이 안내한 곳에 붙여 넣어 제출하세요. 리그와 대시보드는 제출된 코드로 집계됩니다.</p>
+      <div class="code" id="mycode" tabindex="0">${esc(code)}</div>
+      <button class="btn primary" data-act="copyCode">성과 코드 복사</button>
+    </div>
+    <div class="card stack"><h3 style="font-size:17px">설정</h3>
+      <div class="row between"><span>화면 테마</span><div class="row" style="gap:6px">${[["system","시스템"],["dark","다크"],["light","라이트"]].map(t=>`<button class="btn sm ${S.settings.theme===t[0]?"primary":""}" data-act="setTheme" data-v="${t[0]}">${t[1]}</button>`).join("")}</div></div>
+      <div class="row between"><span>동작 줄이기(애니메이션 끄기)</span><button class="btn sm ${S.settings.reduce?"primary":""}" data-act="toggle" data-k="reduce">${S.settings.reduce?"켜짐":"꺼짐"}</button></div>
+      <div class="row between"><span>자유 탐험(모든 월드 열기)<br><span class="muted small">교수님 안내가 있을 때만 켜세요</span></span><button class="btn sm ${S.settings.free?"primary":""}" data-act="toggle" data-k="free">${S.settings.free?"켜짐":"꺼짐"}</button></div>
+      <div class="row between"><span>닉네임·팀 바꾸기</span><button class="btn sm" data-act="go" data-to="onboard" data-p='{"step":0}'>수정</button></div>
+      <hr>
+      <div class="row between"><span><b>교수자 도구</b><br><span class="muted small">학습 분석 대시보드 · 라이브 전광판</span></span><div class="row" style="gap:6px"><button class="btn sm" data-act="go" data-to="teacher">대시보드</button><button class="btn sm" data-act="go" data-to="live">전광판</button></div></div>
+      <div class="row between"><span class="small muted">기록은 이 기기의 브라우저에만 저장됩니다.</span><button class="btn sm ghost" data-act="askReset">기록 초기화</button></div>
+      <div id="resetBox"></div>
+    </div>
+  </section>`);
+};
+
+/* ---------- 자기점검 ---------- */
+function gridStyle(t,r){
+  if(t>=7&&r>=7) return "팀형(9,9)에 가까움";
+  if(t>=7&&r<=3) return "과업형(9,1)에 가까움";
+  if(t<=3&&r>=7) return "컨트리클럽형(1,9)에 가까움";
+  if(t<=3&&r<=3) return "무기력형(1,1)에 가까움";
+  return t>r+1?"과업 쪽으로 기운 중도형":r>t+1?"관계 쪽으로 기운 중도형":"중도형(5,5)에 가까움";
+}
+VIEWS.selfcheck = (p)=>{
+  const ans = p.a || {};
+  const done = Object.keys(ans).length===SELFCHECK.length;
+  if(p.result && S.selfcheck){
+    const {T:t,R:r} = S.selfcheck;
+    let cells=""; for(let y=9;y>=1;y--) for(let x=1;x<=9;x++){ const on=x===t&&y===r; cells+=`<button disabled aria-pressed="${on}" class="${({"1,1":1,"1,9":1,"9,1":1,"5,5":1,"9,9":1})[x+","+y]?"lm":""}">${on?"나":""}</button>`; }
+    return shell(`<section class="stack">
+      <div class="stack" style="gap:6px"><div class="eyebrow">나의 리더십 스타일</div><h1 style="font-size:24px">${esc(gridStyle(t,r))}</h1><p class="muted">과업 지향 ${t}점 · 관계 지향 ${r}점 (각 1~9로 환산)</p></div>
+      <div class="card"><div class="gridwrap"><div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:12px;color:var(--muted);text-align:center;font-weight:700">관계(인간) 지향 →</div><div class="g9">${cells}</div><div></div><div style="text-align:center;font-size:12px;color:var(--muted);font-weight:700">과업(생산) 지향 →</div></div></div>
+      <div class="fb info"><b>생각해 볼 질문</b><p>상황이론에 따르면 이 위치가 언제나 최선은 아닙니다. 신규교사 3명이 온 유치원과 유능하지만 지친 교사들이 모인 학교에서, 나는 어느 쪽으로 움직여야 할까요?</p></div>
+      <p class="note">학습용 자기점검이며 표준화된 진단 도구가 아닙니다. 자체 개발한 12문항으로, 결과를 성격이나 능력에 대한 판정으로 해석하지 마세요.</p>
+      <div class="row"><button class="btn" data-act="go" data-to="selfcheck">다시 하기</button><button class="btn primary" data-act="go" data-to="home">퀘스트 맵으로</button></div>
+    </section>`, {back:"home", tab:"home"});
+  }
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">자기점검 · 12문항</div><h1 style="font-size:24px">나의 리더십 스타일</h1><p class="muted">최근 팀 과제나 동아리 활동을 떠올리며 답하세요. 1 = 전혀 아니다, 5 = 매우 그렇다.</p></div>
+    <p class="note">학습용 자기점검이며 표준화된 진단 도구가 아닙니다.</p>
+    ${SELFCHECK.map((it,k)=>`<div class="card stack" style="gap:8px"><span>${k+1}. ${esc(it.t)}</span><div class="row" role="group" aria-label="${k+1}번 응답" style="gap:6px">${[1,2,3,4,5].map(v=>`<button class="btn sm ${ans[k]===v?"primary":""}" data-act="scset" data-k="${k}" data-v="${v}" style="min-width:44px">${v}</button>`).join("")}</div></div>`).join("")}
+    <button class="btn primary block" data-act="scdone" ${done?"":"disabled"}>결과 보기 (${Object.keys(ans).length}/${SELFCHECK.length})</button>
+  </section>`, {back:"home", tab:"home"});
+};
+
+/* ---------- 리더십 연대기 ---------- */
+VIEWS.timeline = (p)=>{
+  if(!p.order) p.order = shuffle(TIMELINE.map((_,k)=>k));
+  const sub = !!p.sub; const per = p.order.map((v,k)=>v===k); const ok = per.every(Boolean);
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">TIMELINE</div><h1 style="font-size:24px">리더십 연대기</h1><p class="muted">연구가 등장한 순서대로 배열하세요. 위가 가장 이른 시기입니다.</p></div>
+    <ol class="orderlist">${p.order.map((v,k)=>`<li class="${sub?(per[k]?"ok":"no"):""}"><span class="n">${k+1}</span><span class="t">${esc(TIMELINE[v])}</span>${sub?"":`<button class="btn sm" data-act="tmove" data-k="${k}" data-d="-1" aria-label="위로" ${k===0?"disabled":""}>↑</button><button class="btn sm" data-act="tmove" data-k="${k}" data-d="1" aria-label="아래로" ${k===p.order.length-1?"disabled":""}>↓</button>`}</li>`).join("")}</ol>
+    ${sub?`<div class="fb ${ok?"ok":"bad"}"><b>${ok?"완벽한 연대기입니다":per.filter(Boolean).length+"/"+per.length+" 위치가 맞았습니다"}</b><p class="small">특성이론(리더는 누구인가) → 행동이론(무엇을 하는가: 오하이오, 관리망) → 상황이론(언제 효과적인가: Fiedler, Hersey & Blanchard) → 최근 이론(변혁적, 분산적). 각 이론은 앞 이론의 한계를 보완하며 등장했습니다.</p></div>
+      <div class="row"><button class="btn" data-act="tretry">다시 배열</button><button class="btn primary" data-act="go" data-to="home">퀘스트 맵으로</button></div>`
+    :`<button class="btn primary block" data-act="tsubmit">제출</button>`}
+  </section>`, {back:"home", tab:"home"});
+};
+
+/* ---------- 하브루타 ---------- */
+VIEWS.havruta = (p)=>{
+  const qs = HAVRUTA[p.w], i = p.i||0;
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">HAVRUTA · 짝 대화</div><h1 style="font-size:24px">하브루타 질문 카드</h1><p class="muted">짝과 번갈아 질문하고 답하세요. 한 사람이 90초 말하면 역할을 바꿉니다. 정답보다 근거를 묻는 것이 핵심입니다.</p></div>
+    <div class="card stack" style="min-height:180px;justify-content:center"><span class="eyebrow">질문 ${i+1} / ${qs.length}</span><p class="qtext" style="font-family:var(--serif);font-size:21px">${esc(qs[i])}</p></div>
+    <div class="panel stack" style="gap:6px"><b class="small">되묻기 도구</b><span class="small">· 왜 그렇게 생각해? · 근거가 되는 이론은? · 반대 상황이라면? · 그래서 원장은 무엇을 해야 해?</span></div>
+    <div class="row between"><button class="btn" data-act="go" data-to="havruta" data-p='{"w":"${p.w}","i":${(i+qs.length-1)%qs.length}}'>이전 질문</button>
+      ${i<qs.length-1?`<button class="btn primary" data-act="go" data-to="havruta" data-p='{"w":"${p.w}","i":${i+1}}'>다음 질문</button>`:`<button class="btn primary" data-act="havDone" data-v="${p.w}">짝 대화 완료</button>`}</div>
+  </section>`, {back:"world", backP:{w:p.w}, tab:"home"});
+};
+
+/* ---------- 출구 성찰 ---------- */
+VIEWS.exit = (p)=>{
+  const w = WORLDS[wIdx(p.w)];
+  return shell(`<section class="stack">
+    <div class="stack" style="gap:6px"><div class="eyebrow">EXIT TICKET</div><h1 style="font-size:24px">출구 성찰</h1><p class="muted">${esc(w.name)}에서 가장 헷갈린 것 1개를 남기세요. 교수님이 다음 수업 도입부에서 다룹니다.</p></div>
+    <div class="card stack"><label for="exitt">가장 헷갈린 것</label><textarea id="exitt" maxlength="200" placeholder="예: Fiedler의 중간 호의성 상황에서 왜 관계지향이 효과적인지 모르겠다"></textarea>
+      <label for="exitg">오늘 새로 알게 된 것(선택)</label><input id="exitg" type="text" maxlength="120" placeholder="한 줄">
+      <button class="btn primary" data-act="exitSave" data-v="${p.w}">성찰 제출 (+${XP.exit} XP)</button></div>
+  </section>`, {back:"world", backP:{w:p.w}, tab:"home"});
+};
+
+/* =========================================================
+   교수자: 학습 분석 대시보드
+   ========================================================= */
+function parseCodes(text){
+  const toks = (text.match(/LQ1\.[A-Za-z0-9_\-]+\.[a-z0-9]+/g)||[]);
+  let ok=0, bad=0;
+  toks.forEach(tk=>{
+    try{ const [,body,h] = tk.split("."); const json=b64d(body); if(hash(json)!==h){ bad++; return; }
+      const p = JSON.parse(json); const old=T.roster[p.id]; if(!old || old.ts<=p.ts){ T.roster[p.id]=p; } ok++; }
+    catch(e){ bad++; }
+  });
+  saveT(); return {ok,bad};
+}
+function rosterList(){
+  const cw = weekKey();
+  return Object.values(T.roster).map(p=>({...p, wxNow: p.wk===cw ? p.wx : (p.wk===addDays(cw,-7)?0:0), pxNow: p.wk===cw ? p.px : (p.wk===addDays(cw,-7)?p.wx:0)}));
+}
+function heatColor(v){ if(v==null) return "background:var(--line-soft);color:var(--muted)"; const c = v>=80?"var(--ok-fill)":v>=60?"color-mix(in srgb,var(--ok-fill) 55%,var(--gold-fill))":v>=40?"var(--gold-fill)":"var(--bad-fill)"; return `background:${c};color:#0E1A2B`; }
+function leagueData(){
+  const L = rosterList().sort((a,b)=>b.wxNow-a.wxNow||b.xp-a.xp);
+  const teams = {}; L.forEach(p=>{ const t=p.t||"팀 미정"; (teams[t]=teams[t]||[]).push(p.wxNow); });
+  const tl = Object.entries(teams).map(([t,a])=>({t,n:a.length,a:Math.round(a.reduce((x,y)=>x+y,0)/a.length)})).sort((a,b)=>b.a-a.a);
+  return {L, tl};
+}
+VIEWS.teacher = ()=>{
+  const {L, tl} = leagueData();
+  const n = L.length;
+  const today = ymd();
+  const idle = L.filter(p=>p.last && p.last < addDays(today,-7));
+  const misCount = {}; L.forEach(p=>(p.mis||[]).forEach(id=>misCount[id]=(misCount[id]||0)+1));
+  const misTop = Object.entries(misCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const exits = []; L.forEach(p=>(p.ex||[]).forEach(e=>exits.push({n:p.n,w:e[0],t:e[1]})));
+  const kw = {}; exits.forEach(e=>{ const words=(e.t.match(/[A-Za-z&]+|[가-힣]{2,}/g)||[]); new Set(words).forEach(x=>{ if(["모르겠다","헷갈린다","헷갈렸다","이해가","것이","있는","없는","무엇","어떻게","그리고","하는","같다","잘"].includes(x)) return; kw[x]=(kw[x]||0)+1; }); });
+  const kwTop = Object.entries(kw).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  const growth = L.filter(p=>p.pxNow>0).map(p=>({...p,g:Math.round((p.wxNow-p.pxNow)/p.pxNow*100)})).sort((a,b)=>b.g-a.g).slice(0,5);
+  const avgM = WORLDS.map(w=>{ let c=0,t=0; L.forEach(p=>{ const m=(p.m||{})[w.id]; if(m){ c+=m[0]; t+=m[1]; } }); return t?Math.round(c/t*100):null; });
+  const reteach = WORLDS.map((w,i)=>({w,v:avgM[i]})).filter(x=>x.v!=null).sort((a,b)=>a.v-b.v)[0];
+  return shell(`<section class="stack">
+    <div class="row between"><div class="stack" style="gap:6px"><div class="eyebrow">INSTRUCTOR</div><h1 style="font-size:28px">학습 분석 대시보드</h1><p class="muted">다음 수업에서 무엇을 다시 가르칠지 5분 안에 판단하기 위한 화면입니다.</p></div>
+      <div class="row"><button class="btn" data-act="go" data-to="live">라이브 전광판</button><button class="btn ghost" data-act="go" data-to="me">학생 화면</button></div></div>
+    <div class="card stack"><label for="codes">학생 성과 코드 붙여넣기 <span class="muted small">(여러 개를 한꺼번에 붙여 넣어도 됩니다. 같은 학생은 최신 코드로 갱신)</span></label>
+      <textarea id="codes" placeholder="LQ1.xxxxx.yyyy  LQ1.xxxxx.yyyy ..."></textarea>
+      <div class="row"><button class="btn primary" data-act="tImport">불러오기</button><span class="muted small num">현재 ${n}명</span>
+        ${n?`<button class="btn sm" data-act="tCsvCopy">CSV 복사</button><button class="btn sm" data-act="tCsv">CSV 내려받기</button><button class="btn sm" data-act="tSnap">리그 스냅샷 코드 만들기</button><button class="btn sm ghost" data-act="tAskClear">명단 비우기</button>`:""}</div>
+      <div id="tbox"></div>
+    </div>
+    ${!n?`<div class="note">아직 불러온 코드가 없습니다. 학생들에게 '나' 탭 → '성과 코드 복사' 후 LMS 게시판이나 설문 응답으로 제출하게 하고, 모인 코드를 위 상자에 한꺼번에 붙여 넣으세요.</div>`:`
+    <div class="grid3">
+      <div class="card"><div class="eyebrow">참여 인원</div><h2 class="num" style="font-size:34px">${n}명</h2><p class="muted small">평균 ${Math.round(L.reduce((a,p)=>a+p.xp,0)/n)} XP</p></div>
+      <div class="card"><div class="eyebrow">재지도 1순위</div><h2 style="font-size:22px">${reteach?esc(reteach.w.name):"-"}</h2><p class="muted small num">${reteach?"평균 숙달도 "+reteach.v+"%":"데이터 부족"}</p></div>
+      <div class="card"><div class="eyebrow">조기 경보</div><h2 class="num" style="font-size:34px;color:${idle.length?"var(--bad)":"var(--ok)"}">${idle.length}명</h2><p class="muted small">7일 이상 미접속</p></div>
+      <div class="card"><div class="eyebrow">사전 진단 평균</div><h2 class="num" style="font-size:34px">${(()=>{const a=L.filter(p=>p.pre!=null); return a.length?(a.reduce((x,p)=>x+p.pre,0)/a.length).toFixed(1)+"/3":"-";})()}</h2><p class="muted small">사후 비교: 보스전 통과 평균 ${(L.reduce((a,p)=>a+(p.bp||0),0)/n).toFixed(1)}개</p></div>
+    </div>
+    <div class="grid2">
+      <div class="card stack"><h3 style="font-size:17px">주간 개인 리그 · 상위 5</h3><div class="lb">${L.slice(0,5).map((p,i)=>`<div class="lbrow"><span class="rk num">${i+1}</span><span style="min-width:0"><b>${esc(p.n)}</b> <span class="muted small">${esc(p.t||"")} · ${esc(p.lv)}</span></span><b class="num">${p.wxNow}</b></div>`).join("")}</div></div>
+      <div class="card stack"><h3 style="font-size:17px">팀 리그 · 평균 주간 XP</h3>${tl.map((t,i)=>`<div class="hbar"><span class="small">${i+1}. ${esc(t.t)} (${t.n})</span><div class="b"><i style="width:${Math.round(t.a/Math.max(1,tl[0].a)*100)}%"></i></div><b class="num small">${t.a}</b></div>`).join("")}
+        <h4 style="font-family:var(--serif);margin-top:6px">성장 리그 · 지난주 대비</h4>${growth.length?growth.map((p,i)=>`<div class="row between small"><span>${i+1}. ${esc(p.n)}</span><b class="num">${p.g>=0?"+":""}${p.g}%</b></div>`).join(""):`<p class="small muted">지난주 기록이 있는 학생이 아직 없습니다.</p>`}</div>
+    </div>
+    <div class="card stack"><h3 style="font-size:17px">개념 숙달도 히트맵 (학생 × 월드, 첫 시도 정답률)</h3>
+      <div class="tablewrap"><table><thead><tr><th>닉네임</th><th>팀</th>${WORLDS.map(w=>`<th class="n">${esc(w.name)}</th>`).join("")}<th class="n">XP</th><th class="n">문답</th><th class="n">사례</th><th>최근 학습</th></tr></thead><tbody>
+      <tr><td><b>반 평균</b></td><td></td>${avgM.map(v=>`<td class="n"><span class="heat" style="${heatColor(v)}">${v==null?"-":v+"%"}</span></td>`).join("")}<td></td><td></td><td></td><td></td></tr>
+      ${L.map(p=>`<tr><td>${esc(p.n)}</td><td>${esc(p.t||"")}</td>${WORLDS.map(w=>{const m=(p.m||{})[w.id]; const v=m&&m[1]?Math.round(m[0]/m[1]*100):null; return `<td class="n"><span class="heat" style="${heatColor(v)}">${v==null?"-":v+"%"}</span></td>`;}).join("")}<td class="n">${p.xp}</td><td class="n">${p.dl||0}</td><td class="n">${p.cs||0}</td><td style="${idle.includes(p)?"color:var(--bad)":""}">${esc(p.last||"")}</td></tr>`).join("")}
+      </tbody></table></div></div>
+    <div class="grid2">
+      <div class="card stack"><h3 style="font-size:17px">오개념 Top 5 → 다음 수업 도입부 소재</h3>${misTop.length?misTop.map(([id,c])=>{const q=QBY[id]; return q?`<div class="panel stack" style="gap:4px"><div class="row between"><b class="small">${esc(CBY[q.c].term)}</b><span class="pill bad num">${c}명</span></div><span class="small">${esc(q.q)}</span></div>`:"";}).join(""):`<p class="small muted">확신 있게 틀린 문항이 아직 없습니다.</p>`}</div>
+      <div class="card stack"><h3 style="font-size:17px">출구 성찰 · '헷갈린 것'</h3>
+        ${kwTop.length?`<div>${kwTop.map(([k,c])=>`<span class="kw">${esc(k)} <b class="num">${c}</b></span>`).join("")}</div>`:""}
+        <div class="stack" style="gap:6px;max-height:320px;overflow:auto">${exits.length?exits.slice(-40).reverse().map(e=>`<p class="small">· <span class="muted">${esc((WORLDS[wIdx(e.w)]||{}).name||"")}</span> ${esc(e.t)}</p>`).join(""):`<p class="small muted">아직 제출된 성찰이 없습니다.</p>`}</div></div>
+    </div>`}
+  </section>`, {nav:false, back:"me", noXp:true});
+};
+
+/* =========================================================
+   교수자: 라이브 전광판
+   ========================================================= */
+let LV = {tab:"quiz", w:"w1", qi:0, tally:[0,0,0,0], tally1:null, reveal:false, round:1, time:30, left:null, run:false, hav:{w:"w1",i:0,sp:0,left:90,run:false,round:1}};
+function liveQs(){ return QUESTIONS.filter(q=>q.w===LV.w && (q.t==="mc"||q.t==="ox")); }
+VIEWS.live = ()=>{
+  if(!T.teams || !T.teams.length) { T.teams = ["1팀","2팀","3팀","4팀","5팀","6팀"].map(n=>({n,s:0})); saveT(); }
+  const tabs = [["quiz","라이브 퀴즈"],["teams","팀 점수판"],["cloud","워드클라우드"],["hav","하브루타 타이머"]];
+  let body = "";
+  if(LV.tab==="quiz"){
+    const qs = liveQs(); const q = qs[LV.qi % qs.length];
+    const opts = q.t==="ox" ? ["O","X"] : q.o;
+    const ans = q.t==="ox" ? (q.a?0:1) : q.a;
+    const tot = LV.tally.reduce((a,b)=>a+b,0), tot1 = LV.tally1 ? LV.tally1.reduce((a,b)=>a+b,0) : 0;
+    const pc = tot? Math.round(LV.tally[ans]/tot*100) : 0;
+    body = `<div class="row between"><div class="row"><select id="lvw" data-act="lvWorld" aria-label="월드 선택" style="width:auto">${WORLDS.map(w=>`<option value="${w.id}" ${LV.w===w.id?"selected":""}>${esc(w.name)}</option>`).join("")}</select>
+        <span class="pill num">${LV.qi%qs.length+1} / ${qs.length}</span>${LV.round===2?`<span class="pill burg">재투표</span>`:""}</div>
+        <div class="row"><span class="timer bigq num" id="lvt" style="font-size:clamp(28px,3vw,48px)">${LV.left==null?LV.time:LV.left}</span><button class="btn" data-act="lvTimer">${LV.run?"멈춤":"30초 시작"}</button></div></div>
+      <div class="card stack" style="gap:18px"><p class="bigq">${esc(q.q)}</p>
+        <div class="stack">${opts.map((o,k)=>`<div class="lopt ${LV.reveal&&k===ans?"right":""}"><span class="k">${q.t==="ox"?o:"ABCD"[k]}</span><span>${q.t==="ox"?"":esc(o)}</span>
+          <span class="tally"><button class="btn sm" data-act="lvTally" data-k="${k}" data-d="-1" aria-label="${k+1}번 1 빼기">−</button><b>${LV.tally[k]||0}</b><button class="btn sm" data-act="lvTally" data-k="${k}" data-d="1" aria-label="${k+1}번 1 더하기">+</button></span>
+          ${LV.reveal?`${LV.tally1?`<div class="distbar"><i style="width:${tot1?Math.round((LV.tally1[k]||0)/tot1*100):0}%"></i></div>`:""}<div class="distbar ${LV.tally1?"r2":""}"><i style="width:${tot?Math.round((LV.tally[k]||0)/tot*100):0}%"></i></div>`:""}</div>`).join("")}</div>
+        ${LV.reveal?`<div class="fb ${pc>=70?"ok":"bad"}"><b>정답률 ${pc}%${LV.tally1?` (1차 ${tot1?Math.round(LV.tally1[ans]/tot1*100):0}% → 2차 ${pc}%)`:""}</b><p>${esc(q.ex)}</p>
+          ${pc<70&&LV.round===1?`<p><b>정답률이 70% 미만입니다.</b> 다른 답을 고른 사람과 짝을 지어 2분 동안 근거를 설명한 뒤 다시 투표하세요(Peer Instruction).</p>`:""}</div>`:""}
+      </div>
+      <div class="row"><button class="btn" data-act="lvPrev">이전 문항</button>
+        ${!LV.reveal?`<button class="btn primary" data-act="lvReveal">정답 공개</button>`:LV.round===1&&pc<70?`<button class="btn burg" data-act="lvRevote">짝 토론 2분 → 재투표</button>`:""}
+        <button class="btn" data-act="lvNext">다음 문항</button></div>
+      <p class="note">학생들은 손가락(1~4)이나 O/X 카드로 답하고, 진행자가 수를 세어 입력합니다. 실시간 서버 없이 강의실 어디서나 작동합니다.</p>`;
+  }
+  if(LV.tab==="teams"){
+    const mx = Math.max(1,...T.teams.map(t=>t.s));
+    const sorted = T.teams.map((t,i)=>({...t,i})).sort((a,b)=>b.s-a.s);
+    body = `<div class="stack">${sorted.map((t,r)=>`<div class="card" style="padding:14px"><div class="row between" style="flex-wrap:nowrap;gap:12px">
+        <span class="timer" style="font-size:clamp(22px,2.4vw,40px);color:var(--gold);width:1.6em">${r+1}</span>
+        <input type="text" id="tn_${t.i}" value="${esc(t.n)}" data-act="lvTeamName" data-k="${t.i}" aria-label="팀 이름" style="max-width:180px;font-weight:700">
+        <div class="bar" style="flex:1;height:18px"><i style="width:${Math.round(t.s/mx*100)}%"></i></div>
+        <b class="timer num" style="font-size:clamp(22px,2.4vw,40px);min-width:2.6em;text-align:right">${t.s}</b>
+        <span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm" data-act="lvScore" data-k="${t.i}" data-d="-5">−5</button><button class="btn sm" data-act="lvScore" data-k="${t.i}" data-d="5">+5</button><button class="btn sm primary" data-act="lvScore" data-k="${t.i}" data-d="10">+10</button></span>
+      </div></div>`).join("")}</div>
+      <div class="row"><button class="btn" data-act="lvTeamAdd">팀 추가</button><button class="btn" data-act="lvTeamDel" ${T.teams.length<=2?"disabled":""}>마지막 팀 삭제</button><button class="btn ghost" data-act="lvTeamReset">점수 초기화</button></div>`;
+  }
+  if(LV.tab==="cloud"){
+    const entries = Object.entries(T.cloud).sort((a,b)=>b[1]-a[1]);
+    const mx = Math.max(1,...entries.map(e=>e[1]));
+    const palette = ["var(--gold)","var(--fg)","var(--burg)","var(--ok)","var(--muted)"];
+    body = `<input type="text" id="cq" data-act="lvCloudQ" value="${esc(T.cloudQ)}" aria-label="질문" style="font-family:var(--serif);font-size:clamp(18px,2vw,30px);font-weight:700;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0">
+      <div class="cloud" aria-live="polite">${entries.length?shuffle(entries).map(([w,c],i)=>`<span style="font-size:${Math.round(16+ (c/mx)*54)}px;color:${palette[(w.length+c)%palette.length]}" title="${c}회">${esc(w)}</span>`).join(""):`<span class="muted" style="font-family:var(--sans);font-weight:500">학생들이 말한 요인을 아래에 입력하세요. 같은 말이 반복될수록 크게 보입니다.</span>`}</div>
+      <form class="row" data-form="cloud" style="flex-wrap:nowrap"><input type="text" id="cin" maxlength="20" placeholder="예: 공감, 소통, 결단력" aria-label="요인 입력"><button class="btn primary" type="submit">추가</button></form>
+      <div class="row"><span class="muted small">상위 요인: ${entries.slice(0,5).map(e=>esc(e[0])+"("+e[1]+")").join(", ")||"-"}</span><button class="btn sm ghost" data-act="lvCloudClear">비우기</button></div>
+      <p class="note">팀 활동 '유아교육기관장에게 요구되는 리더십 요인' 브레인스토밍용입니다. 모인 요인을 특성·행동·상황 이론으로 분류해 보는 활동으로 이어 가면 좋습니다.</p>`;
+  }
+  if(LV.tab==="hav"){
+    const h = LV.hav, qs = HAVRUTA[h.w];
+    body = `<div class="row between"><select id="hw" data-act="lvHavWorld" aria-label="월드 선택" style="width:auto">${WORLDS.map(w=>`<option value="${w.id}" ${h.w===w.id?"selected":""}>${esc(w.name)}</option>`).join("")}</select><span class="pill num">라운드 ${h.round}</span></div>
+      <div class="card"><p class="bigq">${esc(qs[h.i])}</p></div>
+      <div class="grid2"><div class="speaker ${h.sp===0?"on":""}"><div class="eyebrow">질문하는 사람 A</div><div class="bigtimer timer num" id="ht0">${h.sp===0?h.left:"—"}</div></div><div class="speaker ${h.sp===1?"on":""}"><div class="eyebrow">질문하는 사람 B</div><div class="bigtimer timer num" id="ht1">${h.sp===1?h.left:"—"}</div></div></div>
+      <div class="row"><button class="btn primary" data-act="lvHavRun">${h.run?"멈춤":"시작"}</button><button class="btn" data-act="lvHavSwap">발언 교대</button><button class="btn" data-act="lvHavNext">다음 질문 카드</button></div>
+      <p class="note">90초마다 질문자와 답하는 사람이 바뀝니다. 되묻기: 왜 그렇게 생각해? · 근거 이론은? · 반대 상황이라면?</p>`;
+  }
+  return `<header class="top"><div class="in"><button class="iconbtn" data-act="go" data-to="teacher" aria-label="대시보드로">${ICON.back}</button><div class="brand">LEAD <b>QUEST</b> <span class="muted" style="font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:0">라이브 전광판</span></div><div class="sp"></div>
+    <button class="btn sm" data-act="fullscreen">전체 화면</button><button class="iconbtn" data-act="theme" aria-label="화면 테마 바꾸기">${ICON.sun}</button></div></header>
+    <main class="wrap live stack ${NEWROUTE?"fadein":""}" style="padding-bottom:40px">
+      <div class="tabs" role="tablist">${tabs.map(t=>`<button role="tab" aria-selected="${LV.tab===t[0]}" data-act="lvTab" data-v="${t[0]}">${t[1]}</button>`).join("")}</div>
+      ${body}
+      <div class="foot"><b>${esc(COURSE.sign)}</b> · ${esc(COURSE.course)}</div>
+    </main>`;
+};
+AFTER.live = ()=>{
+  if(LV.tab==="quiz" && LV.run){
+    timers.push(setInterval(()=>{ LV.left = Math.max(0,(LV.left==null?LV.time:LV.left)-1); const el=$("#lvt"); if(el){ el.textContent=LV.left; el.classList.toggle("low",LV.left<=5);} if(LV.left<=0){ LV.run=false; clearTimers(); render(); } },1000));
+  }
+  if(LV.tab==="hav" && LV.hav.run){
+    timers.push(setInterval(()=>{ const h=LV.hav; h.left--; if(h.left<=0){ h.sp=1-h.sp; h.left=90; if(h.sp===0) h.round++; render(); return; } const el=$("#ht"+h.sp); if(el){ el.textContent=h.left; el.classList.toggle("low",h.left<=10);} },1000));
+  }
+};
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+function P(el){ try{ return JSON.parse(el.dataset.p||"{}"); }catch(e){ return {}; } }
+document.addEventListener("click", e=>{
+  const el = e.target.closest("[data-act]"); if(!el || el.disabled) return;
+  if(el.tagName==="SELECT"||el.tagName==="INPUT") return;
+  const a = el.dataset.act, v = el.dataset.v;
+  const H = ACT[a]; if(H){ e.preventDefault(); H(el, v); }
+});
+document.addEventListener("keydown", e=>{
+  if((e.key==="Enter"||e.key===" ") && e.target.matches && e.target.matches('[role="button"][data-act]')){ e.preventDefault(); e.target.click(); }
+});
+document.addEventListener("change", e=>{
+  const el = e.target; const a = el.dataset && el.dataset.act; if(!a) return;
+  if(a==="qmatch"){ Q.temp[+el.dataset.k] = +el.value; }
+  if(a==="lvWorld"){ LV.w=el.value; LV.qi=0; resetTally(); render(); }
+  if(a==="lvHavWorld"){ LV.hav.w=el.value; LV.hav.i=0; render(); }
+  if(a==="lvTeamName"){ T.teams[+el.dataset.k].n = el.value.slice(0,16)||"팀"; saveT(); }
+  if(a==="lvCloudQ"){ T.cloudQ = el.value; saveT(); }
+});
+document.addEventListener("submit", e=>{
+  const f = e.target; e.preventDefault();
+  if(f.dataset.form==="cloud"){ const i=$("#cin"); const w=(i.value||"").trim().replace(/\s+/g," "); if(!w) return; T.cloud[w]=(T.cloud[w]||0)+1; saveT(); render(); setTimeout(()=>{ const n=$("#cin"); if(n) n.focus(); },0); }
+});
+function resetTally(){ LV.tally=[0,0,0,0]; LV.tally1=null; LV.reveal=false; LV.round=1; LV.left=null; LV.run=false; clearTimers(); }
+
+const ACT = {
+  go(el){ const to = el.dataset.to; const p = P(el); if(to==="dialogue" && (!D || D.w!==p.w)) D=null; go(to, p); },
+  locked(){ toast("이전 월드의 보스전을 통과하면 열립니다"); },
+  closeOverlay(){ closeOverlay(); },
+  theme(){ const order=["system","dark","light"]; const cur=S.settings.theme; const cs = window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";
+    const eff = cur==="system"?cs:cur; S.settings.theme = eff==="dark"?"light":"dark"; save(); applyTheme(); toast(S.settings.theme==="dark"?"다크 테마":"라이트 테마"); },
+  setTheme(el,v){ S.settings.theme=v; save(); render(); },
+  toggle(el){ const k=el.dataset.k; S.settings[k]=!S.settings[k]; save(); render(); },
+  fullscreen(){ const d=document.documentElement; (d.requestFullscreen? d.requestFullscreen():Promise.reject()).catch(()=>toast("이 화면에서는 전체 화면을 쓸 수 없습니다. 브라우저의 전체 화면(F11)을 쓰세요.")); },
+  print(){ try{ window.print(); }catch(e){} },
+  // onboarding
+  onb1(){ const n=($("#nick").value||"").trim(), t=$("#team").value; if(n.length<2){ toast("닉네임을 2자 이상 입력하세요"); $("#nick").focus(); return; }
+    S.nick=n.slice(0,12); S.team=t; save(); if(S.onboarded){ toast("저장했습니다"); go("me"); return; } S.preAns=[]; go("onboard",{step:1,i:0}); },
+  pre(el,v){ const i=R.p.i||0, item=PRE[i]; const val = item.t==="ox" ? v==="1" : +v; S.preAns=(S.preAns||[]); S.preAns[i]= val===item.a;
+    if(i<PRE.length-1) go("onboard",{step:1,i:i+1}); else { S.pre=S.preAns.filter(Boolean).length; delete S.preAns; S.onboarded=true; rollover(); save(); go("onboard",{step:2}); } },
+  // cards
+  flip(){ R.p.f=!R.p.f; render(); },
+  cardNav(el){ R.p.i=(R.p.i||0)+(+el.dataset.d); R.p.f=false; render(); window.scrollTo(0,0); },
+  rate(el,v){ const c=CARDS[R.p.w][R.p.i||0]; const prev=S.cards[c.id]; const day=864e5;
+    let int = v==="know" ? Math.max(3,Math.round(((prev&&prev.int)||1.2)*2.5)) : v==="meh" ? 1 : 0;
+    S.cards[c.id]={r:v,int,next:Date.now()+int*day - (int?3600e3:0)};
+    if(!prev || prev.d!==ymd()){ S.cards[c.id].d=ymd(); mission("cards"); } else S.cards[c.id].d=prev.d;
+    save(); touchStreak(); render(); toast(v==="know"?int+"일 뒤 복습합니다":v==="meh"?"내일 다시 봅니다":"오늘 복습 목록에 올렸습니다"); },
+  explain(el){ const c=CARDS[R.p.w][R.p.i||0]; const t=($("#expl").value||"").trim(); const out=$("#kwout");
+    if(t.length<10){ out.innerHTML='<span style="color:var(--bad)">10자 이상 써 주세요</span>'; return; }
+    const hit = c.kw.filter(k=>t.replace(/\s/g,"").includes(k.replace(/\s/g,""))); const miss=c.kw.filter(k=>!hit.includes(k));
+    out.innerHTML = c.kw.map(k=>`<span class="kw ${hit.includes(k)?"hit":"miss"}">${esc(k)}</span>`).join("") + (miss.length?` <span class="muted">빠진 요소를 넣어 다시 써 볼까요?</span>`:" <span style='color:var(--ok)'>핵심 요소를 모두 담았습니다</span>");
+    const first = !S.explains[c.id]; S.explains[c.id]=t; save();
+    if(first && hit.length>=Math.ceil(c.kw.length/2)) gain(XP.explain,"내 말로 설명하기",el);
+    else if(first) toast("핵심 요소를 절반 이상 담으면 XP를 받습니다"); },
+  // dialogue
+  dpick(el,v){ const st=DIALOGUES[D.w].steps[D.step]; const k=+v; if(D.firstPick[D.step]==null){ D.firstPick[D.step]=st.o[k].s; D.score+=st.o[k].s; }
+    D.picked=k; render(); },
+  dhint(){ if(D.hintLv<3){ D.hintLv++; D.hints++; render(); } },
+  dnext(){ const st=DIALOGUES[D.w].steps[D.step]; D.log.push({t:st.q},{me:true,t:st.o[D.picked].t});
+    if(D.step<4){ D.step++; D.picked=null; D.hintLv=0; render(); window.scrollTo(0,document.body.scrollHeight); return; }
+    D.finished=true; const prev=S.dialogues[D.w]||{};
+    S.dialogues[D.w]={done:true,score:Math.max(prev.score||0,D.score),hints:D.hints,n:(prev.n||0)+1}; mission("dlg"); save();
+    if(!prev.done) gain(Math.max(10, XP.dialogue - XP.hint*D.hints),"소크라테스 문답 완주");
+    checkBadges(); render(); window.scrollTo(0,0); },
+  dreset(){ D=null; render(); },
+  // quiz
+  quizStart(el){ const p=P(el); const ids = shuffle(worldQs(p.w).map(q=>q.id)); startQuiz(ids,"arena",p.w); },
+  bossStart(el){ const p=P(el); const ids = shuffle(worldQs(p.w).map(q=>q.id)).slice(0,10); startQuiz(ids,"boss",p.w); },
+  retryAll(){ const ids = Object.entries(S.wrong).filter(([id,v])=>!v.fixed).sort((a,b)=>(b[1].mis?1:0)-(a[1].mis?1:0)).map(([id])=>id).slice(0,15); if(ids.length) startQuiz(ids,"retry",null); },
+  retryOne(el,v){ startQuiz([v],"retry",null); },
+  qset(el,v){ const q=QBY[Q.ids[Q.i]]; Q.temp = q.t==="ox" ? v==="true" : +v; render(); },
+  qconf(el,v){ Q.conf=v; render(); },
+  qsort(el){ Q.temp[+el.dataset.k]=+el.dataset.v; render(); },
+  qmove(el){ const k=+el.dataset.k, d=+el.dataset.d; const t=Q.temp; [t[k],t[k+d]]=[t[k+d],t[k]]; render(); },
+  qchip(el){ const k=+el.dataset.k; if(Q.temp[k]){ Q.temp[k]=null; Q.sel=k; } else Q.sel = Q.sel===k?null:k; render(); },
+  qcell(el,v){ if(Q.sel==null){ toast("먼저 묘사를 고르세요"); return; } Q.temp[Q.sel]=v; Q.sel=null; render(); },
+  qgrid(el){ Q.temp=[+el.dataset.x,+el.dataset.y]; render(); },
+  qsubmit(el){ submitQ(el); },
+  qnext(){ nextQ(); },
+  quitQuiz(){ if(Q.mode==="boss"){ while(Q.results.length<Q.ids.length) Q.results.push({id:Q.ids[Q.results.length],ok:false}); finishQuiz(); } else if(Q.results.length){ finishQuiz(); } else go(Q.w?"world":"notes",{w:Q.w}); },
+  // case
+  cpick(el,v){ if(R.p.s===1) R.p.dx=+v; else R.p.rx=+v; render(); },
+  cnext(){ const k=CASES.find(x=>x.id===R.p.k); const st=S.cases[k.id]||{};
+    if(R.p.s===1){ go("case",{k:k.id,s:2,dx:R.p.dx}); return; }
+    const first=!st.done; S.cases[k.id]={...st,done:true,dx:R.p.dx,rx:R.p.rx,ok:R.p.dx===k.dx.a&&R.p.rx===k.rx.a}; save();
+    if(first) gain(XP.caseLab,"사례 진단 제출");
+    checkBadges(); go("case",{k:k.id,s:3,dx:R.p.dx,rx:R.p.rx}); },
+  cnote(){ const k=R.p.k; S.cases[k]=S.cases[k]||{}; S.cases[k].note=($("#cnote").value||"").trim().slice(0,300); save(); toast("진단 리포트를 저장했습니다"); },
+  // league
+  loadSnap(){ const t=($("#snap").value||"").trim(); const m=t.match(/LQS\.([A-Za-z0-9_\-]+)\.([a-z0-9]+)/); if(!m){ toast("LQS. 로 시작하는 코드를 붙여 넣으세요"); return; }
+    try{ const json=b64d(m[1]); if(hash(json)!==m[2]) throw 0; const L=JSON.parse(json); const myk=S.id.slice(0,8); L.top.forEach(p=>p.me = p.k===myk); S.league=L; save(); render(); toast("리그 스냅샷을 불러왔습니다"); }
+    catch(e){ toast("코드가 손상되었습니다. 다시 복사해 붙여 넣으세요"); } },
+  // me
+  copyCode(){ copyText(makeCode(),"성과 코드를 복사했습니다. 교수님이 안내한 곳에 붙여 넣으세요"); },
+  askReset(){ $("#resetBox").innerHTML=`<div class="fb bad stack"><b>정말 이 기기의 모든 학습 기록을 지울까요?</b><span class="small">XP·배지·오답노트가 모두 사라지며 되돌릴 수 없습니다.</span><div class="row"><button class="btn sm" data-act="cancelReset">취소</button><button class="btn sm burg" data-act="doReset">모두 지우기</button></div></div>`; },
+  cancelReset(){ $("#resetBox").innerHTML=""; },
+  doReset(){ const theme=S.settings.theme; S=blank(); S.settings.theme=theme; save(); D=null; Q=null; go("onboard"); },
+  // self check
+  scset(el){ const a = Object.assign({}, R.p.a||{}); a[+el.dataset.k]=+el.dataset.v; R.p.a=a; render(); },
+  scdone(){ const a=R.p.a; let t=0,r=0; SELFCHECK.forEach((it,k)=>{ if(it.k==="T") t+=a[k]; else r+=a[k]; });
+    const to9 = s=>Math.max(1,Math.min(9,Math.round(1+(s/6-1)*2))); const first=!S.selfcheck;
+    S.selfcheck={T:to9(t),R:to9(r),at:Date.now()}; save(); if(first) gain(XP.self,"리더십 스타일 자기점검"); checkBadges(); go("selfcheck",{result:true}); },
+  // timeline
+  tmove(el){ const k=+el.dataset.k, d=+el.dataset.d; const o=R.p.order; [o[k],o[k+d]]=[o[k+d],o[k]]; render(); },
+  tsubmit(){ R.p.sub=true; const ok=R.p.order.every((v,k)=>v===k); if(ok && !S.timeline){ S.timeline=true; save(); gain(XP.timeline,"리더십 연대기 완성"); checkBadges(); } render(); },
+  tretry(){ go("timeline",{}); },
+  // havruta & exit
+  havDone(el,v){ S.havruta++; const k="hav_"+v+"_"+ymd(); if(!S[k]){ S[k]=1; save(); gain(XP.havruta,"하브루타 짝 대화"); } else save(); checkBadges(); go("world",{w:v}); },
+  exitSave(el,v){ const t=($("#exitt").value||"").trim(); const g=($("#exitg").value||"").trim(); if(t.length<4){ toast("헷갈린 것을 한 줄 이상 써 주세요"); return; }
+    const today=ymd(); const dup = S.exits.some(e=>e.w===v && e.d===today);
+    S.exits.push({w:v,t:t.slice(0,200),g:g.slice(0,120),d:today,at:Date.now()}); S.exits=S.exits.slice(-20); save();
+    if(!dup) gain(XP.exit,"출구 성찰 제출",el); else toast("저장했습니다. XP는 월드별 하루 1회 지급됩니다");
+    go("world",{w:v}); },
+  // teacher
+  tImport(){ const r=parseCodes($("#codes").value||""); render(); toast(r.ok?r.ok+"개 코드를 불러왔습니다"+(r.bad?" · 손상된 코드 "+r.bad+"개 제외":""):"유효한 코드를 찾지 못했습니다"); },
+  tAskClear(){ $("#tbox").innerHTML=`<div class="fb bad row"><span>불러온 명단을 모두 비울까요?</span><button class="btn sm" data-act="tCancel">취소</button><button class="btn sm burg" data-act="tClear">비우기</button></div>`; },
+  tCancel(){ $("#tbox").innerHTML=""; },
+  tClear(){ T.roster={}; saveT(); render(); },
+  tCsv(){ download("leadquest_"+ymd()+".csv", csv()); },
+  tCsvCopy(){ copyText(csv(),"CSV를 복사했습니다. 스프레드시트에 붙여 넣으세요"); },
+  tSnap(){ const {L,tl}=leagueData(); const r={}; L.forEach((p,i)=>r[p.id.slice(0,8)]=[i+1,p.wxNow]);
+    const snap={at:Date.now(),total:L.length,top:L.slice(0,5).map(p=>({n:p.n,t:p.t,lv:p.lv,x:p.wxNow,k:p.id.slice(0,8)})),teams:tl,r};
+    const json=JSON.stringify(snap); const code="LQS."+b64e(json)+"."+hash(json);
+    $("#tbox").innerHTML=`<div class="stack" style="margin-top:8px"><b class="small">리그 스냅샷 코드: 학생들에게 공유하세요(상위 5명 닉네임과 팀 평균만 공개, 나머지는 본인 순위만 확인)</b><div class="code">${esc(code)}</div></div>`;
+    copyText(code,"리그 스냅샷 코드를 복사했습니다"); },
+  // live
+  lvTab(el,v){ LV.tab=v; LV.run=false; LV.hav.run=false; clearTimers(); render(); },
+  lvTally(el){ const k=+el.dataset.k; LV.tally[k]=Math.max(0,(LV.tally[k]||0)+(+el.dataset.d)); render(); },
+  lvReveal(){ LV.reveal=true; LV.run=false; clearTimers(); render(); },
+  lvRevote(){ LV.tally1=LV.tally.slice(); LV.tally=[0,0,0,0]; LV.reveal=false; LV.round=2; LV.left=120; LV.run=true; clearTimers(); render(); toast("2분 짝 토론 후 다시 투표합니다"); },
+  lvNext(){ LV.qi++; resetTally(); render(); },
+  lvPrev(){ const n=liveQs().length; LV.qi=(LV.qi-1+n)%n; resetTally(); render(); },
+  lvTimer(){ if(LV.run){ LV.run=false; clearTimers(); render(); return; } if(LV.left==null||LV.left<=0) LV.left=LV.time; LV.run=true; render(); },
+  lvScore(el){ const t=T.teams[+el.dataset.k]; t.s=Math.max(0,t.s+(+el.dataset.d)); saveT(); render(); },
+  lvTeamAdd(){ T.teams.push({n:(T.teams.length+1)+"팀",s:0}); saveT(); render(); },
+  lvTeamDel(){ if(T.teams.length>2){ T.teams.pop(); saveT(); render(); } },
+  lvTeamReset(){ T.teams.forEach(t=>t.s=0); saveT(); render(); },
+  lvCloudClear(){ T.cloud={}; saveT(); render(); },
+  lvHavRun(){ LV.hav.run=!LV.hav.run; clearTimers(); render(); },
+  lvHavSwap(){ const h=LV.hav; h.sp=1-h.sp; h.left=90; if(h.sp===0) h.round++; clearTimers(); render(); },
+  lvHavNext(){ const h=LV.hav; h.i=(h.i+1)%HAVRUTA[h.w].length; h.sp=0; h.left=90; h.round=1; clearTimers(); render(); }
+};
+function csv(){
+  const head=["닉네임","팀","직급","총XP","이번주XP","사전진단",...WORLDS.map(w=>w.name+" 숙달도(%)"),"문답완주","사례진단","보스통과","미해결 오개념 수","연속학습","최근학습","출구성찰"];
+  const rows = rosterList().map(p=>[p.n,p.t,p.lv,p.xp,p.wxNow,p.pre==null?"":p.pre,...WORLDS.map(w=>{const m=(p.m||{})[w.id]; return m&&m[1]?Math.round(m[0]/m[1]*100):"";}),p.dl||0,p.cs||0,p.bp||0,(p.mis||[]).length,p.st||0,p.last||"",(p.ex||[]).map(e=>e[1]).join(" / ")]);
+  return [head,...rows].map(r=>r.map(x=>{ const s=String(x==null?"":x); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }).join(",")).join("\n");
+}
+
+/* boot */
+rollover(); save(); render();
+</script>
+</body>
+</html>
