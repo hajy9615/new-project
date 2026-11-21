@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--ARTIFACT-START-->
+<title>제일 IR 플랫폼</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 좌측 고정 메뉴(3개 업무 영역 + 운영) + 우측 작업 화면. 860px 이하에서는 메뉴가 상단 가로 스크롤 띠로 바뀜. */
+:root{
+  --bg:#f3f5f9; --surface:#fcfcfb; --surface2:#ebeff5; --fg:#101826; --muted:#566176; --line:#d7dde8;
+  --accent:#1d4f91; --accent-fg:#ffffff; --accent-soft:#e2ebf8;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --grid:#e3e7ee;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --good-t:#006300; --warn-t:#7a5200; --crit-t:#a82828;
+  --display:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111418; --surface:#1a1a19; --surface2:#25282e; --fg:#f0efec; --muted:#b1b6c1; --line:#363a42;
+    --accent:#86b6ef; --accent-fg:#0b1422; --accent-soft:#1d2a3c;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --grid:#2c3037;
+    --good-t:#62d062; --warn-t:#fab219; --crit-t:#f29090; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111418; --surface:#1a1a19; --surface2:#25282e; --fg:#f0efec; --muted:#b1b6c1; --line:#363a42;
+  --accent:#86b6ef; --accent-fg:#0b1422; --accent-soft:#1d2a3c;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --grid:#2c3037;
+  --good-t:#62d062; --warn-t:#fab219; --crit-t:#f29090; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 var(--body);}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100%}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{padding:0 8px}
+.brand b{font:700 17px/1.3 var(--display);display:block}
+.brand span{font-size:12px;color:var(--muted)}
+.navg{display:flex;flex-direction:column;gap:2px}
+.navg h6{margin:0 0 2px;padding:0 8px;font:600 11px/1.6 var(--body);letter-spacing:.06em;color:var(--muted)}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:8px;border:0;background:none;text-align:left;padding:7px 8px;border-radius:7px;cursor:pointer;width:100%;text-decoration:none;color:inherit}
+.nav:hover{background:var(--surface2)}
+.nav[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.nav .cnt{font-size:11px;background:var(--crit);color:#fff;border-radius:9px;padding:0 6px;line-height:18px;font-weight:700}
+.rolebox{margin-top:auto;border-top:1px solid var(--line);padding:12px 8px 0;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+.main{min-width:0;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.vh{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.vh h1{margin:0;font:700 24px/1.3 var(--display);text-wrap:balance}
+.vh p{margin:2px 0 0;color:var(--muted);max-width:68ch}
+.sample{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:1px dashed var(--serious);border-radius:var(--r);padding:8px 12px;font-size:13px;background:var(--surface)}
+.sample b{color:var(--crit-t)}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+@media (max-width:420px){.g2{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.panel>h2{margin:0;font:600 15px/1.4 var(--display)}
+.panel>h2 small{font:400 12px var(--body);color:var(--muted);margin-left:6px}
+.kpi{border-left:0}
+.kpi .lab{font-size:12px;color:var(--muted)}
+.kpi .val{font:700 28px/1.2 var(--display);font-variant-numeric:tabular-nums}
+.kpi .val small{font:500 13px var(--body);color:var(--muted);margin-left:3px}
+.kpi .sub{font-size:12px;color:var(--muted)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.tot td{font-weight:700;border-top:2px solid var(--fg);border-bottom:0}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:20px;padding:0 8px;border-radius:10px;background:var(--surface2);white-space:nowrap}
+.pill.good{color:var(--good-t)} .pill.warn{color:var(--warn-t)} .pill.crit{color:var(--crit-t)}
+.pill.good::before{content:"●"} .pill.warn::before{content:"▲"} .pill.crit::before{content:"■"}
+.bar{display:grid;grid-template-columns:minmax(90px,200px) minmax(60px,1fr) 58px;gap:10px;align-items:center;font-size:13px}
+.bar .track{height:12px;background:var(--surface2);border-radius:0 4px 4px 0;position:relative}
+.bar .fill{height:100%;background:var(--s1);border-radius:0 4px 4px 0;min-width:2px}
+.bar .mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.bars{display:flex;flex-direction:column;gap:8px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:0;border-top:2px solid;vertical-align:middle;margin-right:5px}
+.legend i.d{border-top-style:dashed}
+.legend i.m{width:2px;height:12px;border:0;background:var(--fg)}
+svg text{font:11px var(--body);fill:var(--muted)}
+svg .lbl{fill:var(--fg);font-weight:500}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:6px 12px;cursor:pointer}
+.btn:hover{background:var(--surface2)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:700}
+.btn.sm{padding:2px 9px;font-size:12px}
+.btn.danger{color:var(--crit-t)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs .btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.form label,.fl{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.form .wide{grid-column:1/-1}
+input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:6px 9px;min-width:0;width:100%}
+textarea{min-height:72px;resize:vertical}
+.doc{border:1px solid var(--fg);padding:22px;background:var(--surface);font-size:13px}
+.doc h3{text-align:center;font:700 19px var(--display);margin:0 0 14px;letter-spacing:.3em}
+.doc td,.doc th{border:1px solid var(--fg);color:var(--fg)}
+.doc th{width:26%;background:var(--surface2);font-size:13px}
+.chk{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.chk:last-child{border-bottom:0}
+.msg{align-self:flex-start;max-width:80ch;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;background:var(--surface)}
+.msg.me{align-self:flex-end;background:var(--accent-soft);border-color:transparent}
+.msg blockquote{margin:6px 0;padding:6px 10px;border-left:3px solid var(--s1);background:var(--surface2)}
+.msg .src{font-size:12px;color:var(--muted)}
+.chat{display:flex;flex-direction:column;gap:10px;min-height:220px}
+.note{font-size:12px;color:var(--muted)}
+.ins{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.ins h3{margin:0;font:600 14px/1.5 var(--display)}
+.heat td.c{text-align:right}
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--fg);color:var(--bg);font-size:12px;padding:5px 8px;border-radius:6px;max-width:260px;white-space:pre-line}
+.tl{display:flex;flex-direction:column;gap:0;border-left:2px solid var(--line);margin-left:6px;padding-left:14px}
+.tl div{padding:5px 0;position:relative}
+.tl div::before{content:"";position:absolute;left:-20px;top:13px;width:10px;height:10px;border-radius:50%;background:var(--s1);border:2px solid var(--surface)}
+.tl div.chg::before{background:var(--s2)}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left,0px));gap:8px}
+  .navs{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px}
+  .navg{flex-direction:row;flex:none}
+  .navg h6{display:none}
+  .nav{white-space:nowrap;width:auto}
+  .rolebox{margin:0;border:0;padding:0;flex-direction:row;flex-wrap:wrap;align-items:center}
+  .rolebox select{width:auto}
+  .vh h1{font-size:20px}
+}
+@media (prefers-reduced-motion:no-preference){.fill{transition:width .3s}}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>제일 IR 플랫폼</b><span>순천제일대학교 교육혁신원 · AID 사업단</span></div>
+    <nav class="navs" id="navs" aria-label="메뉴"></nav>
+    <div class="rolebox">
+      <label for="role">열람 권한 미리보기</label>
+      <select id="role"><option value="manager">담당자 (관리·전체 열람)</option><option value="viewer">전체 열람</option><option value="dept">소속 열람</option></select>
+      <select id="roleDept" aria-label="소속 부서" hidden></select>
+    </div>
+  </aside>
+  <main class="main"><div class="wrap" id="view"></div></main>
+</div>
+<div id="tip" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+"use strict";
+/* ============ 기본 도구 ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const won=n=>Math.round(n).toLocaleString("ko-KR");
+const mil=n=>(n/1e6).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1});
+const pct=(a,b)=>b?a/b*100:0, p1=n=>n.toFixed(1);
+const sum=(a,f=x=>x)=>a.reduce((s,x)=>s+f(x),0);
+const ymd=d=>d.toISOString().slice(0,10);
+const KEY="scjc-ir-v1";
+function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36).toUpperCase().padStart(6,"0").slice(0,6)}
+
+/* ============ 예시 데이터 (실제 자료 업로드 전까지 표시) ============ */
+function sampleState(){
+  const areas=["AI·DX 교육과정 혁신","AI 기반 교수학습 지원","AI 교육 인프라 구축","AI 행정혁신·성과확산"];
+  const P=[
+    ["P01","AI 융합 교육과정 개발",0,"AIDX교육센터",180,.71],["P02","AI 마이크로디그리 운영",0,"AIDX교육센터",120,.66],
+    ["P03","학과별 AI 활용 교과목 개편",0,"학과 공통",150,.44],["P04","교수자 AI 교수법 연수",1,"교수학습정보지원센터",90,.78],
+    ["P05","AI 튜터·학습분석 운영",1,"교수학습정보지원센터",110,.62],["P06","원격수업 콘텐츠 고도화",1,"원격교육지원센터",100,.74],
+    ["P07","AI 실습실 구축",2,"AIDX교육센터",320,.31],["P08","생성형 AI 라이선스",2,"원격교육지원센터",140,.83],
+    ["P09","학습데이터 플랫폼",2,"교육혁신원",160,.52],["P10","행정 AI 전환 지원",3,"교육혁신원",80,.69],
+    ["P11","성과확산 워크숍·공모전",3,"사업단 운영팀",70,.58],["P12","사업 운영·성과관리",3,"사업단 운영팀",90,.73]
+  ].map(a=>({id:a[0],name:a[1],area:areas[a[2]],dept:a[3],budget:a[4]*1e6,_f:a[5]}));
+  const items=["인건비","교육과정 개발·운영비","교육환경 개선비","기자재 구입비","사업 운영비"];
+  let s=20261121;const r=()=>(s=(Math.imul(s,1664525)+1013904223)>>>0)/4294967296;
+  const tx=[];let id=1;
+  const acct=v=>"AC-"+hash("acct"+v).slice(0,4);
+  for(const p of P){
+    const n=7+Math.floor(r()*7), w=Array.from({length:n},()=>.4+r()), ws=sum(w), total=p.budget*p._f;
+    for(let i=0;i<n;i++){
+      const m=3+Math.min(8,Math.floor(Math.pow(r(),.7)*9)); let d=r()<.38?24+Math.floor(r()*5):1+Math.floor(r()*23);
+      if(m===11)d=1+Math.floor(r()*14);
+      const v="거래처-"+String(1+Math.floor(r()*14)).padStart(2,"0");
+      const it=p.id==="P07"?(r()<.7?items[3]:items[2]):p.id==="P08"?items[4]:items[Math.floor(r()*5)];
+      tx.push({id:id++,date:`2026-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`,prog:p.id,item:it,amount:Math.round(total*w[i]/ws/1000)*1000,vendor:v,acct:acct(v),memo:""});
+    }
+    delete p._f;
+  }
+  // 점검 화면 시연용으로 넣은 사례
+  tx.push({id:id++,date:"2026-10-13",prog:"P04",item:items[4],amount:1800000,vendor:"거래처-04",acct:acct("거래처-04"),memo:"연수 운영 용역"});
+  tx.push({id:id++,date:"2026-10-22",prog:"P11",item:items[4],amount:2400000,vendor:"거래처-04",acct:"AC-2208",memo:"워크숍 운영 용역"});
+  for(let i=0;i<3;i++)tx.push({id:id++,date:"2026-09-17",prog:"P08",item:items[4],amount:4900000,vendor:"거래처-09",acct:acct("거래처-09"),memo:"라이선스 "+(i+1)+"차분"});
+  return {
+    v:1, period:{start:"2026-03-01",end:"2027-02-28"}, items, programs:P, tx,
+    src:{tx:"예시",ind:"예시",kpi:"예시",stu:"예시"},
+    changes:[{date:"2026-06-10",prog:"P07",before:240e6,after:320e6,reason:""},{date:"2026-07-02",prog:"P11",before:60e6,after:70e6,reason:"공모전 신설에 따른 증액"}],
+    ind:{years:[2022,2023,2024,2025,2026],rows:[
+      {name:"신입생 충원율",unit:"%",up:true,our:[88.2,90.1,91.4,93.0,94.6],peer:[89.5,89.9,90.3,91.2,92.0]},
+      {name:"재학생 충원율",unit:"%",up:true,our:[91.0,90.2,89.8,91.1,92.3],peer:[90.4,90.1,90.6,90.9,91.4]},
+      {name:"취업률",unit:"%",up:true,our:[69.8,70.5,71.9,72.4,73.1],peer:[70.9,71.2,71.0,71.8,72.2]},
+      {name:"중도탈락률",unit:"%",up:false,our:[8.9,8.6,8.8,8.1,7.6],peer:[8.2,8.3,8.1,8.0,7.9]},
+      {name:"학생 1인당 교육비",unit:"천원",up:true,our:[10210,10680,11150,11820,12490],peer:[10650,10900,11300,11700,12100]},
+      {name:"전임교원 확보율",unit:"%",up:true,our:[62.1,62.8,63.5,64.0,64.9],peer:[63.0,63.2,63.9,64.4,64.8]}]},
+    kpis:[
+      {id:"K1",name:"AI 교과목 이수율",unit:"%",target:60,actual:52,progs:["P01","P02","P03"]},
+      {id:"K2",name:"교수자 AI 교수법 연수 이수율",unit:"%",target:80,actual:74,progs:["P04"]},
+      {id:"K3",name:"AI 튜터 활용 학생 비율",unit:"%",target:50,actual:28,progs:["P05","P08"]},
+      {id:"K4",name:"AI 활용 콘텐츠 개발 건수",unit:"건",target:40,actual:36,progs:["P06"]},
+      {id:"K5",name:"행정 AI 도구 적용 업무 수",unit:"건",target:20,actual:22,progs:["P10"]},
+      {id:"K6",name:"성과확산 참여 기관 수",unit:"곳",target:15,actual:9,progs:["P11"]}],
+    evals:[
+      {name:"1차년도 연차점검",areas:[["상황",18,20],["투입",21,25],["과정",25,30],["성과",20,25]]},
+      {name:"2차년도 1차 중간점검",areas:[["상황",18,20],["투입",22,25],["과정",27,30],["성과",21,25]]}],
+    feedback:[
+      {id:1,src:"2차년도 1차 중간점검",text:"성과지표와 예산 투입의 연계 근거를 프로그램 단위로 제시할 것",owner:"사업단 운영팀",due:"2026-12-18",status:"진행",evidence:""},
+      {id:2,src:"2차년도 1차 중간점검",text:"프로그램 만족도 조사 결과가 다음 학기 계획에 반영된 내역을 관리할 것",owner:"교수학습정보지원센터",due:"2026-12-31",status:"접수",evidence:""},
+      {id:3,src:"1차년도 연차점검",text:"AI 실습실 구축 일정 지연에 대비한 집행 계획을 보완할 것",owner:"AIDX교육센터",due:"2026-11-28",status:"진행",evidence:""},
+      {id:4,src:"1차년도 연차점검",text:"교수자 연수 이수 현황을 학과별로 점검할 것",owner:"교수학습정보지원센터",due:"2026-09-30",status:"완료",evidence:"연수 이수 현황 보고(9월)"}],
+    evid:[
+      ["K1","교과목 편성표",1],["K1","수강·이수 명단 집계",1],["K1","교과목 CQI 보고서",0],["K2","연수 계획서",1],["K2","이수 확인 대장",1],
+      ["K3","AI 튜터 이용 로그 집계",0],["K3","학생 안내 공문",1],["K4","콘텐츠 목록·검수 결과",1],["K5","적용 업무 목록",1],["K5","도입 전후 비교 자료",0],
+      ["K6","참여 기관 명단",1],["K6","워크숍 결과보고서",0]].map((a,i)=>({id:i+1,kpi:a[0],doc:a[1],ok:!!a[2]})),
+    students:[["학과 A",98.2,5.1,4.31,78.4,61],["학과 B",95.0,6.8,4.18,74.0,55],["학과 C",91.3,9.4,4.02,69.5,38],["학과 D",99.1,4.4,4.40,81.2,72],
+      ["학과 E",86.5,11.2,3.95,66.1,29],["학과 F",93.7,7.3,4.22,72.8,49],["학과 G",89.9,8.8,4.10,70.3,44],["학과 H",96.4,6.0,4.27,76.6,58]]
+      .map(a=>({dept:a[0],fill:a[1],drop:a[2],sat:a[3],job:a[4],ai:a[5]})),
+    dropWhen:[["1학년 1학기 중",21],["1학년 1학기 종료 후",34],["1학년 2학기 종료 후",24],["2학년 이후",21]],
+    tasks:[{id:1,due:"2026-12-04",text:"11월분 집행 내역 마감·증빙 점검"},{id:2,due:"2026-12-18",text:"중간점검 지적사항 조치 결과 취합"},
+      {id:3,due:"2027-01-15",text:"자율성과지표 실적 집계·증빙 묶음 확정"},{id:4,due:"2027-02-12",text:"사업비 정산 준비(잔액·이월 검토)"}],
+    kb:[
+      {t:"회의비",k:["회의비","회의","다과","식대"],x:"회의 목적·일시·장소·참석자·회의 내용이 기재된 회의록과 지출 증빙을 함께 제출함. 1인당 집행 한도는 운영 설정의 기준값을 적용함."},
+      {t:"여비",k:["여비","출장","교통비","숙박","일비"],x:"출장 목적·기간·출장지가 확인되는 출장 명령(신청) 문서와 교통·숙박 증빙을 제출함. 출장 기간은 사업 기간 안에 있어야 함."},
+      {t:"전문가 수당",k:["수당","자문","자문료","강사료","강사","심사"],x:"활동 일시·내용·시간이 확인되는 결과물(자문 의견서, 강의 확인서 등)과 지급 대상자 확인 서류를 제출함. 지급액은 시간과 단가의 곱과 일치해야 함."},
+      {t:"기자재 구입",k:["기자재","장비","검수","자산"],x:"구입 품의, 견적 비교, 검수 조서, 자산 등재 내역을 함께 보관함. 동일 거래처에 같은 날 여러 건으로 나누어 집행한 경우 사유를 기재함."},
+      {t:"예산 변경",k:["변경","전용","증액","감액","조정"],x:"프로그램 예산을 변경할 때는 변경 전·후 금액과 사유를 기록하고 승인 문서를 남김."},
+      {t:"증빙 일반",k:["증빙","영수증","세금계산서","카드","계좌"],x:"지급 계좌는 거래처 등록 계좌와 대조한 뒤 지급함. 증빙의 금액·일자·거래처가 결의 내용과 일치해야 함."}
+    ].map(o=>({...o,src:"예시 문안 · 대학 사업비 집행 지침 원문으로 교체 필요"})),
+    rules:{meetHead:30000,feeHour:200000,changePct:20,monthEnd:40,lowExec:90,gap:20},
+    review:{}, stats:{views:{},docsOk:0,docsWarn:0,ask:0,miss:[]}, role:"manager", roleDept:""
+  };
+}
+let S;
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.v===1){S=j;return}}catch(e){}S=sampleState()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+load();
+
+/* ============ 계산 ============ */
+const prog=id=>S.programs.find(p=>p.id===id);
+function scope(){return S.role==="dept"&&S.roleDept?S.programs.filter(p=>p.dept===S.roleDept):S.programs}
+function scopeTx(){const ids=new Set(scope().map(p=>p.id));return S.tx.filter(t=>ids.has(t.prog))}
+function months(){const o=[];let d=new Date(S.period.start+"T00:00:00Z");const e=new Date(S.period.end+"T00:00:00Z");while(d<=e){o.push(d.toISOString().slice(0,7));d.setUTCMonth(d.getUTCMonth()+1)}return o}
+function progress(){const a=+new Date(S.period.start),b=+new Date(S.period.end),n=Date.now();return Math.max(0,Math.min(1,(n-a)/(b-a)))*100}
+function forecast(progs,txs){
+  const ms=months(), by=Object.fromEntries(ms.map(m=>[m,0]));
+  for(const t of txs){const m=t.date.slice(0,7);if(m in by)by[m]+=t.amount}
+  const budget=sum(progs,p=>p.budget), nowM=ymd(new Date()).slice(0,7);
+  const lastData=txs.length?txs.map(t=>t.date.slice(0,7)).sort().pop():ms[0];
+  const cur=ms.includes(nowM)?nowM:(nowM>ms[ms.length-1]?null:ms[0]);
+  let cut=cur?ms.indexOf(cur):ms.length; // cut 이전 달까지를 마감된 달로 봄
+  if(lastData<(cur||"9999"))cut=Math.min(cut,ms.indexOf(lastData)+1);
+  const done=ms.slice(0,cut), recent=done.slice(-3), rate=recent.length?sum(recent,m=>by[m])/recent.length:0;
+  const actual=[];let c=0;ms.forEach((m,i)=>{c+=by[m];actual.push(i<cut||by[m]?c:null)});
+  const spent=sum(txs,t=>t.amount), proj=[];let pc=sum(done,m=>by[m]);
+  ms.forEach((m,i)=>{if(i<cut-1)proj.push(null);else if(i===cut-1)proj.push(pc);else{pc+=rate;proj.push(Math.max(pc,i===cut?spent:0))}});
+  const end=Math.min(Math.max(pc,spent),Math.max(budget,spent));
+  return {ms,by,actual,proj,budget,spent,rate,end,endRate:pct(end,budget),unused:Math.max(0,budget-end)};
+}
+function kpiLink(){return S.kpis.map(k=>{const ps=k.progs.map(prog).filter(Boolean),b=sum(ps,p=>p.budget),ids=new Set(ps.map(p=>p.id)),sp=sum(S.tx.filter(t=>ids.has(t.prog)),t=>t.amount);
+  return {...k,budget:b,spent:sp,exec:pct(sp,b),ach:pct(k.actual,k.target)}})}
+function insights(){
+  const out=[],R=S.rules,name=id=>prog(id)?.name||id;
+  const byV={};for(const t of S.tx)(byV[t.vendor]??=[]).push(t);
+  for(const [v,ts] of Object.entries(byV)){const ac=[...new Set(ts.map(t=>t.acct).filter(Boolean))];
+    if(ac.length>1){const odd=ts.filter(t=>t.acct!==ts[0].acct);out.push({id:"acct:"+v,lv:"crit",type:"지급 계좌 불일치",title:`${v}에 지급한 계좌가 ${ac.length}개로 나뉨`,
+      body:`같은 거래처에 서로 다른 계좌로 지급한 기록이 있음. 문서 한 건씩 보면 드러나지 않는 유형임.`,ev:[ts[0],...odd].slice(0,4).map(t=>`${t.date} ${name(t.prog)} ${won(t.amount)}원 (${t.acct})`),act:"지급 전 등록 계좌 대조 절차 확인",progs:[...new Set(ts.map(t=>t.prog))]})}}
+  for(const c of S.changes){const d=pct(c.after-c.before,c.before);if(Math.abs(d)>=R.changePct&&!c.reason.trim())out.push({id:"chg:"+c.prog+c.date,lv:"warn",type:"계획 대비 예산 변경",
+    title:`${name(c.prog)} 예산이 ${p1(d)}% 변경됨, 사유 기록 없음`,body:`${c.date}에 ${mil(c.before)}백만원에서 ${mil(c.after)}백만원으로 변경됨.`,ev:[`변경 이력 ${c.date}`],act:"변경 사유와 승인 문서 보완",progs:[c.prog]})}
+  const g={};for(const t of S.tx)(g[t.vendor+"|"+t.date+"|"+t.prog]??=[]).push(t);
+  for(const ts of Object.values(g))if(ts.length>=2)out.push({id:"split:"+ts[0].vendor+ts[0].date+ts[0].prog,lv:"warn",type:"같은 날 나누어 집행",title:`${name(ts[0].prog)}: ${ts[0].vendor}에 ${ts[0].date} 하루 ${ts.length}건 집행`,
+    body:`합계 ${won(sum(ts,t=>t.amount))}원. 나누어 집행한 사유가 기록되어 있는지 확인이 필요함.`,ev:ts.map(t=>`${t.date} ${won(t.amount)}원 ${t.memo||""}`),act:"분할 집행 사유 기재 여부 확인",progs:[ts[0].prog]});
+  const tot=sum(S.tx,t=>t.amount),late=sum(S.tx.filter(t=>+t.date.slice(8)>=25),t=>t.amount),ls=pct(late,tot);
+  if(ls>=R.monthEnd)out.push({id:"monthend",lv:"warn",type:"월말 집행 몰림",title:`집행액의 ${p1(ls)}%가 매월 25일 이후에 몰림`,body:`결재·검수가 월말에 집중되면 증빙 누락과 보완 요청이 늘어남.`,ev:[`25일 이후 집행 ${mil(late)}백만원 / 전체 ${mil(tot)}백만원`],act:"월 중순 집행 점검일 운영 검토",progs:[]});
+  for(const p of S.programs){const f=forecast([p],S.tx.filter(t=>t.prog===p.id));if(f.endRate<R.lowExec)out.push({id:"low:"+p.id,lv:f.endRate<R.lowExec-20?"crit":"warn",type:"불용 위험",
+    title:`${p.name}: 종료 시점 집행률 ${p1(f.endRate)}% 예상`,body:`최근 3개월 월평균 집행 ${mil(f.rate)}백만원 기준. 불용 예상액 ${mil(f.unused)}백만원.`,ev:[`현재 집행 ${mil(f.spent)}백만원 / 예산 ${mil(f.budget)}백만원`],act:"잔여 기간 집행 계획 제출 요청",progs:[p.id]})}
+  for(const k of kpiLink())if(k.exec-k.ach>=R.gap)out.push({id:"gap:"+k.id,lv:"warn",type:"집행 대비 성과 부족",title:`${k.name}: 집행률 ${p1(k.exec)}%, 목표 달성률 ${p1(k.ach)}%`,
+    body:`예산은 쓰였으나 지표가 따라오지 않음. 연계 프로그램의 운영 방식 점검이 필요함.`,ev:k.progs.map(name),act:"프로그램 운영 결과와 지표 산식 점검",progs:k.progs});
+  if(S.stats.miss.length>=3)out.push({id:"kbmiss",lv:"warn",type:"지침 안내 공백",title:`집행 기준 질문 ${S.stats.miss.length}건에 답을 찾지 못함`,body:`등록된 지침에 없는 내용이 반복해서 질문됨.`,ev:S.stats.miss.slice(-4),act:"해당 내용의 지침 원문 등록",progs:[]});
+  return out;
+}
+function visibleInsights(){let a=insights();if(S.role!=="manager")a=a.filter(i=>S.review[i.id]==="게시");
+  if(S.role==="dept"&&S.roleDept){const ids=new Set(scope().map(p=>p.id));a=a.filter(i=>i.progs.some(p=>ids.has(p)))}return a}
+
+/* ============ 그림 ============ */
+function lineChart({xs,series,fmt=v=>v,h=230}){
+  const W=640,L=52,Rr=64,T=14,B=28,vals=series.flatMap(s=>s.v.filter(v=>v!=null));
+  let lo=Math.min(...vals),hi=Math.max(...vals);if(series.some(s=>s.zero))lo=0;const pad=(hi-lo)*.08||1;if(!series.some(s=>s.zero))lo-=pad;hi+=pad;
+  const x=i=>L+(W-L-Rr)*(xs.length>1?i/(xs.length-1):.5),y=v=>T+(h-T-B)*(1-(v-lo)/(hi-lo));
+  let g="";for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${esc(fmt(v))}</text>`}
+  const step=Math.ceil(xs.length/7);xs.forEach((l,i)=>{if(i%step===0||i===xs.length-1)g+=`<text x="${x(i)}" y="${h-8}" text-anchor="middle">${esc(l)}</text>`});
+  const ends=[];
+  for(const s of series){let d="",last=null;s.v.forEach((v,i)=>{if(v==null)return;d+=(d?"L":"M")+x(i)+" "+y(v);last=i});
+    g+=`<path d="${d}" fill="none" stroke="${s.c}" stroke-width="2" ${s.dash?'stroke-dasharray="5 4"':""} stroke-linejoin="round"/>`;
+    s.v.forEach((v,i)=>{if(v==null)return;g+=`<circle cx="${x(i)}" cy="${y(v)}" r="${i===last&&!s.thin?4:0}" fill="${s.c}" stroke="var(--surface)" stroke-width="2"/><circle cx="${x(i)}" cy="${y(v)}" r="11" fill="transparent" data-tip="${esc(s.n+" · "+xs[i]+"\n"+fmt(v))}"/>`});
+    if(last!=null&&s.label!==false)ends.push({y:y(s.v[last]),t:fmt(s.v[last]),x:x(last)})}
+  ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<13)ends[i].y=ends[i-1].y+13;
+  for(const e of ends)g+=`<text class="lbl" x="${e.x+8}" y="${e.y+4}">${esc(e.t)}</text>`;
+  return `<svg viewBox="0 0 ${W} ${h}" role="img" style="width:100%;height:auto;max-width:100%">${g}</svg>
+  <div class="legend">${series.map(s=>`<span><i class="${s.dash?"d":""}" style="border-color:${s.c}"></i>${esc(s.n)}</span>`).join("")}</div>`;
+}
+function bars(rows,mark){return `<div class="bars">${rows.map(r=>`<div class="bar" data-tip="${esc(r.tip||"")}"><span>${esc(r.l)}</span>
+  <span class="track"><span class="fill" style="width:${Math.max(0,Math.min(100,r.v))}%;display:block${r.c?";background:"+r.c:""}"></span>${mark!=null?`<span class="mark" style="left:${Math.min(100,mark)}%"></span>`:""}</span><span class="v">${r.t??p1(r.v)+"%"}</span></div>`).join("")}</div>`}
+const stPill=(lv,t)=>`<span class="pill ${lv}">${esc(t)}</span>`;
+function execStatus(rate,prog){const d=rate-prog;return d>=-10?stPill("good","정상"):d>=-25?stPill("warn","지연"):stPill("crit","위험")}
+
+/* ============ 화면 ============ */
+const NAV=[
+ ["사업비 관리",[["home","종합 현황"],["budget","예산·집행 현황"],["forecast","집행 예측·경보"],["approval","결재 도우미"],["guide","집행 기준 안내"]]],
+ ["성과·IR",[["indicators","성과지표 추이"],["kpi","자율성과지표·자체평가"],["link","예산–성과 연계"],["feedback","환류 추적"],["evidence","평가 증빙 묶음"],["student","학생 성공 IR"]]],
+ ["행정 인사이트",[["insight","확인 과제"],["path","사업 경로"],["tasks","준비 업무"]]],
+ ["운영",[["admin","자료·설정"]]]];
+const V={};
+function head(t,d,extra=""){const sm=Object.values(S.src).includes("예시");return `<div class="vh"><div><h1>${t}</h1><p>${d}</p></div><div class="row">${extra}</div></div>
+ ${sm?`<div class="sample"><b>예시 데이터</b><span>화면의 수치는 기능 확인용으로 만든 값이며 순천제일대학교의 실제 자료가 아님. 자료·설정 메뉴에서 실제 자료를 올리면 바뀜.</span></div>`:""}`}
+
+V.home=()=>{const ps=scope(),tx=scopeTx(),f=forecast(ps,tx),pr=progress(),ex=pct(f.spent,f.budget),ins=visibleInsights();
+  const up=[...S.tasks].filter(t=>t.due>=ymd(new Date())).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4);
+  const open=S.feedback.filter(x=>x.status!=="완료");
+  const k=(l,v,u,s)=>`<div class="panel kpi"><span class="lab">${l}</span><span class="val">${v}<small>${u}</small></span><span class="sub">${s}</span></div>`;
+  return head("종합 현황",`사업 기간 ${S.period.start} ~ ${S.period.end}${S.role==="dept"&&S.roleDept?" · "+esc(S.roleDept):""}`)+`
+  <div class="grid g4">${k("집행률",p1(ex),"%",`기간 진도율 ${p1(pr)}% 대비 ${ex-pr>=0?"+":""}${p1(ex-pr)}%p`)}${k("집행액",mil(f.spent),"백만원",`배정 ${mil(f.budget)}백만원`)}
+  ${k("종료 시점 예상 집행률",p1(f.endRate),"%",`불용 예상 ${mil(f.unused)}백만원`)}${k("확인 과제",ins.length,"건",`환류 미완료 ${open.length}건`)}</div>
+  <div class="grid g2"><div class="panel"><h2>영역별 집행률<small>세로선은 기간 진도율</small></h2>${bars(Object.entries(groupBy(ps,"area")).map(([a,l])=>{const ids=new Set(l.map(p=>p.id)),sp=sum(tx.filter(t=>ids.has(t.prog)),t=>t.amount),b=sum(l,p=>p.budget);return {l:a,v:pct(sp,b),tip:`${a}\n집행 ${mil(sp)} / 배정 ${mil(b)}백만원`}}),pr)}</div>
+  <div class="panel"><h2>누적 집행과 예측</h2>${fcChart(f)}</div></div>
+  <div class="grid g2"><div class="panel"><h2>먼저 볼 확인 과제</h2>${ins.slice(0,4).map(i=>`<div class="chk">${stPill(i.lv,i.type)}<span>${esc(i.title)}</span></div>`).join("")||`<span class="note">게시된 확인 과제가 없음.</span>`}<a class="btn sm" style="align-self:flex-start;text-decoration:none" href="#insight">전체 보기</a></div>
+  <div class="panel"><h2>다가오는 준비 업무</h2>${up.map(t=>`<div class="chk"><span class="pill">${t.due}</span><span>${esc(t.text)}</span></div>`).join("")||`<span class="note">예정된 업무가 없음.</span>`}</div></div>`};
+function groupBy(a,k){const o={};for(const x of a)(o[x[k]]??=[]).push(x);return o}
+function fcChart(f){const lin=f.ms.map((m,i)=>f.budget*(i+1)/f.ms.length);
+  return lineChart({xs:f.ms.map(m=>m.slice(2).replace("-",".")),fmt:v=>mil(v),series:[{n:"균등 집행 기준",c:"var(--muted)",v:lin,thin:true,zero:true,label:false},{n:"실제 누적(백만원)",c:"var(--s1)",v:f.actual},{n:"예측",c:"var(--s1)",v:f.proj,dash:true}]})}
+
+let bTab="area";
+V.budget=()=>{const ps=scope(),tx=scopeTx(),pr=progress();
+  const rowsBy=k=>{const src=k==="item"?groupBy(tx,"item"):groupBy(ps,k);return Object.entries(src).map(([n,l])=>{if(k==="item"){return {n,b:null,s:sum(l,t=>t.amount),c:l.length}}const ids=new Set(l.map(p=>p.id)),t=tx.filter(t=>ids.has(t.prog));return {n,b:sum(l,p=>p.budget),s:sum(t,t=>t.amount),c:t.length}})};
+  const rows=bTab==="prog"?ps.map(p=>{const t=tx.filter(t=>t.prog===p.id);return {n:p.name,sub:p.dept,b:p.budget,s:sum(t,t=>t.amount),c:t.length}}):rowsBy(bTab);
+  const tb=sum(ps,p=>p.budget),ts=sum(tx,t=>t.amount),lab={area:"영역",dept:"부서",item:"비목",prog:"프로그램"};
+  return head("예산·집행 현황","배정과 집행을 영역·부서·비목·프로그램 단위로 조회함. 기간 진도율은 "+p1(pr)+"%.",
+   `<div class="tabs">${Object.entries(lab).map(([k,l])=>`<button class="btn" aria-pressed="${bTab===k}" data-act="btab" data-k="${k}">${l}별</button>`).join("")}</div>`)+`
+  <div class="panel"><h2>${lab[bTab]}별 배정·집행</h2><div class="tw"><table><thead><tr><th>${lab[bTab]}</th><th class="n">배정(백만원)</th><th class="n">집행(백만원)</th><th class="n">잔액(백만원)</th><th class="n">집행률</th><th class="n">건수</th><th>상태</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td>${esc(r.n)}${r.sub?`<div class="note">${esc(r.sub)}</div>`:""}</td><td class="n">${r.b==null?"–":mil(r.b)}</td><td class="n">${mil(r.s)}</td><td class="n">${r.b==null?"–":mil(r.b-r.s)}</td><td class="n">${r.b==null?p1(pct(r.s,ts))+"% <span class='note'>(구성비)</span>":p1(pct(r.s,r.b))+"%"}</td><td class="n">${r.c}</td><td>${r.b==null?"":execStatus(pct(r.s,r.b),pr)}</td></tr>`).join("")}
+  <tr class="tot"><td>합계</td><td class="n">${mil(tb)}</td><td class="n">${mil(ts)}</td><td class="n">${mil(tb-ts)}</td><td class="n">${p1(pct(ts,tb))}%</td><td class="n">${tx.length}</td><td></td></tr></tbody></table></div>
+  <span class="note">상태 기준: 집행률이 기간 진도율보다 10%p 넘게 낮으면 지연, 25%p 넘게 낮으면 위험.</span></div>
+  <div class="grid g2"><div class="panel"><h2>월별 집행액<small>백만원</small></h2>${(()=>{const f=forecast(ps,tx);return lineChart({xs:f.ms.map(m=>m.slice(2).replace("-",".")),fmt:v=>mil(v),series:[{n:"월 집행액",c:"var(--s1)",v:f.ms.map(m=>f.by[m]||(m<=ymd(new Date()).slice(0,7)?0:null)),zero:true}]})})()}</div>
+  <div class="panel"><h2>예산 변경 이력</h2><div class="tw"><table><thead><tr><th>일자</th><th>프로그램</th><th class="n">변경 전</th><th class="n">변경 후</th><th class="n">증감</th><th>사유</th></tr></thead><tbody>${S.changes.filter(c=>ps.some(p=>p.id===c.prog)).map(c=>`<tr><td>${c.date}</td><td>${esc(prog(c.prog)?.name||c.prog)}</td><td class="n">${mil(c.before)}</td><td class="n">${mil(c.after)}</td><td class="n">${p1(pct(c.after-c.before,c.before))}%</td><td>${c.reason?esc(c.reason):stPill("warn","사유 없음")}</td></tr>`).join("")||`<tr><td colspan="6" class="note">변경 이력이 없음.</td></tr>`}</tbody></table></div></div></div>`};
+
+V.forecast=()=>{const ps=scope(),tx=scopeTx(),f=forecast(ps,tx),R=S.rules;
+  const rows=ps.map(p=>{const g=forecast([p],tx.filter(t=>t.prog===p.id));return {p,g}}).sort((a,b)=>a.g.endRate-b.g.endRate);
+  return head("집행 예측·경보",`최근 3개월 월평균 집행 속도가 사업 종료까지 유지된다고 보고 계산함. 경보 기준은 종료 시점 집행률 ${R.lowExec}% 미만.`)+`
+  <div class="grid g4"><div class="panel kpi"><span class="lab">현재 집행률</span><span class="val">${p1(pct(f.spent,f.budget))}<small>%</small></span><span class="sub">${mil(f.spent)}백만원</span></div>
+  <div class="panel kpi"><span class="lab">최근 3개월 월평균 집행</span><span class="val">${mil(f.rate)}<small>백만원</small></span><span class="sub">마감된 달 기준</span></div>
+  <div class="panel kpi"><span class="lab">종료 시점 예상 집행률</span><span class="val">${p1(f.endRate)}<small>%</small></span><span class="sub">${f.endRate<R.lowExec?"경보 기준 미달":"기준 충족"}</span></div>
+  <div class="panel kpi"><span class="lab">불용 예상액</span><span class="val">${mil(f.unused)}<small>백만원</small></span><span class="sub">배정의 ${p1(pct(f.unused,f.budget))}%</span></div></div>
+  <div class="panel"><h2>누적 집행과 예측<small>백만원</small></h2>${fcChart(f)}</div>
+  <div class="panel"><h2>프로그램별 종료 시점 예상<small>예상 집행률이 낮은 순</small></h2><div class="tw"><table><thead><tr><th>프로그램</th><th>부서</th><th class="n">현재 집행률</th><th class="n">예상 집행률</th><th class="n">불용 예상(백만원)</th><th class="n">기준 충족에 필요한 월 집행(백만원)</th><th>판정</th></tr></thead><tbody>
+  ${rows.map(({p,g})=>{const left=Math.max(1,g.ms.filter(m=>m>ymd(new Date()).slice(0,7)).length+1),need=Math.max(0,(p.budget*R.lowExec/100-g.spent)/left);
+   return `<tr><td>${esc(p.name)}</td><td>${esc(p.dept)}</td><td class="n">${p1(pct(g.spent,g.budget))}%</td><td class="n">${p1(g.endRate)}%</td><td class="n">${mil(g.unused)}</td><td class="n">${mil(need)}</td><td>${g.endRate>=R.lowExec?stPill("good","충족"):g.endRate>=R.lowExec-20?stPill("warn","주의"):stPill("crit","불용 위험")}</td></tr>`}).join("")}</tbody></table></div></div>`};
+
+/* ---- 결재 도우미 ---- */
+let aType="meet";const aForm={};
+const ATYPES={meet:["회의비","회 의 록"],trip:["여비 정산","여 비 정 산 서"],fee:["전문가 수당","수 당 지 급 조 서"]};
+function aChecks(){const f=aForm,R=S.rules,out=[],p=prog(f.prog),amt=+f.amount||0;const add=(lv,t)=>out.push({lv,t});
+  if(!f.prog)add("crit","프로그램을 선택해야 함");if(!f.date)add("crit","집행일을 입력해야 함");if(amt<=0)add("crit","금액을 입력해야 함");
+  if(f.date&&(f.date<S.period.start||f.date>S.period.end))add("crit",`집행일이 사업 기간(${S.period.start} ~ ${S.period.end}) 밖임`);
+  if(f.date){const d=new Date(f.date+"T00:00:00").getDay();if(d===0||d===6)add("warn","집행일이 주말임. 사유를 적요에 기재할 것")}
+  if(p&&amt>0){const left=p.budget-sum(S.tx.filter(t=>t.prog===p.id),t=>t.amount);if(amt>left)add("crit",`프로그램 잔액 ${won(left)}원을 초과함`)}
+  if(f.vendor&&f.acct){const prev=S.tx.find(t=>t.vendor===f.vendor&&t.acct);if(prev&&prev.acct!=="AC-"+hash("a"+f.acct).slice(0,4)&&prev.acct!==f.acct)add("warn",`${f.vendor}의 기존 지급 계좌와 다름. 등록 계좌를 대조할 것`)}
+  if(aType==="meet"){const n=+f.people||0;if(n<2)add("crit","참석 인원은 2명 이상이어야 함");else if(amt/n>R.meetHead)add("warn",`1인당 ${won(amt/n)}원으로 기준 ${won(R.meetHead)}원을 넘음`);
+    if(!(f.title||"").trim())add("crit","회의명을 입력해야 함");if((f.body||"").trim().length<20)add("warn","회의 내용이 20자 미만임. 논의·결정 사항을 적을 것")}
+  if(aType==="trip"){if(!f.place)add("crit","출장지를 입력해야 함");if(!f.from||!f.to)add("crit","출장 기간을 입력해야 함");else if(f.to<f.from)add("crit","출장 종료일이 시작일보다 빠름");
+    if(!(f.body||"").trim())add("warn","출장 목적을 적을 것");if(!f.ev)add("warn","교통·숙박 증빙 첨부 여부를 확인할 것")}
+  if(aType==="fee"){const h=+f.hours||0,u=+f.unit||0;if(h<=0||u<=0)add("crit","시간과 단가를 입력해야 함");else{if(h*u!==amt)add("crit",`시간×단가(${won(h*u)}원)가 금액과 다름`);if(u>R.feeHour)add("warn",`시간당 단가가 기준 ${won(R.feeHour)}원을 넘음`)}
+    if(!(f.body||"").trim())add("warn","활동 내용을 적을 것");if(!f.ev)add("warn","결과물(의견서·확인서) 첨부 여부를 확인할 것")}
+  return out}
+function aDoc(){const f=aForm,p=prog(f.prog),r=(k,v)=>`<tr><th>${k}</th><td>${esc(v||"")}</td></tr>`;
+  const sp={meet:r("회의명",f.title)+r("장소",f.place)+r("참석 인원",f.people?f.people+"명":"")+r("회의 내용",f.body),
+    trip:r("출장지",f.place)+r("출장 기간",f.from&&f.to?f.from+" ~ "+f.to:"")+r("출장 인원",f.people?f.people+"명":"")+r("출장 목적",f.body),
+    fee:r("활동 내용",f.body)+r("활동 시간",f.hours?f.hours+"시간":"")+r("시간당 단가",f.unit?won(f.unit)+"원":"")}[aType];
+  return `<div class="doc" id="docOut"><h3>${ATYPES[aType][1]}</h3><table>${r("사업명","AID 전환 중점 전문대학 지원사업")}${r("프로그램",p?p.name+" ("+p.dept+")":"")}${r("집행일",f.date)}${r("금액",f.amount?won(f.amount)+"원":"")}${r("지급처",f.vendor)}${sp}${r("적요",f.memo)}</table>
+  <p style="text-align:right;margin:16px 0 0">작성자 ____________ (서명) &nbsp; 확인자 ____________ (서명)</p></div>`}
+V.approval=()=>{const f=aForm,i=(k,l,t="text",x="")=>`<label>${l}<input id="a_${k}" data-f="${k}" type="${t}" value="${esc(f[k]||"")}" ${x}></label>`;
+  const sp={meet:i("title","회의명")+i("place","장소")+i("people","참석 인원","number","min=0")+`<label class="wide">회의 내용<textarea id="a_body" data-f="body">${esc(f.body||"")}</textarea></label>`,
+    trip:i("place","출장지")+i("from","시작일","date")+i("to","종료일","date")+i("people","출장 인원","number","min=0")+`<label class="wide">출장 목적<textarea id="a_body" data-f="body">${esc(f.body||"")}</textarea></label><label class="wide" style="flex-direction:row;align-items:center"><input id="a_ev" data-f="ev" type="checkbox" style="width:auto" ${f.ev?"checked":""}> 교통·숙박 증빙을 첨부함</label>`,
+    fee:i("hours","활동 시간","number","min=0 step=0.5")+i("unit","시간당 단가(원)","number","min=0")+`<label class="wide">활동 내용<textarea id="a_body" data-f="body">${esc(f.body||"")}</textarea></label><label class="wide" style="flex-direction:row;align-items:center"><input id="a_ev" data-f="ev" type="checkbox" style="width:auto" ${f.ev?"checked":""}> 결과물(의견서·확인서)을 첨부함</label>`}[aType];
+  return head("결재 도우미","값을 입력하면 서식이 만들어지고, 제출 전에 누락과 기준 위반을 먼저 점검함. 개인 성명·계좌번호는 저장하지 않음.",
+   `<div class="tabs">${Object.entries(ATYPES).map(([k,v])=>`<button class="btn" aria-pressed="${aType===k}" data-act="atab" data-k="${k}">${v[0]}</button>`).join("")}</div>`)+`
+  <div class="grid g2"><div class="panel"><h2>입력</h2><div class="form" id="aform">
+   <label>프로그램<select id="a_prog" data-f="prog"><option value="">선택</option>${scope().map(p=>`<option value="${p.id}" ${f.prog===p.id?"selected":""}>${esc(p.name)}</option>`).join("")}</select></label>
+   ${i("date","집행일","date")}${i("amount","금액(원)","number","min=0")}${i("vendor","지급처")}${i("acct","계좌 끝 4자리(대조용)","text","maxlength=4 inputmode=numeric")}${sp}
+   <label class="wide">적요<input id="a_memo" data-f="memo" value="${esc(f.memo||"")}"></label></div>
+   <div class="row"><button class="btn pri" data-act="adone">작성 완료 기록</button><label class="row note" style="gap:4px"><input type="checkbox" id="a_reg" style="width:auto"> 집행 내역에도 등록</label><button class="btn" data-act="acopy">서식 내용 복사</button>${self===top?`<button class="btn" data-act="print">인쇄</button>`:""}<button class="btn" data-act="aclear">비우기</button></div><span class="note" id="amsg"></span></div>
+  <div class="panel"><h2>제출 전 점검</h2><div id="achk"></div><h2>서식 미리보기</h2><div id="adoc"></div></div></div>`};
+function aRefresh(){const c=aChecks();$("#achk").innerHTML=c.length?c.map(x=>`<div class="chk">${stPill(x.lv,x.lv==="crit"?"보완 필요":"확인")}<span>${esc(x.t)}</span></div>`).join(""):`<div class="chk">${stPill("good","통과")}<span>점검 항목을 모두 통과함.</span></div>`;$("#adoc").innerHTML=aDoc()}
+
+/* ---- 집행 기준 안내 ---- */
+const chat=[];
+function ask(q){q=q.trim();if(!q)return;S.stats.ask++;
+  const sc=S.kb.map(e=>({e,s:e.k.filter(k=>q.includes(k)).length})).filter(o=>o.s>0).sort((a,b)=>b.s-a.s).slice(0,2);
+  if(!sc.length)S.stats.miss.push(q.slice(0,60));chat.push({q,a:sc.map(o=>o.e)});save()}
+V.guide=()=>head("집행 기준 안내","등록된 지침 원문에서 해당 부분을 찾아 그대로 보여줌. 원문에 없는 내용은 답하지 않으며, 승인·반려 판단도 하지 않음.")+`
+  <div class="grid g2"><div class="panel"><h2>질문</h2><div class="chat">${chat.length?chat.map(c=>`<div class="msg me">${esc(c.q)}</div><div class="msg">${c.a.length?c.a.map(e=>`<b>${esc(e.t)}</b><blockquote>${esc(e.x)}</blockquote><div class="src">출처: ${esc(e.src)}</div>`).join(""):"등록된 지침에서 해당 내용을 찾지 못함. 사업단 담당자에게 문의할 것. 이 질문은 지침 보완 목록에 기록됨."}</div>`).join(""):`<span class="note">비목이나 상황을 입력함. 예: 회의비 증빙, 출장 여비, 자문료 단가</span>`}</div>
+   <form class="row" id="askf"><input id="askq" placeholder="예: 회의비는 어떤 증빙이 필요한가" style="flex:1;width:auto" autocomplete="off"><button class="btn pri">찾기</button></form>
+   <div class="row">${S.kb.map(e=>`<button class="btn sm" data-act="askq" data-q="${esc(e.t)}">${esc(e.t)}</button>`).join("")}</div></div>
+  <div class="panel"><h2>등록된 지침<small>${S.kb.length}건</small></h2>${S.kb.map((e,i)=>`<div class="chk"><div style="flex:1"><b>${esc(e.t)}</b> <span class="note">${esc(e.k.join(", "))}</span><div>${esc(e.x)}</div><div class="note">출처: ${esc(e.src)}</div></div>${S.role==="manager"?`<button class="btn sm danger" data-act="kbdel" data-i="${i}">삭제</button>`:""}</div>`).join("")}
+   ${S.role==="manager"?`<h2>지침 등록</h2><form class="form" id="kbf"><label>항목명<input id="kb_t" required></label><label>검색어(쉼표로 구분)<input id="kb_k" required></label><label class="wide">원문<textarea id="kb_x" required></textarea></label><label class="wide">출처(지침명·조항)<input id="kb_s" required></label><div><button class="btn pri">등록</button></div></form>`:""}</div></div>`;
+
+/* ---- 성과·IR ---- */
+let indSel=0;
+V.indicators=()=>{const I=S.ind,r=I.rows[indSel],f=v=>r.unit==="천원"?won(v):p1(v),last=I.years.length-1;
+  return head("성과지표 추이","정보공시 주요 지표의 연도별 추이를 비교군 평균과 함께 봄. 비교군은 자료·설정에서 올린 값을 따름.")+`
+  <div class="panel"><h2>지표 요약<small>${I.years[last]}년 기준</small></h2><div class="tw"><table><thead><tr><th>지표</th><th class="n">본교</th><th class="n">비교군 평균</th><th class="n">차이</th><th class="n">전년 대비</th><th>판정</th><th></th></tr></thead><tbody>
+  ${I.rows.map((x,i)=>{const d=x.our[last]-x.peer[last],y=x.our[last]-x.our[last-1],good=x.up?d>=0:d<=0,fx=v=>x.unit==="천원"?won(v):p1(v);
+   return `<tr><td>${esc(x.name)} <span class="note">(${x.unit})</span></td><td class="n">${fx(x.our[last])}</td><td class="n">${fx(x.peer[last])}</td><td class="n">${d>=0?"+":""}${fx(d)}</td><td class="n">${y>=0?"+":""}${fx(y)}</td><td>${good?stPill("good","비교군 이상"):stPill("warn","비교군 미만")}</td><td><button class="btn sm" data-act="ind" data-i="${i}" aria-pressed="${i===indSel}">추이</button></td></tr>`}).join("")}</tbody></table></div></div>
+  <div class="panel"><h2>${esc(r.name)}<small>${r.unit}${r.up?"":" · 낮을수록 좋음"}</small></h2>${lineChart({xs:I.years.map(String),fmt:f,series:[{n:"본교",c:"var(--s1)",v:r.our},{n:"비교군 평균",c:"var(--s2)",v:r.peer}]})}</div>`};
+
+V.kpi=()=>{const ks=kpiLink();
+  return head("자율성과지표·자체평가","지표별 목표 대비 실적과 점검 차수별 자체평가 점수를 한 화면에서 확인함.")+`
+  <div class="panel"><h2>자율성과지표 달성 현황<small>세로선은 목표(100%)</small></h2>${bars(ks.map(k=>({l:k.name,v:Math.min(120,k.ach)/1.2,t:p1(k.ach)+"%",tip:`${k.name}\n실적 ${k.actual}${k.unit} / 목표 ${k.target}${k.unit}`,c:k.ach>=100?"var(--s3)":""})),100/1.2)}
+  <div class="tw"><table><thead><tr><th>지표</th><th class="n">목표</th><th class="n">실적</th><th class="n">달성률</th><th>판정</th></tr></thead><tbody>${ks.map(k=>`<tr><td>${esc(k.name)}</td><td class="n">${k.target}${k.unit}</td><td class="n">${S.role==="manager"?`<input type="number" value="${k.actual}" data-act="kact" data-id="${k.id}" id="k_${k.id}" style="width:86px;text-align:right" aria-label="${esc(k.name)} 실적">`:k.actual}${S.role==="manager"?"":k.unit}</td><td class="n">${p1(k.ach)}%</td><td>${k.ach>=100?stPill("good","달성"):k.ach>=80?stPill("warn","근접"):stPill("crit","미달")}</td></tr>`).join("")}</tbody></table></div></div>
+  <div class="panel"><h2>자체평가 점수<small>상황·투입·과정·성과 영역</small></h2><div class="tw"><table><thead><tr><th>점검 차수</th>${S.evals[0].areas.map(a=>`<th class="n">${a[0]} (${a[2]})</th>`).join("")}<th class="n">합계</th></tr></thead><tbody>
+  ${S.evals.map((e,i)=>`<tr><td>${esc(e.name)}</td>${e.areas.map((a,j)=>{const d=i?a[1]-S.evals[i-1].areas[j][1]:0;return `<td class="n">${a[1]}${i?` <span class="note">(${d>=0?"+":""}${d})</span>`:""}</td>`}).join("")}<td class="n"><b>${sum(e.areas,a=>a[1])}</b> / ${sum(e.areas,a=>a[2])}</td></tr>`).join("")}</tbody></table></div>
+  <span class="note">차수별 위원 의견과 조치 현황은 환류 추적 메뉴에서 관리함.</span></div>`};
+
+V.link=()=>{const ks=kpiLink(),W=640,H=320,L=48,B=36,T=14,Rr=20,x=v=>L+(W-L-Rr)*Math.min(v,120)/120,y=v=>T+(H-T-B)*(1-Math.min(v,120)/120);
+  let g=`<rect x="${x(60)}" y="${y(60)}" width="${x(120)-x(60)}" height="${y(0)-y(60)}" fill="var(--crit)" opacity=".07"/><text x="${x(120)-6}" y="${y(0)-8}" text-anchor="end">집행 높음 · 성과 낮음 (점검 대상)</text>`;
+  for(const v of [0,30,60,90,120]){g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}</text><line y1="${T}" y2="${H-B}" x1="${x(v)}" x2="${x(v)}" stroke="var(--grid)"/><text x="${x(v)}" y="${H-B+14}" text-anchor="middle">${v}</text>`}
+  g+=`<line x1="${x(0)}" y1="${y(0)}" x2="${x(120)}" y2="${y(120)}" stroke="var(--muted)" stroke-dasharray="4 4"/><text x="${(L+W-Rr)/2}" y="${H-4}" text-anchor="middle">예산 집행률(%)</text><text transform="translate(12 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">목표 달성률(%)</text>`;
+  for(const k of ks){g+=`<circle cx="${x(k.exec)}" cy="${y(k.ach)}" r="6" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/><text class="lbl" x="${x(k.exec)+9}" y="${y(k.ach)+4}">${k.id}</text><circle cx="${x(k.exec)}" cy="${y(k.ach)}" r="14" fill="transparent" data-tip="${esc(`${k.name}\n집행률 ${p1(k.exec)}% · 달성률 ${p1(k.ach)}%`)}"/>`}
+  return head("예산–성과 연계","프로그램 예산을 연계된 성과지표와 묶어, 쓴 만큼 성과가 따라오는지 확인함. 점선 아래로 멀어질수록 집행 대비 성과가 부족함.")+`
+  <div class="grid g2"><div class="panel"><h2>집행률과 달성률</h2><svg viewBox="0 0 ${W} ${H}" role="img" style="width:100%;height:auto">${g}</svg></div>
+  <div class="panel"><h2>지표별 연계 예산</h2><div class="tw"><table><thead><tr><th>지표</th><th>연계 프로그램</th><th class="n">예산(백만원)</th><th class="n">집행률</th><th class="n">달성률</th><th class="n">차이</th></tr></thead><tbody>
+  ${ks.map(k=>{const d=k.ach-k.exec;return `<tr><td><b>${k.id}</b> ${esc(k.name)}</td><td>${k.progs.map(p=>esc(prog(p)?.name||p)).join("<br>")}</td><td class="n">${mil(k.budget)}</td><td class="n">${p1(k.exec)}%</td><td class="n">${p1(k.ach)}%</td><td class="n">${d>=0?"+":""}${p1(d)}%p ${d<=-S.rules.gap?stPill("warn","점검"):""}</td></tr>`}).join("")}</tbody></table></div>
+  <span class="note">달성률이 집행률보다 ${S.rules.gap}%p 넘게 낮으면 점검 대상으로 표시하고 확인 과제에 올림.</span></div></div>`};
+
+V.feedback=()=>{const st=["접수","진행","완료"],today=ymd(new Date()),mg=S.role==="manager";
+  const list=[...S.feedback].sort((a,b)=>(a.status==="완료")-(b.status==="완료")||a.due.localeCompare(b.due));
+  return head("환류 추적","위원 의견과 확인 과제를 담당·기한·조치·완료 증빙까지 이어서 관리함. 완료 처리에는 증빙 기재가 필요함.")+`
+  <div class="grid g4">${st.map(s=>`<div class="panel kpi"><span class="lab">${s}</span><span class="val">${S.feedback.filter(f=>f.status===s).length}<small>건</small></span></div>`).join("")}<div class="panel kpi"><span class="lab">기한 경과</span><span class="val">${S.feedback.filter(f=>f.status!=="완료"&&f.due<today).length}<small>건</small></span></div></div>
+  <div class="panel"><h2>과제 목록</h2><div class="tw"><table><thead><tr><th>출처</th><th>의견·과제</th><th>담당</th><th>기한</th><th>상태</th><th>완료 증빙</th></tr></thead><tbody>
+  ${list.map(f=>`<tr><td>${esc(f.src)}</td><td style="min-width:240px">${esc(f.text)}</td><td>${esc(f.owner)}</td><td>${f.due} ${f.status!=="완료"&&f.due<today?stPill("crit","경과"):""}</td>
+   <td>${mg?`<select data-act="fst" data-id="${f.id}" id="fs_${f.id}" aria-label="상태" style="width:auto">${st.map(s=>`<option ${s===f.status?"selected":""}>${s}</option>`).join("")}</select>`:stPill(f.status==="완료"?"good":"warn",f.status)}</td>
+   <td>${mg?`<input data-act="fev" data-id="${f.id}" id="fe_${f.id}" value="${esc(f.evidence)}" placeholder="문서명·번호" aria-label="완료 증빙" style="min-width:150px">`:esc(f.evidence)}</td></tr>`).join("")}</tbody></table></div><span class="note" id="fmsg"></span>
+  ${mg?`<h2>과제 추가</h2><form class="form" id="ff"><label>출처<input id="ff_s" required placeholder="점검 차수·회의명"></label><label>담당<input id="ff_o" required></label><label>기한<input id="ff_d" type="date" required></label><label class="wide">의견·과제<input id="ff_t" required></label><div><button class="btn pri">추가</button></div></form>`:""}</div>`};
+
+V.evidence=()=>{const mg=S.role==="manager",miss=S.evid.filter(e=>!e.ok).length;
+  return head("평가 증빙 묶음","성과지표마다 필요한 증빙을 연결해 두고 확보 여부를 관리함. 보고서 작성 때 목록을 그대로 복사해 씀.",`<button class="btn" data-act="evcopy">증빙 목록 복사</button>`)+`
+  <div class="grid g4"><div class="panel kpi"><span class="lab">전체 증빙</span><span class="val">${S.evid.length}<small>건</small></span></div><div class="panel kpi"><span class="lab">확보</span><span class="val">${S.evid.length-miss}<small>건</small></span></div><div class="panel kpi"><span class="lab">미확보</span><span class="val">${miss}<small>건</small></span><span class="sub" id="evmsg"></span></div></div>
+  <div class="grid g2">${S.kpis.map(k=>{const l=S.evid.filter(e=>e.kpi===k.id),m=l.filter(e=>!e.ok).length;return `<div class="panel"><h2>${k.id} ${esc(k.name)} ${m?stPill("warn","미확보 "+m):stPill("good","완비")}</h2>
+   ${l.map(e=>`<label class="chk" style="cursor:${mg?"pointer":"default"}"><input type="checkbox" id="ev_${e.id}" data-act="evt" data-id="${e.id}" ${e.ok?"checked":""} ${mg?"":"disabled"} style="width:auto;margin-top:4px"><span>${esc(e.doc)}</span></label>`).join("")}
+   ${mg?`<form class="row" data-form="evadd" data-k="${k.id}"><input id="eva_${k.id}" placeholder="증빙 추가" style="flex:1;width:auto" aria-label="${k.id} 증빙 추가"><button class="btn sm">추가</button></form>`:""}</div>`}).join("")}</div>`};
+
+V.student=()=>{const cols=[["fill","신입생 충원율","%",true],["drop","중도탈락률","%",false],["sat","강의 만족도","점",true],["job","취업률","%",true],["ai","AI 교과 이수율","%",true]];
+  const rng=Object.fromEntries(cols.map(c=>[c[0],[Math.min(...S.students.map(s=>s[c[0]])),Math.max(...S.students.map(s=>s[c[0]]))]]));
+  const cell=(c,v)=>{const [lo,hi]=rng[c[0]];let t=hi>lo?(v-lo)/(hi-lo):.5;if(!c[3])t=1-t;return `<td class="c" style="background:color-mix(in oklab,var(--s1) ${Math.round(6+t*44)}%,var(--surface))" data-tip="${esc(c[1]+" "+v+c[2])}">${c[0]==="sat"?v.toFixed(2):p1(v)}</td>`};
+  const avg=k=>sum(S.students,s=>s[k])/S.students.length;
+  const risk=S.students.filter(s=>s.drop>avg("drop")&&s.sat<avg("sat"));
+  return head("학생 성공 IR","학과 단위 집계만 다루며 개인 단위 자료는 싣지 않음. 색이 진할수록 양호함(중도탈락률은 낮을수록 진함).")+`
+  <div class="panel"><h2>학과별 주요 지표</h2><div class="tw"><table class="heat"><thead><tr><th>학과</th>${cols.map(c=>`<th class="n">${c[1]}(${c[2]})</th>`).join("")}</tr></thead><tbody>
+  ${S.students.map(s=>`<tr><td>${esc(s.dept)}</td>${cols.map(c=>cell(c,s[c[0]])).join("")}</tr>`).join("")}
+  <tr class="tot"><td>평균</td>${cols.map(c=>`<td class="n">${c[0]==="sat"?avg(c[0]).toFixed(2):p1(avg(c[0]))}</td>`).join("")}</tr></tbody></table></div></div>
+  <div class="grid g2"><div class="panel"><h2>중도탈락 발생 시점<small>전체 대비 구성비</small></h2>${bars(S.dropWhen.map(d=>({l:d[0],v:d[1],tip:d[0]+" "+d[1]+"%"})))}
+   <span class="note">1학년 1학기 전후 비중이 높으면 입학 초기 적응 지원 시점을 앞당기는 근거가 됨.</span></div>
+  <div class="panel"><h2>먼저 살필 학과</h2>${risk.length?risk.map(s=>`<div class="chk">${stPill("warn","확인")}<span><b>${esc(s.dept)}</b>: 중도탈락률 ${p1(s.drop)}%(평균 ${p1(avg("drop"))}%), 만족도 ${s.sat.toFixed(2)}점(평균 ${avg("sat").toFixed(2)}점), AI 교과 이수율 ${p1(s.ai)}%</span></div>`).join(""):`<span class="note">해당 학과가 없음.</span>`}
+   <span class="note">기준: 중도탈락률이 평균보다 높고 만족도가 평균보다 낮은 학과. 학과 평가나 순위 산정에는 쓰지 않음.</span></div></div>`};
+
+/* ---- 행정 인사이트 ---- */
+V.insight=()=>{const mg=S.role==="manager",all=mg?insights():visibleInsights(),rv=id=>S.review[id]||"검토 전";
+  return head("확인 과제","집행 기록을 서로 연결해, 문서 한 건씩 볼 때는 드러나지 않는 확인 과제를 근거와 함께 제시함. 담당자가 게시한 항목만 다른 권한에 보임.")+`
+  ${mg?`<div class="grid g4">${["검토 전","게시","보류"].map(s=>`<div class="panel kpi"><span class="lab">${s}</span><span class="val">${all.filter(i=>rv(i.id)===s).length}<small>건</small></span></div>`).join("")}</div>`:""}
+  ${all.map(i=>`<div class="ins"><div class="row">${stPill(i.lv,i.type)}${mg?`<span class="pill">${rv(i.id)}</span>`:""}</div><h3>${esc(i.title)}</h3><div>${esc(i.body)}</div>
+   <div class="note">근거: ${i.ev.map(esc).join(" · ")}</div><div><b>제안 조치</b> ${esc(i.act)}</div>
+   ${mg?`<div class="row"><button class="btn sm pri" data-act="rv" data-id="${esc(i.id)}" data-s="게시">게시</button><button class="btn sm" data-act="rv" data-id="${esc(i.id)}" data-s="보류">보류</button><button class="btn sm" data-act="tofb" data-id="${esc(i.id)}">환류 과제로 등록</button></div>`:""}</div>`).join("")||`<div class="panel"><span class="note">게시된 확인 과제가 없음.</span></div>`}
+  <span class="note">이 화면은 개인을 평가하거나 부서 순위를 매기는 데 쓰지 않음. 승인·반려 판단은 하지 않고 확인할 사항만 제시함.</span>`};
+let pathSel="";
+V.path=()=>{const ps=scope();if(!ps.some(p=>p.id===pathSel))pathSel=ps[0]?.id||"";const p=prog(pathSel);if(!p)return head("사업 경로","표시할 프로그램이 없음.");
+  const tx=S.tx.filter(t=>t.prog===p.id),bm=groupBy(tx.map(t=>({...t,m:t.date.slice(0,7)})),"m"),ev=[];
+  for(const [m,l] of Object.entries(bm))ev.push({d:m+"-99",h:`<div><b>${m}</b> 집행 ${l.length}건, ${mil(sum(l,t=>t.amount))}백만원 <span class="note">${[...new Set(l.map(t=>t.item))].map(esc).join(", ")}</span></div>`});
+  for(const c of S.changes.filter(c=>c.prog===p.id))ev.push({d:c.date,h:`<div class="chg"><b>${c.date}</b> 예산 변경 ${mil(c.before)} → ${mil(c.after)}백만원 ${c.reason?esc(c.reason):stPill("warn","사유 없음")}</div>`});
+  for(const f of S.feedback.filter(f=>f.owner===p.dept))ev.push({d:f.due,h:`<div class="chg"><b>${f.due}</b> 환류 과제(${esc(f.status)}): ${esc(f.text)}</div>`});
+  ev.sort((a,b)=>a.d.localeCompare(b.d));const sp=sum(tx,t=>t.amount);
+  return head("사업 경로","프로그램이 계획부터 집행까지 지나온 경로를 한 줄로 이어 봄. 담당자가 바뀔 때 인수인계 자료로 씀.",`<select id="pathSel" data-act="path" aria-label="프로그램" style="width:auto">${ps.map(x=>`<option value="${x.id}" ${x.id===pathSel?"selected":""}>${esc(x.name)}</option>`).join("")}</select>`)+`
+  <div class="grid g2"><div class="panel"><h2>${esc(p.name)}<small>${esc(p.area)} · ${esc(p.dept)}</small></h2><div class="tl">${ev.map(e=>e.h).join("")||"<div>기록이 없음.</div>"}</div></div>
+  <div class="panel"><h2>인수인계 요약</h2><table><tbody><tr><th>배정</th><td class="n">${mil(p.budget)}백만원</td></tr><tr><th>집행</th><td class="n">${mil(sp)}백만원 (${p1(pct(sp,p.budget))}%)</td></tr><tr><th>집행 건수</th><td class="n">${tx.length}건</td></tr><tr><th>주요 거래처</th><td>${Object.entries(groupBy(tx,"vendor")).sort((a,b)=>sum(b[1],t=>t.amount)-sum(a[1],t=>t.amount)).slice(0,3).map(([v,l])=>`${esc(v)} ${mil(sum(l,t=>t.amount))}`).join("<br>")}</td></tr>
+   <tr><th>연계 지표</th><td>${S.kpis.filter(k=>k.progs.includes(p.id)).map(k=>`${esc(k.name)} (${p1(pct(k.actual,k.target))}%)`).join("<br>")||"없음"}</td></tr>
+   <tr><th>열린 확인 과제</th><td>${insights().filter(i=>i.progs.includes(p.id)).map(i=>esc(i.type)).join(", ")||"없음"}</td></tr></tbody></table></div></div>`};
+V.tasks=()=>{const today=ymd(new Date()),mg=S.role==="manager",l=[...S.tasks].sort((a,b)=>a.due.localeCompare(b.due));
+  const days=d=>Math.round((new Date(d)-new Date(today))/864e5);
+  return head("준비 업무","정산·점검 일정에 맞춰 미리 준비할 업무를 기한 순으로 보여줌.")+`
+  <div class="panel"><h2>기한 순 목록</h2>${l.map(t=>{const n=days(t.due);return `<div class="chk"><span class="pill ${n<0?"crit":n<=14?"warn":"good"}">${n<0?"경과 "+(-n)+"일":"D-"+n}</span><span style="flex:1"><b>${t.due}</b> ${esc(t.text)}</span>${mg?`<button class="btn sm danger" data-act="tdel" data-id="${t.id}">삭제</button>`:""}</div>`}).join("")||`<span class="note">등록된 업무가 없음.</span>`}
+  ${mg?`<form class="form" id="tf"><label>기한<input id="tf_d" type="date" required></label><label class="wide">업무<input id="tf_t" required></label><div><button class="btn pri">추가</button></div></form>`:""}</div>`};
+
+/* ---- 운영 ---- */
+V.admin=()=>{if(S.role!=="manager")return head("자료·설정","담당자 권한에서만 사용할 수 있음.");
+  const R=S.rules,st=S.stats,vs=Object.entries(st.views).sort((a,b)=>b[1]-a[1]),names=Object.fromEntries(NAV.flatMap(g=>g[1]));
+  const ri=(k,l,u)=>`<label>${l}<input type="number" id="r_${k}" data-act="rule" data-k="${k}" value="${R[k]}"><span>${u}</span></label>`;
+  return head("자료·설정","자료 올리기, 점검 기준값, 이용 현황, 백업을 관리함.")+`
+  <div class="grid g2"><div class="panel"><h2>자료 올리기<small>엑셀(.xlsx) 또는 CSV</small></h2>
+   <div class="fl"><label for="up">파일 선택</label><input type="file" id="up" accept=".xlsx,.xls,.csv"></div><span class="note" id="upmsg">첫 행의 열 이름으로 자료 종류를 구분함.</span>
+   <div class="tw"><table><thead><tr><th>자료</th><th>필요한 열 이름</th><th>현재</th></tr></thead><tbody>
+   <tr><td>집행 내역</td><td>집행일, 프로그램, 비목, 금액, 거래처, 계좌, 적요</td><td>${esc(S.src.tx)} · ${S.tx.length}건</td></tr>
+   <tr><td>예산 배정</td><td>코드, 프로그램, 영역, 부서, 예산</td><td>${S.programs.length}개 프로그램</td></tr></tbody></table></div>
+   <span class="note">가명 처리: 계좌번호는 올리는 즉시 비교용 기호(AC-####)로 바꾸고 원래 번호는 저장하지 않음. 수령인·성명 열은 읽지 않음.</span>
+   <div class="row"><button class="btn" data-act="tplcopy">집행 내역 양식 복사</button><button class="btn" data-act="txcopy">현재 집행 내역 복사</button></div></div>
+  <div class="panel"><h2>점검 기준값</h2><div class="form">${ri("meetHead","회의비 1인당 기준","원")}${ri("feeHour","수당 시간당 단가 기준","원")}${ri("changePct","예산 변경 확인 기준","% 이상")}${ri("monthEnd","월말 몰림 기준","% 이상")}${ri("lowExec","불용 경보 기준(예상 집행률)","% 미만")}${ri("gap","집행 대비 성과 부족 기준","%p 이상")}
+   <label>사업 시작일<input type="date" id="pd_s" data-act="period" data-k="start" value="${S.period.start}"></label><label>사업 종료일<input type="date" id="pd_e" data-act="period" data-k="end" value="${S.period.end}"></label></div>
+   <span class="note">회의비·수당 기준과 사업 기간은 예시 값임. 대학 사업비 집행 지침과 협약 기간의 값으로 바꿔야 함.</span></div></div>
+  <div class="grid g2"><div class="panel"><h2>이용 현황<small>이 브라우저 기준</small></h2><div class="grid g4" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">
+   <div class="kpi"><div class="lab">서류 작성</div><div class="val">${st.docsOk+st.docsWarn}<small>건</small></div></div><div class="kpi"><div class="lab">점검에서 걸러진 서류</div><div class="val">${st.docsWarn}<small>건</small></div></div>
+   <div class="kpi"><div class="lab">기준 질문</div><div class="val">${st.ask}<small>건</small></div></div><div class="kpi"><div class="lab">답을 못 찾은 질문</div><div class="val">${st.miss.length}<small>건</small></div></div></div>
+   <div class="tw"><table><thead><tr><th>메뉴</th><th class="n">조회</th></tr></thead><tbody>${vs.map(([k,v])=>`<tr><td>${esc(names[k]||k)}</td><td class="n">${v}</td></tr>`).join("")}</tbody></table></div>
+   ${st.miss.length?`<div class="note">답을 못 찾은 질문: ${st.miss.slice(-6).map(esc).join(" / ")}</div>`:""}</div>
+  <div class="panel"><h2>백업·복원</h2><span class="note">자료는 이 브라우저에만 저장됨. 다른 기기로 옮기거나 보관하려면 아래 내용을 복사해 둠.</span>
+   <textarea id="bk" aria-label="백업 내용" placeholder="복원할 백업 내용을 붙여넣음"></textarea>
+   <div class="row"><button class="btn" data-act="bkout">백업 내용 만들기</button><button class="btn" data-act="bkin">붙여넣은 내용으로 복원</button></div>
+   <div class="row"><button class="btn danger" data-act="reset">예시 데이터로 되돌리기</button><span class="note" id="bkmsg"></span></div></div></div>`};
+
+/* ============ 동작 ============ */
+let cur="home",resetArm=false;
+function allowed(v){return V[v]&&(v!=="admin"||S.role==="manager")}
+function renderNav(){const n=S.role==="manager"?insights().filter(i=>!S.review[i.id]).length:0;
+  $("#navs").innerHTML=NAV.map(g=>g[1].some(x=>allowed(x[0]))?`<div class="navg"><h6>${g[0]}</h6>${g[1].filter(x=>allowed(x[0])).map(x=>`<a class="nav" href="#${x[0]}" ${x[0]===cur?'aria-current="page"':""}>${x[1]}${x[0]==="insight"&&n?`<span class="cnt">${n}</span>`:""}</a>`).join("")}</div>`:"").join("")}
+function render(count){const hsh=location.hash.slice(1);cur=allowed(hsh)?hsh:(allowed(cur)?cur:"home");
+  if(count){S.stats.views[cur]=(S.stats.views[cur]||0)+1;save()}
+  renderNav();$("#view").innerHTML=V[cur]();if(cur==="approval")aRefresh();
+  const ch=$(".chat");if(ch)ch.lastElementChild?.scrollIntoView({block:"nearest"})}
+function copy(text,el){const done=()=>{if(el)el.textContent="복사함. 엑셀이나 문서에 붙여넣을 수 있음."};
+  try{navigator.clipboard.writeText(text).then(done,()=>fallback())}catch(e){fallback()}
+  function fallback(){const t=document.createElement("textarea");t.value=text;document.body.append(t);t.select();try{document.execCommand("copy");done()}catch(e){}t.remove()}}
+
+addEventListener("hashchange",()=>{render(true);scrollTo(0,0)});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b||b.tagName==="INPUT"||b.tagName==="SELECT")return;const a=b.dataset.act,d=b.dataset;
+  if(a==="btab"){bTab=d.k;render()}
+  else if(a==="atab"){aType=d.k;render()}
+  else if(a==="aclear"){for(const k in aForm)delete aForm[k];render()}
+  else if(a==="acopy"){copy($("#docOut").innerText,$("#amsg"))}
+  else if(a==="print"){print()}
+  else if(a==="adone"){const c=aChecks(),m=$("#amsg");if(c.some(x=>x.lv==="crit")){m.textContent="보완 필요 항목이 남아 있어 완료로 기록하지 않음.";return}
+    c.length?S.stats.docsWarn++:S.stats.docsOk++;
+    if($("#a_reg").checked){const f=aForm;S.tx.push({id:Math.max(0,...S.tx.map(t=>t.id))+1,date:f.date,prog:f.prog,item:aType==="trip"?"사업 운영비":aType==="fee"?"인건비":"사업 운영비",amount:+f.amount,vendor:f.vendor||"미기재",acct:f.acct?"AC-"+hash("a"+f.acct).slice(0,4):"",memo:f.memo||ATYPES[aType][0]})}
+    save();m.textContent=`완료로 기록함${$("#a_reg").checked?", 집행 내역에도 등록함":""}. 확인 항목 ${c.length}건.`;renderNav()}
+  else if(a==="askq"){ask(d.q);render()}
+  else if(a==="kbdel"){S.kb.splice(+d.i,1);save();render()}
+  else if(a==="ind"){indSel=+d.i;render()}
+  else if(a==="rv"){S.review[d.id]=d.s;save();render()}
+  else if(a==="tofb"){const i=insights().find(x=>x.id===d.id);if(i){const dd=new Date();dd.setDate(dd.getDate()+14);S.feedback.push({id:Math.max(0,...S.feedback.map(f=>f.id))+1,src:"확인 과제: "+i.type,text:i.title+" → "+i.act,owner:prog(i.progs[0])?.dept||"사업단 운영팀",due:ymd(dd),status:"접수",evidence:""});S.review[i.id]="게시";save();location.hash="feedback"}}
+  else if(a==="tdel"){S.tasks=S.tasks.filter(t=>t.id!=d.id);save();render()}
+  else if(a==="evcopy"){copy("지표\t증빙\t확보\n"+S.evid.map(e=>`${e.kpi} ${S.kpis.find(k=>k.id===e.kpi)?.name||""}\t${e.doc}\t${e.ok?"확보":"미확보"}`).join("\n"),$("#evmsg"))}
+  else if(a==="tplcopy"){copy("집행일\t프로그램\t비목\t금액\t거래처\t계좌\t적요\n2026-11-20\t"+S.programs[0].name+"\t"+S.items[4]+"\t150000\t거래처명\t000-00-0000\t회의 다과",$("#upmsg"))}
+  else if(a==="txcopy"){copy("집행일\t프로그램\t비목\t금액\t거래처\t계좌기호\t적요\n"+S.tx.map(t=>[t.date,prog(t.prog)?.name||t.prog,t.item,t.amount,t.vendor,t.acct,t.memo].join("\t")).join("\n"),$("#upmsg"))}
+  else if(a==="bkout"){$("#bk").value=JSON.stringify(S);$("#bk").select();$("#bkmsg").textContent="백업 내용을 만들었음. 전체를 복사해 보관함."}
+  else if(a==="bkin"){try{const j=JSON.parse($("#bk").value);if(j.v!==1||!Array.isArray(j.tx))throw 0;S=j;save();render();}catch(x){$("#bkmsg").textContent="백업 형식이 맞지 않음. 백업 내용 전체를 붙여넣었는지 확인할 것."}}
+  else if(a==="reset"){if(!resetArm){resetArm=true;b.textContent="한 번 더 누르면 현재 자료를 지우고 되돌림";return}resetArm=false;S=sampleState();save();render()}
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.dataset.f){aForm[t.dataset.f]=t.type==="checkbox"?t.checked:t.value;aRefresh()}});
+document.addEventListener("change",e=>{const t=e.target,a=t.dataset.act,d=t.dataset;
+  if(t.id==="role"){S.role=t.value;syncRole();save();render()}
+  else if(t.id==="roleDept"){S.roleDept=t.value;save();render()}
+  else if(t.id==="up"){upload(t.files[0])}
+  else if(a==="kact"){const k=S.kpis.find(k=>k.id===d.id);k.actual=+t.value||0;S.src.kpi="직접 입력";save();render()}
+  else if(a==="fst"){const f=S.feedback.find(f=>f.id==d.id);if(t.value==="완료"&&!f.evidence.trim()){t.value=f.status;$("#fmsg").textContent="완료로 바꾸려면 완료 증빙을 먼저 적어야 함.";return}f.status=t.value;save();render()}
+  else if(a==="fev"){S.feedback.find(f=>f.id==d.id).evidence=t.value;save()}
+  else if(a==="evt"){S.evid.find(x=>x.id==d.id).ok=t.checked;save();render()}
+  else if(a==="path"){pathSel=t.value;render()}
+  else if(a==="rule"){S.rules[d.k]=+t.value||0;save();renderNav()}
+  else if(a==="period"){if(t.value){S.period[d.k]=t.value;save()}}
+});
+document.addEventListener("submit",e=>{e.preventDefault();const f=e.target,v=id=>$("#"+id).value.trim();
+  if(f.id==="askf"){ask(v("askq"));render();$("#askq")?.focus()}
+  else if(f.id==="kbf"){S.kb.push({t:v("kb_t"),k:v("kb_k").split(",").map(s=>s.trim()).filter(Boolean),x:v("kb_x"),src:v("kb_s")});save();render()}
+  else if(f.id==="ff"){S.feedback.push({id:Math.max(0,...S.feedback.map(x=>x.id))+1,src:v("ff_s"),text:v("ff_t"),owner:v("ff_o"),due:v("ff_d"),status:"접수",evidence:""});save();render()}
+  else if(f.id==="tf"){S.tasks.push({id:Math.max(0,...S.tasks.map(x=>x.id))+1,due:v("tf_d"),text:v("tf_t")});save();render()}
+  else if(f.dataset.form==="evadd"){const x=v("eva_"+f.dataset.k);if(x){S.evid.push({id:Math.max(0,...S.evid.map(x=>x.id))+1,kpi:f.dataset.k,doc:x,ok:false});save();render()}}
+});
+const tip=$("#tip");
+document.addEventListener("pointermove",e=>{const t=e.target.closest?.("[data-tip]");if(!t||!t.dataset.tip){tip.hidden=true;return}tip.textContent=t.dataset.tip;tip.hidden=false;
+  const w=tip.offsetWidth;tip.style.left=Math.max(4,Math.min(innerWidth-w-4,e.clientX+12))+"px";tip.style.top=Math.max(4,e.clientY-tip.offsetHeight-10)+"px"});
+document.addEventListener("pointerleave",()=>tip.hidden=true);
+
+function syncRole(){$("#role").value=S.role;const d=$("#roleDept"),ds=[...new Set(S.programs.map(p=>p.dept))];d.hidden=S.role!=="dept";
+  if(!ds.includes(S.roleDept))S.roleDept=ds[0]||"";d.innerHTML=ds.map(x=>`<option ${x===S.roleDept?"selected":""}>${esc(x)}</option>`).join("")}
+
+/* ---- 자료 올리기 ---- */
+function upload(file){const m=$("#upmsg");if(!file)return;if(typeof XLSX==="undefined"){m.textContent="엑셀 읽기 도구를 불러오지 못함. 네트워크를 확인한 뒤 다시 시도할 것.";return}
+  const fr=new FileReader();fr.onload=()=>{try{const wb=XLSX.read(new Uint8Array(fr.result),{type:"array",cellDates:true}),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""});
+    m.textContent=importRows(rows);save();renderNav()}catch(x){m.textContent="파일을 읽지 못함. 첫 번째 시트의 첫 행에 열 이름이 있는지 확인할 것."}};fr.readAsArrayBuffer(file)}
+function importRows(rows){if(!rows.length)return "자료 행이 없음.";const keys=Object.keys(rows[0]).map(k=>k.trim()),has=k=>keys.includes(k),g=(r,k)=>{for(const x in r)if(x.trim()===k)return r[x];return ""};
+  const num=v=>+String(v).replace(/[^\d.-]/g,"")||0,dt=v=>v instanceof Date?ymd(new Date(v.getTime()-v.getTimezoneOffset()*6e4)):String(v).trim().replace(/[./]/g,"-").slice(0,10);
+  if(has("예산")&&has("프로그램")){const ps=rows.map((r,i)=>({id:String(g(r,"코드")||"P"+String(i+1).padStart(2,"0")).trim(),name:String(g(r,"프로그램")).trim(),area:String(g(r,"영역")||"미분류").trim(),dept:String(g(r,"부서")||"미지정").trim(),budget:num(g(r,"예산"))})).filter(p=>p.name&&p.budget>0);
+    if(!ps.length)return "예산 배정으로 읽을 수 있는 행이 없음.";S.programs=ps;S.tx=S.tx.filter(t=>prog(t.prog));syncRole();return `예산 배정 ${ps.length}개 프로그램을 반영함. 프로그램 코드가 달라진 집행 내역은 제외됨.`}
+  if(has("금액")&&has("집행일")){const out=[];let bad=0,id=1;for(const r of rows){const pn=String(g(r,"프로그램")).trim(),p=S.programs.find(p=>p.name===pn||p.id===pn),d=dt(g(r,"집행일")),a=num(g(r,"금액"));
+      if(!p||!/^\d{4}-\d{2}-\d{2}$/.test(d)||!a){bad++;continue}const ac=String(g(r,"계좌")).replace(/\D/g,"");
+      out.push({id:id++,date:d,prog:p.id,item:String(g(r,"비목")||"미분류").trim(),amount:a,vendor:String(g(r,"거래처")||"미기재").trim(),acct:ac?"AC-"+hash("acct"+ac).slice(0,4):"",memo:String(g(r,"적요")).trim()})}
+    if(!out.length)return `읽을 수 있는 행이 없음. 프로그램 이름이 예산 배정과 같은지, 집행일이 연-월-일 형식인지 확인할 것. (제외 ${bad}행)`;
+    S.tx=out;S.items=[...new Set(out.map(t=>t.item))];S.src.tx="업로드 "+ymd(new Date());S.review={};return `집행 내역 ${out.length}건을 반영함.${bad?` 프로그램·일자·금액을 읽지 못한 ${bad}행은 제외함.`:""} 계좌번호는 비교용 기호로 바꿔 저장함.`}
+  return "열 이름을 알아보지 못함. 집행 내역은 '집행일'과 '금액', 예산 배정은 '프로그램'과 '예산' 열이 필요함."}
+
+syncRole();render(true);
+</script>
+</body>
+</html>
