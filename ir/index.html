@@ -219,10 +219,17 @@ textarea{min-height:72px;resize:vertical}
 .tl div{padding:5px 0;position:relative}
 .tl div::before{content:"";position:absolute;left:-20px;top:13px;width:10px;height:10px;border-radius:50%;background:var(--s1);border:2px solid var(--surface)}
 .tl div.chg::before{background:var(--s2)}
-.stage{position:relative;height:460px;border-radius:var(--r);background:radial-gradient(120% 95% at 50% 0%,var(--stage-a) 0%,var(--stage-b) 58%,var(--stage-c) 100%);overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none}
+.stage{position:relative;height:560px;border-radius:var(--r);background:radial-gradient(120% 95% at 50% 0%,var(--stage-a) 0%,var(--stage-b) 58%,var(--stage-c) 100%);overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none}
 .stage canvas{display:block;width:100%;height:100%}
 .stage .l3{position:absolute;transform:translate(-50%,-100%);font-size:11px;font-weight:700;pointer-events:none;white-space:nowrap;color:var(--stage-fg);text-shadow:0 1px 3px var(--stage-c),0 0 6px var(--stage-c)}
 .stage .note{color:var(--stage-fg)}
+.stage .l3{background:rgba(3,12,34,.74);padding:1px 7px;border-radius:7px;font-weight:600;transition:opacity var(--dur-fast) var(--ease-glide)}
+.stage .l3 b{font-weight:800}
+.stage .l3.s3{transform:translate(-50%,-50%);font-size:13px;padding:4px 12px;border-radius:999px;text-shadow:none;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.stage .l3.c3{transform:translate(-50%,-50%);background:none;font:800 15px var(--display);text-align:center;line-height:1.15}
+.stage .l3.c3 b{font-size:30px}.stage .l3.c3 span{display:block;font:600 11.5px var(--body);opacity:.85}
+@media (max-width:560px){.stage .l3.s3 span{display:none}.stage .l3.s3{padding:3px 9px}.stage .l3.c3 b{font-size:22px}}
+.stage .l3.t3{background:none;color:var(--lime);font-weight:800;transform:translate(-50%,-140%)}
 .opt{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:var(--fg)}
 .thumb{width:44px;height:44px;object-fit:cover;border-radius:5px;border:1px solid var(--line);display:block}
 pre.brief{white-space:pre-wrap;font:13px/1.85 var(--body);margin:0;background:var(--surface2);padding:18px;border-radius:var(--r);border-left:3px solid var(--gold)}
@@ -267,7 +274,7 @@ pre.brief{white-space:pre-wrap;font:13px/1.85 var(--body);margin:0;background:va
   .mast h1{font-size:23px}
   .mast-meta{flex-direction:row;align-items:center}
   .mast-ico{width:150px;height:150px}
-  .stage{height:340px}
+  .stage{height:420px}
 }
 /* ---- v3 부품 ---- */
 .brand{flex-direction:column;align-items:flex-start;gap:8px}
@@ -500,33 +507,39 @@ V.home=()=>{const L=scopeInds(),core=L.filter(i=>i.core),c=cnt(L,stInd),cc=cnt(c
 let gl=null;
 function cubeData(){return scopeInds().map(i=>{const s=stInd(i),f=indFc(i),v=ui.cube==="now"?s.a:f?f.a:null,lv=ui.cube==="now"?s.lv:f?f.lv:"none";return {i,v,lv,tip:`${i.code} ${i.name}\n${ui.cube==="now"?"현재":"5년 뒤 예측"} 달성률 ${v==null?"자료 없음":p1(v)+"%"} · ${ui.cube==="now"?s.label:LV[lv]}`}})}
 function cubeDetail(){const i=ind(ui.cubeSel);if(!i)return `<span class="note">기둥을 누르면 지표의 목표·실적·판정이 표시됨.</span>`;const s=stInd(i);return `<table><tbody><tr><th>지표</th><td><b>${esc(i.name)}</b><div class="note">${i.code} · ${sName(i.strat)}</div></td></tr><tr><th>담당부서</th><td>${esc(i.dept)}</td></tr><tr><th>목표</th><td>${num(i.target)}${i.unit} ${i.dir<0?"이하":"이상"}</td></tr><tr><th>최근 실적</th><td>${s.l?`${num(s.l.v)}${i.unit} (${s.l.y}학년도)`:"미입력"}</td></tr><tr><th>판정</th><td>${sig(s.lv,s.label)}${s.a!=null?` 달성률 ${p1(s.a)}%`:""}</td></tr></tbody></table><a class="btn sm" style="align-self:flex-start" href="#kpi" data-act="goind" data-id="${i.id}">지표 관리에서 열기</a>`}
-V.cube=()=>{const d=cubeData();return head("3D로 보기","성과지표를 전략별로 줄지어 세운 입체 그림임. 기둥 높이는 달성률, 색은 신호등, 반투명 판은 목표(100%)임. 좌우로 끌어 돌려 볼 수 있음.",
-  `<div class="tabs"><button class="btn" aria-pressed="${ui.cube==="now"}" data-act="cubem" data-k="now">현재 달성률</button><button class="btn" aria-pressed="${ui.cube==="fc"}" data-act="cubem" data-k="fc">5년 뒤 예측</button></div>`)+`
-  <div class="panel"><h2>${ui.cube==="now"?"현재 달성률":"5년 뒤 예측 달성률"}<small>앞뒤 줄은 7대 전략 · 실적이 없는 지표는 바닥의 회색 판</small></h2><div class="stage" id="stage"></div><div class="legend">${["good","warn","crit","none"].map(l=>`<span><i class="sq b-${l}"></i>${LV[l]}</span>`).join("")}</div></div>
+V.cube=()=>{const d=cubeData();return head("3D로 보기","성과지표를 7대 전략의 부채꼴에 둥글게 세운 입체 그림임. 기둥 높이는 달성률, 색은 신호등, 위에 떠 있는 연두색 고리가 목표(100%)임. 끌어서 돌리고 기울여 볼 수 있으며, 주의·미달 지표에는 이름표가 붙음.",
+  `<div class="tabs"><button class="btn" aria-pressed="${ui.cube==="now"}" data-act="cubem" data-k="now">현재 달성률</button><button class="btn" aria-pressed="${ui.cube==="fc"}" data-act="cubem" data-k="fc">5년 뒤 예측</button></div><div class="row"><button class="btn" data-act="cubeall" aria-pressed="${!!ui.cubeAll}">${ui.cubeAll?"주의·미달만 이름표":"모든 지표 이름표"}</button><button class="btn" data-act="cubestop" aria-pressed="${!!ui.cubeStop}">${ui.cubeStop?"회전 재개":"회전 멈춤"}</button></div>`)+`
+  <div class="panel"><h2>${ui.cube==="now"?"현재 달성률":"5년 뒤 예측 달성률"}<small>부채꼴 하나가 전략 하나 · 실적이 없는 지표는 낮은 회색 원판</small></h2><div class="stage" id="stage"></div><div class="legend">${["good","warn","crit","none"].map(l=>`<span><i class="sq b-${l}"></i>${LV[l]}</span>`).join("")}</div></div>
   <div class="grid g2"><div class="panel"><h2>선택한 지표</h2><div id="cubed" style="display:flex;flex-direction:column;gap:10px">${cubeDetail()}</div></div>
   <div class="panel"><h2>같은 내용의 표</h2><div class="tw" style="max-height:340px;overflow-y:auto"><table><thead><tr><th>코드</th><th>지표</th><th class="n">달성률</th><th>신호</th></tr></thead><tbody>${d.map(x=>`<tr><td>${x.i.code}</td><td>${esc(x.i.name)}</td><td class="n">${x.v==null?"–":p1(x.v)+"%"}</td><td>${sig(x.lv)}</td></tr>`).join("")}</tbody></table></div></div></div>`};
 function stop3d(){if(gl){cancelAnimationFrame(gl.raf);gl.off();gl.renderer.dispose();gl=null}}
 function init3d(){const el=$("#stage");if(!el)return;const fail=m=>{el.innerHTML=`<div class="note" style="padding:20px">${m} 아래 표에서 같은 내용을 볼 수 있음.</div>`};
   if(!window.THREE)return fail("입체 그림 도구를 불러오지 못함.");let renderer;try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true})}catch(e){return fail("이 기기에서는 입체 그림을 그릴 수 없음.")}
-  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),col={good:css("--good"),warn:css("--warn"),crit:css("--crit"),none:"#7f8aa3"},data=cubeData(),H=3.4,GX=1.05,GZ=1.25;
-  const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1,.1,100),root=new THREE.Group();scene.add(root);scene.add(new THREE.AmbientLight(0xffffff,.82));const dl=new THREE.DirectionalLight(0xffffff,.6);dl.position.set(6,10,8);scene.add(dl);
-  const rows=STRAT.map(s=>data.filter(d=>d.i.strat===s.id)).filter(r=>r.length),maxN=Math.max(1,...rows.map(r=>r.length)),fw=maxN*GX+1,fd=rows.length*GZ+.8;
-  const floor=new THREE.Mesh(new THREE.PlaneGeometry(fw,fd),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.06,side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;root.add(floor);
-  const m=Math.max(fw,fd),gh=new THREE.GridHelper(m,Math.round(m),css("--cyan"),css("--cyan"));gh.material.transparent=true;gh.material.opacity=.3;gh.scale.set(fw/m,1,fd/m);gh.position.y=.005;root.add(gh);
-  const ref=new THREE.Mesh(new THREE.PlaneGeometry(fw,fd),new THREE.MeshBasicMaterial({color:css("--lime"),transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));ref.rotation.x=-Math.PI/2;ref.position.y=H;root.add(ref);
-  const cols=[],labels=[];el.innerHTML="";el.append(renderer.domElement);
-  rows.forEach((l,ri)=>l.forEach((d,i)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(.62,1,.62),new THREE.MeshLambertMaterial({color:col[d.lv],emissive:col[d.lv],emissiveIntensity:.05}));mesh.position.set((i-(l.length-1)/2)*GX,0,(ri-(rows.length-1)/2)*GZ);
-    mesh.userData={d,h:d.v==null?.05:Math.max(.08,Math.min(d.v,150)/100*H)};root.add(mesh);cols.push(mesh);const lb=document.createElement("div");lb.className="l3";lb.textContent=i===0?STRAT.find(s=>s.id===d.i.strat).p+" "+d.i.code:d.i.code;el.append(lb);labels.push(lb)}));
-  const t0=performance.now(),ray=new THREE.Raycaster(),v3=new THREE.Vector3();let drag=null,moved=0,W=1,Hh=1,vis=true;root.rotation.y=-.5;
-  const size=()=>{W=el.clientWidth||1;Hh=el.clientHeight||1;renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(W,Hh,false);cam.aspect=W/Hh;const dist=W/Hh<1.1?24:W/Hh<1.7?17:14;cam.position.set(0,dist*.46,dist);cam.lookAt(0,1.1,0);cam.updateProjectionMatrix()};
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),col={good:css("--good"),warn:css("--warn"),crit:css("--crit"),none:"#7f8aa3"},data=cubeData(),H=3.6,R=5,GAP=.13,T=THREE;
+  const groups=STRAT.map(s=>({s,l:data.filter(d=>d.i.strat===s.id)})).filter(g=>g.l.length),N=sum(groups,g=>g.l.length)||1,per=(Math.PI*2-GAP*groups.length)/N;
+  const scene=new T.Scene(),cam=new T.PerspectiveCamera(34,1,.1,200),root=new T.Group();scene.add(root);scene.add(new T.HemisphereLight(0xffffff,0x1a2c55,.95));const d1=new T.DirectionalLight(0xffffff,.75);d1.position.set(6,12,8);scene.add(d1);const d2=new T.DirectionalLight(0x9fd8ff,.3);d2.position.set(-8,5,-6);scene.add(d2);
+  const flat=(geo,color,op,y)=>{const m=new T.Mesh(geo,new T.MeshBasicMaterial({color,transparent:true,opacity:op,side:T.DoubleSide,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.y=y;root.add(m);return m},ringLine=(r,color,op,y)=>flat(new T.RingGeometry(r-.02,r+.02,128),color,op,y);
+  flat(new T.CircleGeometry(R+1.9,96),0xffffff,.05,0);ringLine(R-1.3,css("--cyan"),.5,.012);ringLine(R+1.3,css("--cyan"),.5,.012);
+  const ref=flat(new T.RingGeometry(R-.7,R+.7,128),css("--lime"),.2,H);ringLine(R-.7,css("--lime"),.75,H);ringLine(R+.7,css("--lime"),.75,H);ringLine(R+.7,0xffffff,.22,H/2);
+  const hub=new T.Mesh(new T.CylinderGeometry(1.25,1.45,.3,64),new T.MeshStandardMaterial({color:css("--blue2"),roughness:.35,metalness:.2,emissive:css("--cyan"),emissiveIntensity:.25}));hub.position.y=.15;root.add(hub);
+  const cols=[],labels=[],slabs=[];el.innerHTML="";el.append(renderer.domElement);const mk=(cls,html)=>{const d=document.createElement("div");d.className=cls;d.innerHTML=html;el.append(d);return d};let a=Math.PI/2;
+  for(const g of groups){const span=per*g.l.length,stc=css("--st-"+g.s.id);flat(new T.RingGeometry(R-1.3,R+1.3,Math.max(10,g.l.length*5),1,a,span),stc,.5,.02);
+    g.l.forEach((d,i)=>{const th=a+per*(i+.5),v=d.v,h=v==null?.06:Math.max(.12,Math.min(v,150)/100*H),m=new T.Mesh(new T.CylinderGeometry(.21,.21,1,24),new T.MeshStandardMaterial({color:col[d.lv],roughness:.42,metalness:.08,emissive:col[d.lv],emissiveIntensity:.1}));
+      m.position.set(R*Math.cos(th),0,-R*Math.sin(th));m.userData={d,h};root.add(m);cols.push(m);labels.push(mk("l3",`${esc(d.i.code)}${v==null?"":" <b>"+Math.round(v)+"%</b>"}`))});
+    const mid=a+span/2;slabs.push({el:mk("l3 s3",`<b>${g.s.p}</b><span> ${esc(g.s.name)}</span>`),p:new T.Vector3((R+2.5)*Math.cos(mid),.1,-(R+2.5)*Math.sin(mid))});slabs[slabs.length-1].el.style.background=stc;a+=span+GAP}
+  const k=cnt(data.map(d=>d.i),stInd),hubL=mk("l3 c3",ui.cube==="now"?`<b>${k.good}</b> / ${data.length}<span>달성</span>`:`<b>${data.filter(d=>d.lv==="good").length}</b> / ${data.length}<span>5년 뒤 달성</span>`),hubP=new T.Vector3(0,.9,0),tgt=mk("l3 t3","목표 100%"),tgtP=new T.Vector3(0,H,R+.7);
+  const t0=performance.now(),ray=new T.Raycaster(),v3=new T.Vector3();let drag=null,moved=0,W=1,Hh=1,vis=true,elev=.74,dist=22;root.rotation.y=-.35;
+  const place=()=>{cam.position.set(0,1.2+dist*Math.sin(elev),dist*Math.cos(elev));cam.lookAt(0,1.3,0)};
+  const size=()=>{W=el.clientWidth||1;Hh=el.clientHeight||1;renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(W,Hh,false);cam.aspect=W/Hh;dist=W/Hh<.95?44:W/Hh<1.5?29:22;cam.updateProjectionMatrix();place()};
   const ro=new ResizeObserver(size),io=new IntersectionObserver(en=>{vis=en[0].isIntersecting});ro.observe(el);io.observe(el);size();
   const hit=e=>{const b=el.getBoundingClientRect();ray.setFromCamera({x:(e.clientX-b.left)/b.width*2-1,y:-((e.clientY-b.top)/b.height)*2+1},cam);return ray.intersectObjects(cols)[0]?.object};
-  el.onpointerdown=e=>{drag=e.clientX;moved=0};
-  el.onpointermove=e=>{if(drag!=null){const dx=e.clientX-drag;root.rotation.y+=dx*.008;moved+=Math.abs(dx);drag=e.clientX;el.dataset.tip=""}else{const o=hit(e);el.dataset.tip=o?o.userData.d.tip:"";el.style.cursor=o?"pointer":"grab"}};
+  el.onpointerdown=e=>{drag=[e.clientX,e.clientY];moved=0};
+  el.onpointermove=e=>{if(drag){const dx=e.clientX-drag[0],dy=e.clientY-drag[1];root.rotation.y+=dx*.008;if(e.pointerType==="mouse"){elev=Math.max(.3,Math.min(1.3,elev+dy*.006));place()}moved+=Math.abs(dx)+Math.abs(dy);drag=[e.clientX,e.clientY];el.dataset.tip=""}else{const o=hit(e);el.dataset.tip=o?o.userData.d.tip:"";el.style.cursor=o?"pointer":"grab"}};
   el.onpointerup=e=>{if(moved<5){const o=hit(e);if(o){ui.cubeSel=o.userData.d.i.id;$("#cubed").innerHTML=cubeDetail()}}drag=null};el.onpointerleave=()=>{drag=null;el.dataset.tip=""};
-  const frame=t=>{cols.forEach((mesh,i)=>{const kk=REDUCE?1:Math.max(0,Math.min(1,(t-t0-i*22)/800)),h=mesh.userData.h*(1-Math.pow(1-kk,3))||.001;mesh.scale.y=h;mesh.position.y=h/2;mesh.material.emissiveIntensity=mesh.userData.d.i.id===ui.cubeSel?.55:.05;
-      v3.set(mesh.position.x,h+.1,mesh.position.z).applyMatrix4(root.matrixWorld).project(cam);labels[i].style.left=(v3.x+1)/2*W+"px";labels[i].style.top=(1-v3.y)/2*Hh+"px"});
-    if(!REDUCE&&drag==null)root.rotation.y+=.0018;if(vis)renderer.render(scene,cam);gl.raf=requestAnimationFrame(frame)};
+  const put=(node,p,show=true)=>{v3.copy(p).applyMatrix4(root.matrixWorld);const front=v3.z>-1.5;v3.project(cam);node.style.left=(v3.x+1)/2*W+"px";node.style.top=(1-v3.y)/2*Hh+"px";node.style.opacity=show?(front?1:.38):0;node.style.zIndex=front?2:1};
+  const tmp=new T.Vector3(),frame=t=>{cols.forEach((m,i)=>{const kk=REDUCE?1:Math.max(0,Math.min(1,(t-t0-i*18)/850)),h=m.userData.h*(1-Math.pow(1-kk,3))||.001,d=m.userData.d,sel=d.i.id===ui.cubeSel;m.scale.set(sel?1.35:1,h,sel?1.35:1);m.position.y=h/2;m.material.emissiveIntensity=sel?.6:.1;
+      put(labels[i],tmp.set(m.position.x,h+.18,m.position.z),!!(sel||d.lv==="crit"||(d.lv==="warn"&&W>=560)||ui.cubeAll))});
+    for(const s of slabs)put(s.el,s.p);put(hubL,hubP);put(tgt,tgtP);ref.material.opacity=.2*(REDUCE?1:Math.min(1,(t-t0)/900));if(!REDUCE&&!drag&&!ui.cubeStop)root.rotation.y+=.0016;if(vis)renderer.render(scene,cam);gl.raf=requestAnimationFrame(frame)};
   gl={renderer,off(){ro.disconnect();io.disconnect()},raf:0};gl.raf=requestAnimationFrame(frame)}
 
 /* ---- 전략 체계 ---- */
@@ -857,6 +870,8 @@ document.addEventListener("click",e=>{const sv=e.target.closest("[data-sdv]");if
   else if(a==="indclose"){ui.sel="";render()}
   else if(a==="godept"){ui.deptSel=ui.deptSel===d.k&&cur==="dept"?"":d.k;if(cur==="dept")render();else location.hash="dept"}
   else if(a==="cubem"){ui.cube=d.k;render()}
+  else if(a==="cubeall"){ui.cubeAll=!ui.cubeAll;b.setAttribute("aria-pressed",ui.cubeAll);b.textContent=ui.cubeAll?"주의·미달만 이름표":"모든 지표 이름표"}
+  else if(a==="cubestop"){ui.cubeStop=!ui.cubeStop;b.setAttribute("aria-pressed",ui.cubeStop);b.textContent=ui.cubeStop?"회전 재개":"회전 멈춤"}
   else if(a==="stopen"){ui.open=ui.open===d.k?"":d.k;render()}
   else if(a==="vdel"){delete S.vals[d.id][d.y];if(!Object.keys(S.vals[d.id]).length)delete S.vals[d.id];sd.cache={};save();render()}
   else if(a==="ddel"){if(S.inds.some(i=>i.dept===d.k)||S.acc.some(i=>i.dept===d.k))return;S.depts=S.depts.filter(x=>x!==d.k);syncRole();save();render()}
