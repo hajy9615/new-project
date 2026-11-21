@@ -6,22 +6,23 @@
 <!--ARTIFACT-START-->
 <title>제일 IR 플랫폼</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
 <style>
+@font-face{font-family:"Pretendard Variable";font-weight:45 920;font-style:normal;font-display:swap;src:url("fonts/PretendardVariable.woff2") format("woff2-variations")}
 /* Layout: 짙은 남색 고정 메뉴(업무 영역 5개, 영역마다 고유 색) + 우측 작업 화면. 화면마다 영역 색의 머리띠(mast)가 열리고 그 아래 도구줄·패널이 이어짐. 860px 이하에서는 메뉴가 상단 가로 띠로 바뀜. */
 :root{
   --bg:#eef1f6; --surface:#fcfcfb; --surface2:#e9edf4; --fg:#0e1b33; --muted:#55607a; --line:#d5dbe7;
   --navy:#0b1d3c; --navy2:#12305f; --on-navy:#eef2fb; --on-navy-m:#a9b6d3; --gold:#d9b56a; --gold-t:#86641f;
   --accent:#173f7a; --accent-fg:#ffffff;
-  --a-decide:#7a5516; --a-budget:#173f7a; --a-perf:#0f5b52; --a-insight:#57306f; --a-ops:#3d4756;
-  --at-decide:#7a5516; --at-budget:#173f7a; --at-perf:#0f5b52; --at-insight:#57306f; --at-ops:#3d4756;
+  --a-decide:#7a5516; --a-sd:#7a2338; --a-budget:#173f7a; --a-perf:#0f5b52; --a-insight:#57306f; --a-ops:#3d4756;
+  --at-sd:#7a2338; --at-decide:#7a5516; --at-budget:#173f7a; --at-perf:#0f5b52; --at-insight:#57306f; --at-ops:#3d4756;
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --grid:#e1e6ef;
   --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
   --good-t:#006300; --warn-t:#7a5200; --crit-t:#a82828;
   --stage-a:#1c3d72; --stage-b:#0a1730; --stage-c:#050b18; --stage-fg:#ffffff;
   --shadow:0 1px 2px rgba(14,27,51,.05),0 8px 24px rgba(14,27,51,.06);
-  --display:"Noto Serif KR","AppleMyungjo","Batang",serif;
-  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --display:"Pretendard Variable","Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --body:"Pretendard Variable","Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --r:14px;
   --dur-instant:120ms; --dur-fast:200ms; --dur-base:420ms; --dur-slow:760ms; --dur-cinema:1250ms;
   --ease-settle:cubic-bezier(0.16,1,0.3,1); --ease-glide:cubic-bezier(0.22,1,0.36,1);
@@ -32,7 +33,7 @@
   :root:not([data-theme="light"]){
     --bg:#0a101c; --surface:#171c26; --surface2:#222a38; --fg:#f0efec; --muted:#b1b8c8; --line:#333c4d;
     --gold-t:#e0bf7a; --accent:#8db6f2; --accent-fg:#0b1422;
-    --at-decide:#e3bd68; --at-budget:#8db6f2; --at-perf:#5fd0bd; --at-insight:#cda8ea; --at-ops:#b9c0cf;
+    --at-sd:#f2a6b7; --at-decide:#e3bd68; --at-budget:#8db6f2; --at-perf:#5fd0bd; --at-insight:#cda8ea; --at-ops:#b9c0cf;
     --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --grid:#2a3242;
     --good-t:#62d062; --warn-t:#fab219; --crit-t:#f29090;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
@@ -41,11 +42,12 @@
 :root[data-theme="dark"]{
   --bg:#0a101c; --surface:#171c26; --surface2:#222a38; --fg:#f0efec; --muted:#b1b8c8; --line:#333c4d;
   --gold-t:#e0bf7a; --accent:#8db6f2; --accent-fg:#0b1422;
-  --at-decide:#e3bd68; --at-budget:#8db6f2; --at-perf:#5fd0bd; --at-insight:#cda8ea; --at-ops:#b9c0cf;
+  --at-sd:#f2a6b7; --at-decide:#e3bd68; --at-budget:#8db6f2; --at-perf:#5fd0bd; --at-insight:#cda8ea; --at-ops:#b9c0cf;
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --grid:#2a3242;
   --good-t:#62d062; --warn-t:#fab219; --crit-t:#f29090;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
 }
+[data-area="sd"]{--area:var(--a-sd);--area-t:var(--at-sd)}
 [data-area="decide"]{--area:var(--a-decide);--area-t:var(--at-decide)}
 [data-area="budget"]{--area:var(--a-budget);--area-t:var(--at-budget)}
 [data-area="perf"]{--area:var(--a-perf);--area-t:var(--at-perf)}
@@ -61,7 +63,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .side{background:linear-gradient(180deg,var(--navy2),var(--navy) 38%);color:var(--on-navy);padding:20px 12px 16px;display:flex;flex-direction:column;gap:16px;position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--gold)}
 .brand{display:flex;gap:10px;align-items:center;padding:0 6px 14px;border-bottom:1px solid color-mix(in oklab,var(--gold) 45%,transparent)}
 .brand svg{flex:none;color:var(--gold)}
-.brand b{font:900 18px/1.25 var(--display);display:block;letter-spacing:-.01em}
+.brand b{font:800 18px/1.25 var(--display);display:block;letter-spacing:-.01em}
 .brand span{font-size:11.5px;color:var(--on-navy-m);line-height:1.4;display:block}
 .navs{display:flex;flex-direction:column;gap:12px}
 .navg{display:flex;flex-direction:column;gap:1px}
@@ -86,7 +88,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .mast-in{position:relative;min-width:0;max-width:74ch}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font:700 12px/1 var(--body);letter-spacing:.14em;color:var(--gold);margin-bottom:10px}
 .eyebrow::before{content:"";width:7px;height:7px;rotate:45deg;background:var(--gold)}
-.mast h1{margin:0;font:900 30px/1.25 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.mast h1{margin:0;font:800 30px/1.25 var(--display);letter-spacing:-.02em;text-wrap:balance}
 .mast p{margin:8px 0 0;color:rgba(255,255,255,.86);font-size:14px}
 .mast-meta{position:relative;display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:12px;color:rgba(255,255,255,.8);font-variant-numeric:tabular-nums}
 .mast-meta b{font:700 13px var(--body);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:2px 12px}
@@ -105,7 +107,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .kpi{position:relative;gap:4px}
 .panel.kpi{padding:16px 18px 14px;border-top:3px solid var(--area-t)}
 .kpi .lab{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.02em}
-.kpi .val{font:900 32px/1.2 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .val{font:800 32px/1.2 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .kpi .val small{font:500 13px var(--body);color:var(--muted);margin-left:4px;letter-spacing:0}
 .kpi .sub{font-size:12px;color:var(--muted)}
 .kpi.has-ring{padding-right:84px}
@@ -141,14 +143,14 @@ svg .lbl{fill:var(--fg);font-weight:700}
 .strip .hatch{background:repeating-linear-gradient(135deg,var(--serious) 0 5px,color-mix(in oklab,var(--serious) 35%,var(--surface)) 5px 10px)}
 .strip-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .strip-l div{display:flex;flex-direction:column;gap:1px;font-size:12px;color:var(--muted);border-left:3px solid var(--c,var(--line));padding-left:9px}
-.strip-l b{font:900 20px/1.3 var(--display);color:var(--fg);font-variant-numeric:tabular-nums}
+.strip-l b{font:800 20px/1.3 var(--display);color:var(--fg);font-variant-numeric:tabular-nums}
 .rings{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px}
 .rg{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:12.5px;font-weight:500}
 .rg svg{width:104px;height:104px}
 .rg circle{fill:none;stroke-width:9}
 .rg .tr{stroke:var(--surface2)} .rg .arc{stroke:var(--s1);stroke-linecap:round}
 .rg .tick{stroke:var(--fg);stroke-width:2.5}
-.rg text{font:900 19px var(--display);fill:var(--fg)}
+.rg text{font:800 19px var(--display);fill:var(--fg)}
 .funnel{display:flex;flex-direction:column;gap:2px}
 .fn{display:grid;grid-template-columns:minmax(96px,150px) minmax(0,1fr) 56px;gap:10px;align-items:center;font-size:13px}
 .fn .fb{height:34px;margin:0 auto;border-radius:7px;background:linear-gradient(180deg,var(--s1),color-mix(in oklab,var(--s1) 78%,var(--navy)));min-width:8px}
@@ -159,7 +161,7 @@ svg .lbl{fill:var(--fg);font-weight:700}
 .step:first-child{clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%);border-radius:10px 0 0 10px;padding-left:16px}
 .step.on{background:var(--area);color:#fff}
 .step span{font-size:12px;opacity:.85}
-.step b{font:900 24px/1.25 var(--display);font-variant-numeric:tabular-nums}
+.step b{font:800 24px/1.25 var(--display);font-variant-numeric:tabular-nums}
 .quad{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
 .quad .ax{font-size:11.5px;color:var(--muted);text-align:center}
 .quad .ay{grid-column:1/-1;text-align:left;font-weight:700;color:var(--fg)}
@@ -168,6 +170,13 @@ svg .lbl{fill:var(--fg);font-weight:700}
 .qc h3{margin:0;font:700 14px var(--display);display:flex;justify-content:space-between;gap:8px}
 .chips{display:flex;gap:5px;flex-wrap:wrap}
 .chip{font-size:12px;padding:2px 9px;border-radius:999px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+.eq{font-size:13px;line-height:1.75}
+.eqt td:nth-child(-n+4){white-space:nowrap}
+.eq i{font-style:normal;font-weight:700;color:var(--area-t)}
+input[type=range]{padding:0;border:0;background:none;height:30px;accent-color:var(--area-t)}
+output{font-variant-numeric:tabular-nums;color:var(--area-t)}
+button.opt{font:inherit;width:100%}
+.flowing{stroke-dasharray:7 6}
 /* ---- 입력·기타 ---- */
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 13px;cursor:pointer;transition:scale var(--dur-instant) var(--ease-glide),background-color var(--dur-fast) var(--ease-glide)}
 .btn:hover{background:var(--surface2)}
@@ -186,7 +195,7 @@ svg .lbl{fill:var(--fg);font-weight:700}
 input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px;min-width:0;width:100%}
 textarea{min-height:72px;resize:vertical}
 .doc{border:1px solid var(--fg);padding:22px;background:var(--surface);font-size:13px}
-.doc h3{text-align:center;font:900 20px var(--display);margin:0 0 14px;letter-spacing:.3em}
+.doc h3{text-align:center;font:800 20px var(--display);margin:0 0 14px;letter-spacing:.3em}
 .doc td,.doc th{border:1px solid var(--fg);color:var(--fg)}
 .doc th{width:26%;background:var(--surface2);font-size:13px}
 .chk{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
@@ -225,6 +234,7 @@ pre.brief{white-space:pre-wrap;font:13px/1.85 var(--body);margin:0;background:va
   .mast .sheen{display:block;position:absolute;inset:0 auto 0 0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.09),transparent);animation:sheen 9s var(--ease-glide) infinite;pointer-events:none}
   .panel{transition:translate var(--dur-base) var(--ease-settle),box-shadow var(--dur-base) var(--ease-glide)}
   @media (hover:hover) and (pointer:fine){.panel.kpi:hover{translate:0 -3px}}
+  .flowing{animation:march var(--dur-cinema) linear infinite}
   ::view-transition-group(*){animation-duration:var(--dur-fast);animation-timing-function:var(--ease-glide)}
 }
 @keyframes rise{from{opacity:0;translate:0 var(--shift-sm)}}
@@ -233,6 +243,7 @@ pre.brief{white-space:pre-wrap;font:13px/1.85 var(--body);margin:0;background:va
 @keyframes arc{from{stroke-dashoffset:var(--v)}}
 @keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes fade{from{opacity:0}}
+@keyframes march{to{stroke-dashoffset:-26}}
 @keyframes sheen{from{transform:translateX(-120%)}55%,to{transform:translateX(320%)}}
 @media (pointer:coarse){.btn,.nav,input:not([type=checkbox]):not([type=radio]),select{min-height:44px}.btn.sm{min-height:36px}}
 @media (max-width:860px){
@@ -450,12 +461,13 @@ function execStatus(rate,prog){const d=rate-prog;return d>=-10?stPill("good","�
 /* ============ 화면 ============ */
 const NAV=[
  ["의사결정",[["cockpit","입체 현황"],["decide","결정 안건"],["sim","재배분 모의"],["portfolio","프로그램 포트폴리오"],["brief","보고 요약"]],"decide"],
+ ["예측·시뮬레이션",[["sdmap","인과지도"],["sdflow","저량·유량도와 산식"],["sdsim","정책 시뮬레이션"],["sdlab","정책 탐색"],["sdgame","의사결정 훈련"]],"sd"],
  ["사업비 관리",[["home","종합 현황"],["budget","예산·집행 현황"],["forecast","집행 예측·경보"],["receipt","영수증 대조"],["approval","결재 도우미"],["guide","집행 기준 안내"]],"budget"],
  ["성과·IR",[["indicators","성과지표 추이"],["kpi","핵심·자율 성과"],["link","예산–성과 연계"],["feedback","환류 추적"],["evidence","평가 증빙 묶음"],["student","학생 성공 IR"]],"perf"],
  ["행정 인사이트",[["insight","확인 과제"],["path","사업 경로"],["tasks","준비 업무"]],"insight"],
  ["운영",[["admin","자료·설정"]],"ops"]];
 const V={};
-const ICO={decide:'<path d="M8 1.5 14.5 8 8 14.5 1.5 8Z"/><path d="M8 5v6M5 8h6"/>',budget:'<path d="M2 13.5h12M4 13V8M8 13V3M12 13V6"/>',perf:'<path d="M2 12l4-4 3 3 5-6"/><path d="M10.5 5H14v3.5"/>',insight:'<circle cx="4" cy="4" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="7" cy="12" r="2"/><path d="M6 4.5l4 1M5 6l1.5 4M10.8 7.6 8.4 10.6"/>',ops:'<circle cx="8" cy="8" r="2.5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/>'};
+const ICO={sd:'<path d="M3 8a5 5 0 0 1 9-3M13 8a5 5 0 0 1-9 3"/><path d="M12 2v3H9M4 14v-3h3"/>',decide:'<path d="M8 1.5 14.5 8 8 14.5 1.5 8Z"/><path d="M8 5v6M5 8h6"/>',budget:'<path d="M2 13.5h12M4 13V8M8 13V3M12 13V6"/>',perf:'<path d="M2 12l4-4 3 3 5-6"/><path d="M10.5 5H14v3.5"/>',insight:'<circle cx="4" cy="4" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="7" cy="12" r="2"/><path d="M6 4.5l4 1M5 6l1.5 4M10.8 7.6 8.4 10.6"/>',ops:'<circle cx="8" cy="8" r="2.5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/>'};
 const ico=(k,cls="")=>`<svg class="${cls}" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[k]}</svg>`;
 const AREA={};NAV.forEach(g=>g[1].forEach(x=>AREA[x[0]]={k:g[2],n:g[0]}));
 const ROLE={manager:"담당자",viewer:"전체 열람",dept:"소속 열람"};
@@ -670,6 +682,7 @@ function agendas(){const out=[],R=S.rules;
   const ac=insights().filter(i=>i.id.startsWith("acct:"));
   if(ac.length)out.push({id:"acct",title:"지급 전 계좌 대조 절차 도입",why:ac.map(i=>i.title),opts:["지급 전 등록 계좌 대조를 필수 절차로 도입","현행 유지, 해당 건만 개별 확인"],link:["insight","확인 과제"]});
   const rc=recCover();if(rc.n&&rc.rate<90)out.push({id:"rec",title:"영수증 확보 기한 운영",why:[`집행 ${rc.n}건 중 영수증 대조 완료 ${rc.ok}건 (${p1(rc.rate)}%)`,`미확보 금액 ${mil(sum(rc.miss,t=>t.amount))}백만원`],opts:[`집행 후 ${R.recDays}일 내 등록을 원칙으로 운영`,"월말 일괄 점검으로 운영"],link:["receipt","영수증 대조"]});
+  try{const m0=sdM(sdSim(SD0)),op=sdOpt();out.push({id:"sd",title:"집행·성과 구조 개선 정책 선택",why:[`현행 유지 시 1차년 불용 ${mil2(m0.lapse1)}백만원, 2차년 말 달성률 ${p1(m0.P2)}% (모의)`,"구조 진단: 독려만 강화하면 재작업과 연말 몰림이 커짐(미봉책의 실패)",`탐색된 최선 조합의 종합 점수 ${p1(op[0].pay)} (현행 유지 ${p1(sdPay(m0,SD0))})`],opts:[...new Set(op.slice(0,3).map(o=>levText(o.lev)))],link:["sdsim","정책 시뮬레이션"]})}catch(e){}
   return out}
 
 /* ---- 입체 현황 ---- */
@@ -782,6 +795,7 @@ function briefText(){const ps=scope(),tx=scopeTx(),f=forecast(ps,tx),pr=progress
    "3. 주요 성과",...([...S.achv].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).map((a,i)=>` ${"가나다라"[i]}. ${a.title} (${a.date})`)),"",
    "4. 결정이 필요한 사항",...(ag.length?ag.slice(0,5).map((a,i)=>` ${"가나다라마"[i]}. ${a.title}: ${a.why[0]}`):[" 해당 없음"]),"",
    "5. 확인 과제",` 게시된 확인 과제 ${ins.length}건${ins.length?": "+[...new Set(ins.map(i=>i.type))].join(", "):""}`,` 환류 과제 미완료 ${S.feedback.filter(x=>x.status!=="완료").length}건, 결정 후 점검 대기 ${S.decisions.filter(d=>d.result==="대기").length}건`);
+  try{const m0=sdM(sdSim(SD0)),b=sdOpt()[0];L.push("","6. 정책 모의(시스템 다이내믹스)",` 가. 현행 유지 시 1차년 불용 ${mil2(m0.lapse1)}백만원, 2차년 말 달성률 ${p1(m0.P2)}%`,` 나. 탐색된 최선 조합: ${levText(b.lev)} → 1차년 불용 ${mil2(b.m.lapse1)}백만원, 2차년 말 달성률 ${p1(b.m.P2)}%`," ※ 가정 값에 따른 모의 결과이며 실제 결과를 보장하지 않음")}catch(e){}
   if(Object.values(S.src).includes("예시"))L.push("","※ 예시 데이터로 작성된 문안임. 실제 자료 반영 후 사용할 것.");
   return L.join("\n")}
 V.brief=()=>head("보고 요약","현재 자료로 한 쪽 분량의 보고 문안을 만듦. 수치는 각 화면의 값과 같으며 문장은 정해진 틀로 채움. 해석과 원인 판단은 덧붙여 써야 함.",`<button class="btn pri" data-act="briefcopy">문안 복사</button>`)+`
@@ -819,6 +833,242 @@ V.kpi=()=>{const ks=kpiLink(),mg=S.role==="manager";
   ${S.evals.map((e,i)=>`<tr><td>${esc(e.name)}</td>${e.areas.map((a,j)=>{const d=i?a[1]-S.evals[i-1].areas[j][1]:0;return `<td class="n">${a[1]}${i?` <span class="note">(${d>=0?"+":""}${d})</span>`:""}</td>`}).join("")}<td class="n"><b>${sum(e.areas,a=>a[1])}</b> / ${sum(e.areas,a=>a[2])}</td></tr>`).join("")}</tbody></table></div>
   <span class="note">차수별 위원 의견과 조치 현황은 환류 추적 메뉴에서 관리함.</span></div>`};
 
+/* ============ 시스템 다이내믹스 엔진 (Euler, 계산 순서: 보조 → 유량 → 저량) ============ */
+const SDLK={LOAD:[[0,.6],[.5,.8],[1,1],[1.5,1.5],[2,2.1],[3,3],[4,3.5]],QUAL:[[0,.4],[.5,.7],[1,1],[1.5,1.2],[2,1.3]]};
+function sdLookup(p,x){if(x<=p[0][0])return p[0][1];for(let i=1;i<p.length;i++)if(x<=p[i][0]){const a=p[i-1],b=p[i];return a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0])}return p[p.length-1][1]}
+const SDF={MIN:Math.min,MAX:Math.max,IF:(c,a,b)=>c?a:b,MOD:(a,b)=>((a%b)+b)%b,FLOOR:Math.floor,EXP:Math.exp,LN:Math.log,LOOKUP_LOAD:x=>sdLookup(SDLK.LOAD,x),LOOKUP_QUAL:x=>sdLookup(SDLK.QUAL,x)};
+const SD_STOCKS=[
+ ["B","예산 잔액","백만원","B0",["alloc"],["req","lapseB"]],
+ ["W","집행 대기액","백만원","W0",["req"],["exec","lapseW"]],
+ ["E","당해 누적 집행액","백만원","E0",["exec"],["resetE"]],
+ ["D","성과 반영 대기 집행","백만원","D0",["exec"],["mature"]],
+ ["Q","운영 품질","지수","1",["qgain"],["qdecay"]],
+ ["P","성과 달성률","%","P0",["pgain"],["resetP"]],
+ ["PL","전년도 달성률","%","P0",["snapP"],[]],
+ ["AY","당해 배정액","백만원","A",["setA"],[]],
+ ["U","누적 불용액","백만원","0",["lapseB","lapseW"],[]]];
+/* [기호, 이름, 단위, 종류(a 보조 / f 유량), 산식] — 위에서 아래 순서로 계산 */
+const SD_VARS0=[
+ ["yend","연말 여부","0·1","a","IF(MOD(t+DT,12)<MOD(t,12),1,0)"],
+ ["trem","잔여 개월","월","a","MAX(1,12-MOD(t,12))"],
+ ["plan","계획 집행률","비율","a","MOD(t,12)/12"],
+ ["rate","집행률","비율","a","E/AY"],
+ ["gap","집행 지연","비율","a","MAX(0,plan-rate)"],
+ ["push","독려 계수","배","a","1+k*gap"],
+ ["req","집행 요청","백만원/월","f","(1-yend)*MIN(B/DT,(c+early)*push*B/trem)"],
+ ["rush","연말 몰림 지수","0~1","a","MAX(0,MIN(1,(req/(AY/12)-1.5)/2))"],
+ ["cap","처리 역량","백만원/월","a","(n0+nAdd)*prod"],
+ ["load","업무 부하","배","a","W/cap"],
+ ["rw","재작업률","비율","a","MIN(0.6,rw0*LOOKUP_LOAD(load)*(1-a*eff))"],
+ ["exec","집행 완료","백만원/월","f","(1-yend)*MIN(W/tmin,cap*(1-rw))"],
+ ["mature","성과 반영","백만원/월","f","D/td"],
+ ["pgain","성과 창출","%/월","f","kappa/(1+g*FLOOR(t/12))*mature*LOOKUP_QUAL(Q)*(1-P/Pmax)"],
+ ["qgain","품질 축적","지수/월","f","(q/q0)*(1-rushPen*rush)*(exec/(AY/12))/tq"],
+ ["qdecay","품질 감쇠","지수/월","f","Q/tq"],
+ ["newA","차년도 배정 산정액","백만원","a","A*(1+s*(P/100-1))"],
+ ["alloc","신규 배정","백만원/월","f","yend*newA/DT"],
+ ["setA","배정액 갱신","백만원/월","f","yend*(newA-AY)/DT"],
+ ["lapseB","연말 반납(잔액)","백만원/월","f","yend*B/DT"],
+ ["lapseW","연말 반납(대기액)","백만원/월","f","yend*W/DT"],
+ ["resetE","집행 누계 초기화","백만원/월","f","yend*E/DT"],
+ ["resetP","달성률 초기화","%/월","f","yend*P/DT"],
+ ["snapP","전년도 달성률 기록","%/월","f","yend*(P-PL)/DT"]];
+const SD_CONST={A:["연간 배정액","백만원"],B0:["초기 예산 잔액","백만원"],W0:["초기 집행 대기액","백만원"],E0:["초기 누적 집행액","백만원"],D0:["초기 성과 반영 대기","백만원"],P0:["현재 달성률","%"],
+ c:["요청 성향","무차원"],early:["집행 계획 조기화","무차원"],k:["독려 강도","무차원"],n0:["처리 인력","명"],nAdd:["추가 인력","명"],prod:["1인당 처리액","백만원/월·명"],rw0:["기본 재작업률","비율"],a:["사전점검 적용률","비율"],eff:["사전점검 효과","비율"],
+ q:["품질 투자 비율","비율"],q0:["기준 품질 투자 비율","비율"],tq:["품질 감쇠 기간","월"],td:["성과 반영 지연","월"],tmin:["최소 처리 기간","월"],rushPen:["몰림의 품질 손실","비율"],s:["성과 연동 배정 민감도","무차원"],Pmax:["달성률 상한","%"],g:["차년도 목표 상향률","비율"],kappa:["성과 생산성","%/백만원"]};
+function sdCompile(vars){const names=new Set(["t","DT",...SD_STOCKS.map(s=>s[0]),...Object.keys(SD_CONST),...vars.map(v=>v[0])]);
+  return vars.map(v=>{const ex=v[4];if(/[^A-Za-z0-9_+\-*/().,<>=\s]/.test(ex))throw new Error(v[1]+": 쓸 수 없는 문자가 있음");
+    const deps=[];const js=ex.replace(/[A-Za-z_][A-Za-z0-9_]*/g,m=>{if(m in SDF)return "F."+m;if(!names.has(m))throw new Error(v[1]+": 모르는 이름 "+m);if(!deps.includes(m))deps.push(m);return "v."+m});
+    let fn;try{fn=new Function("v","F","return ("+js+")")}catch(e){throw new Error(v[1]+": 산식 형식이 맞지 않음")}
+    return {k:v[0],fn,deps}})}
+function sdRun(C,t0,tf,vars,dt=.125,init){const comp=sdCompile(vars),v={...C,DT:dt,t:t0};
+  for(const s of SD_STOCKS)v[s[0]]=init?init[s[0]]:s[3] in C?C[s[3]]:+s[3];
+  const n=Math.round((tf-t0)/dt),keys=[...SD_STOCKS.map(s=>s[0]),...comp.map(c=>c.k)],out={t:[]};for(const k of keys)out[k]=[];const ends=[];
+  for(let i=0;i<=n;i++){v.t=t0+i*dt;for(const c of comp){const x=c.fn(v,SDF);if(!isFinite(x))throw new Error("계산 중 값이 정해지지 않음: "+c.k);v[c.k]=x}
+    out.t.push(v.t);for(const k of keys)out[k].push(v[k]);
+    if(v.yend&&i<n)ends.push({t:v.t,rate:v.rate,P:v.P,lapse:v.B+v.W,AY:v.AY,newA:v.newA,Q:v.Q});
+    if(i===n)break;
+    for(const s of SD_STOCKS){let d=0;for(const f of s[4])d+=v[f];for(const f of s[5])d-=v[f];v["_"+s[0]]=v[s[0]]+d*dt}
+    for(const s of SD_STOCKS)v[s[0]]=v["_"+s[0]]}
+  out.ends=ends;out.state=Object.fromEntries(SD_STOCKS.map(s=>[s[0],v[s[0]]]));out.maxRw=Math.max(...out.rw);out.maxLoad=Math.max(...out.load);return out}
+/* ============ 시스템 다이내믹스: 보정·실행 ============ */
+const sd={lev:{k:1,nAdd:0,a:.2,q:.3,early:0},s:.5,ov:{},vars:null,saved:[],loop:"",node:"",sel:"B",out:"lapse",pos:null,game:null,cache:{},err:""};
+const SD0={k:1,nAdd:0,a:.2,q:.3,early:0};
+const SD_LEV={k:["독려 강도","집행이 계획보다 늦을 때 요청을 재촉하는 세기",0,3,.5,v=>v.toFixed(1),"8 균형 루프의 강도"],nAdd:["추가 처리 인력","결재·증빙 처리 인력 증원",0,3,1,v=>v+"명","12 상수·파라미터"],
+ a:["사전점검 적용률","결재 도우미·증빙 사전점검을 거치는 서류 비율",0,1,.1,v=>Math.round(v*100)+"%","6 정보 흐름"],q:["품질 투자 비율","집행액 중 프로그램 질 개선에 쓰는 비율",.1,.5,.05,v=>Math.round(v*100)+"%","10 흐름 구조"],
+ early:["집행 계획 조기화","연초부터 집행 요청을 앞당기는 정도",0,.6,.1,v=>"+"+v.toFixed(1),"5 규칙"]};
+function sdCalib(){const A=sum(S.programs,p=>p.budget)/1e6,E0=Math.min(sum(S.tx,t=>t.amount)/1e6,A*.999),f=forecast(S.programs,S.tx),r=Math.max(f.rate/1e6,A/240);
+  const ms=(Date.now()-new Date(S.period.start))/(30.4375*864e5),t0=Math.round(Math.max(0,Math.min(11.5,ms))*8)/8;
+  const n0=3,rw0=.12,td=3,Pmax=150,core=S.kpis.filter(k=>k.tier==="핵심"),P0=Math.min(Pmax-5,core.length?sum(core,k=>pct(k.actual,k.target))/core.length:50);
+  const prod=r/(n0*(1-rw0)*.85),cap=n0*prod,W0=Math.min(.85*cap,(A-E0)*.5),B0=A-E0-W0,trem=Math.max(1,12-t0),gap=Math.max(0,t0/12-E0/A),c=Math.max(.05,Math.min(3,r*trem/(Math.max(B0,1)*(1+gap)))),D0=Math.min(.6*E0,r*td),kappa=-Pmax*Math.log(1-P0/Pmax)/Math.max(1,E0-D0);
+  return {C:{A,B0,W0,E0,D0,P0,c,early:0,k:1,n0,nAdd:0,prod,rw0,a:.2,eff:.6,q:.3,q0:.3,tq:12,td,tmin:.25,rushPen:.5,s:sd.s,Pmax,g:.5,kappa,...sd.ov},t0,
+   how:{A:"예산 배정 합계",E0:"집행 내역 합계",B0:"배정 − 집행 − 대기액",W0:"처리 역량의 0.85개월분",P0:"핵심성과지표 평균 달성률",c:"최근 3개월 월평균 집행 × 잔여 개월 ÷ (잔액 × 독려 계수)",prod:"최근 3개월 월평균 집행 ÷ (인력 × (1 − 재작업률) × 0.85)",D0:"월평균 집행 × 성과 반영 지연",kappa:"현재 달성률이 재현되도록 역산"}}}
+function sdSim(lev,extra,nocache){const {C,t0}=sdCalib(),vars=sd.vars||SD_VARS0;if(nocache)return sdRun({...C,...lev,...extra},t0,24,vars);
+  const key=JSON.stringify([C,t0,lev,extra||0,sd.vars?1:0]);if(Object.keys(sd.cache).length>80)sd.cache={};return sd.cache[key]||(sd.cache[key]=sdRun({...C,...lev,...extra},t0,24,vars))}
+function sdM(r){const a=r.ends[0]||{rate:0,P:0,lapse:0,newA:0,Q:1},b=r.ends[1]||a;return {rate1:a.rate*100,lapse1:a.lapse,P1:a.P,newA:a.newA,rate2:b.rate*100,lapse2:b.lapse,P2:b.P,rw:r.maxRw*100,Q:b.Q,lapse:a.lapse+(r.ends[1]?b.lapse:0)}}
+function sdPay(m,lev){return m.P2-m.lapse/(2*sdCalib().C.A)*100-5*lev.nAdd}
+function sdOpt(){const key="opt"+JSON.stringify([sdCalib(),sd.vars?sd.vars.map(v=>v[4]):0]);if(sd.cache[key])return sd.cache[key];const out=[];
+  for(const k of [0,1,2,3])for(const nAdd of [0,1,2])for(const a of [.2,.6,1])for(const q of [.2,.3,.4])for(const early of [0,.2,.4]){const lev={k,nAdd,a,q,early},m=sdM(sdSim(lev,null,1));out.push({lev,m,pay:sdPay(m,lev)})}
+  out.sort((x,y)=>y.pay-x.pay);return sd.cache[key]=out.slice(0,5)}
+function levText(l){const o=[];for(const k in SD_LEV)if(l[k]!==SD0[k])o.push(SD_LEV[k][0]+" "+SD_LEV[k][5](l[k]));return o.join(", ")||"현행 유지"}
+function sdName(k){const s=SD_STOCKS.find(x=>x[0]===k);if(s)return s[1];const v=(sd.vars||SD_VARS0).find(x=>x[0]===k);if(v)return v[1];if(SD_CONST[k])return SD_CONST[k][0];return {t:"시점(월)",DT:"계산 간격"}[k]||k}
+function sdPretty(ex){return esc(ex.replace(/[A-Za-z_][A-Za-z0-9_]*/g,m=>m==="LOOKUP_LOAD"?"부하–재작업 표":m==="LOOKUP_QUAL"?"품질–성과 표":m in SDF?m:"\u0001"+sdName(m)+"\u0002").replace(/\*/g," × ").replace(/\//g," ÷ ")).replace(/\u0001/g,"<i>").replace(/\u0002/g,"</i>")}
+function sdX(r,step=4){const idx=[];for(let i=0;i<r.t.length;i+=step)idx.push(i);const last=r.t.length-2;while(idx.length&&idx[idx.length-1]>last)idx.pop();if(idx[idx.length-1]!==last)idx.push(last);const st=new Date(S.period.start+"T00:00:00Z");
+  return {idx,xs:idx.map(i=>{const d=new Date(st);d.setUTCMonth(d.getUTCMonth()+Math.floor(r.t[i]+1e-9));return d.toISOString().slice(2,7).replace("-",".")})}}
+const dl=(v,u,inv)=>{const g=inv?v<=0:v>=0;return Math.abs(v)<.05?`<span class="pill">변화 없음</span>`:`<span class="pill ${g?"good":"crit"}">${v>0?"+":""}${p1(v)}${u}</span>`};
+
+/* ---- 인과지도 ---- */
+const CLD={n:{bal:["예산 잔액",130,70],req:["집행 요청",360,48],wait:["집행 대기 업무",600,78],load:["업무 부하",750,190],rw:["재작업률",730,330],done:["집행 완료",530,230],gap:["집행 지연",330,205],push:["집행 독려",160,285],rush:["연말 몰림",180,425],qual:["운영 품질",390,445],perf:["성과 달성률",610,445],next:["차년도 배정",75,175]},
+ l:[["bal","req",1],["req","bal",-1],["req","wait",1],["wait","done",1],["done","wait",-1],["wait","load",1],["load","rw",1],["rw","done",-1],["done","gap",-1],["gap","push",1],["push","req",1],["push","rush",1],["rush","qual",-1],["done","qual",1],["qual","perf",1,1],["done","perf",1,1],["perf","next",1,1],["next","bal",1,1]],
+ loops:[["B1","집행 독려",["gap","push","req","wait","done"],"집행이 계획보다 늦으면 독려해 요청을 늘리고, 집행이 따라오면 지연이 줄어듦."],["B2","잔액 소진",["bal","req"],"잔액이 많을수록 요청이 늘고, 요청은 잔액을 줄임."],["B3","대기 해소",["wait","done"],"대기 업무가 쌓이면 처리량이 늘어 대기가 줄어듦."],
+  ["R1","서두름의 악순환",["wait","load","rw","done"],"대기가 쌓이면 부하가 커져 재작업이 늘고, 처리량이 줄어 대기가 더 쌓임."],["R2","성과–재원 선순환",["done","perf","next","bal","req","wait"],"집행이 성과로, 성과가 차년도 배정으로 이어져 다시 집행 여력이 됨. 지연이 길어 효과가 늦게 나타남."],
+  ["R3","독려의 역효과",["push","rush","qual","perf","next","bal","req","wait","done","gap"],"독려가 연말 몰림을 키워 품질과 성과를 떨어뜨리고, 차년도 재원이 줄어 다시 지연과 독려를 부름."]]};
+function cldPol(p){let s=1;p.forEach((a,i)=>{const l=CLD.l.find(x=>x[0]===a&&x[1]===p[(i+1)%p.length]);s*=l?l[2]:0});return s>0?"R":s<0?"B":"?"}
+function cldSvg(){const P=sd.pos||(sd.pos=Object.fromEntries(Object.entries(CLD.n).map(([k,v])=>[k,[v[1],v[2]]]))),lp=CLD.loops.find(l=>l[0]===sd.loop),on=new Set(),inl=new Set(lp?lp[2]:[]);
+  if(lp)lp[2].forEach((a,i)=>on.add(a+">"+lp[2][(i+1)%lp[2].length]));
+  const w=k=>CLD.n[k][0].length*13.5+26,q=(a,c,b,t)=>(1-t)*(1-t)*a+2*t*(1-t)*c+t*t*b;
+  let g=`<defs>${[["p","--s1"],["n","--s2"]].map(([i,c])=>`<marker id="ah${i}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(${c})"/></marker>`).join("")}</defs>`;
+  for(const [a,b,s,d] of CLD.l){const [x1,y1]=P[a],[x2,y2]=P[b],dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,cx=(x1+x2)/2-dy/L*36,cy=(y1+y2)/2+dx/L*36;
+    const trim=(px,py,k)=>{const ux=cx-px,uy=cy-py,l=Math.hypot(ux,uy)||1,tt=Math.min((w(k)/2+5)/Math.abs(ux/l||1e-9),23/Math.abs(uy/l||1e-9));return [px+ux/l*tt,py+uy/l*tt]};
+    const [sx,sy]=trim(x1,y1,a),[ex,ey]=trim(x2,y2,b),act=on.has(a+">"+b),col=s>0?"var(--s1)":"var(--s2)",op=lp&&!act?.14:1;
+    g+=`<g opacity="${op}" data-tip="${esc(`${CLD.n[a][0]} → ${CLD.n[b][0]}\n${s>0?"같은 방향(+): 원인이 늘면 결과도 늘어남":"반대 방향(−): 원인이 늘면 결과는 줄어듦"}${d?"\n시간 지연 있음":""}`)}"><path d="M${sx} ${sy}Q${cx} ${cy} ${ex} ${ey}" fill="none" stroke="${col}" stroke-width="${act?3:1.8}" marker-end="url(#ah${s>0?"p":"n"})" class="${act?"flowing":""}"/><path d="M${sx} ${sy}Q${cx} ${cy} ${ex} ${ey}" fill="none" stroke="transparent" stroke-width="14"/>
+     <text x="${q(sx,cx,ex,.78)-dy/L*11}" y="${q(sy,cy,ey,.78)+dx/L*11+5}" text-anchor="middle" style="font:800 15px var(--body);fill:${col}">${s>0?"+":"−"}</text>${d?`<text x="${q(sx,cx,ex,.45)}" y="${q(sy,cy,ey,.45)+5}" text-anchor="middle" style="font:800 14px var(--body);fill:var(--fg)">‖</text>`:""}</g>`}
+  for(const k in CLD.n){const [x,y]=P[k],ww=w(k),sel=sd.node===k;g+=`<g class="cnode" data-k="${k}" opacity="${lp&&!inl.has(k)?.3:1}" style="cursor:grab"><rect x="${x-ww/2}" y="${y-18}" width="${ww}" height="36" rx="18" fill="var(--surface)" stroke="${sel?"var(--gold-t)":"var(--area-t)"}" stroke-width="${sel?3:1.6}"/><text x="${x}" y="${y+5}" text-anchor="middle" style="font:700 13.5px var(--body);fill:var(--fg)">${CLD.n[k][0]}</text></g>`}
+  return g}
+function cldNode(){const k=sd.node;if(!k)return `<span class="note">변수를 누르면 그 변수에 영향을 주는 것과 받는 것이 표시됨. 변수는 끌어서 옮길 수 있음.</span>`;
+  const li=(l,o)=>`<div class="chk">${stPill(l[2]>0?"good":"warn",l[2]>0?"같은 방향 +":"반대 방향 −")}<span>${CLD.n[l[o]][0]}${l[3]?" (지연)":""}</span></div>`;
+  return `<b>${CLD.n[k][0]}</b><div class="grid g2" style="grid-template-columns:1fr 1fr"><div><div class="note">영향을 주는 변수</div>${CLD.l.filter(l=>l[1]===k).map(l=>li(l,0)).join("")||`<span class="note">없음</span>`}</div><div><div class="note">영향을 받는 변수</div>${CLD.l.filter(l=>l[0]===k).map(l=>li(l,1)).join("")||`<span class="note">없음</span>`}</div></div>
+  <div class="note">포함된 순환: ${CLD.loops.filter(l=>l[2].includes(k)).map(l=>l[0]+" "+l[1]).join(", ")||"없음"}</div>`}
+V.sdmap=()=>{const m0=sdM(sdSim(SD0)),mp=sdM(sdSim({...SD0,k:3}));
+  return head("인과지도","사업비 집행과 성과가 서로 어떻게 맞물려 돌아가는지를 원인과 결과의 순환으로 그림. 순환을 누르면 경로가 강조되고, 순환의 종류(강화 R·균형 B)는 연결 부호에서 자동으로 판별함.")+`
+  <div class="panel"><h2>집행–성과 인과지도<small>변수 ${Object.keys(CLD.n).length}개 · 연결 ${CLD.l.length}개 · 순환 ${CLD.loops.length}개</small></h2>
+   <div class="tw"><svg id="cld" viewBox="0 0 840 500" style="width:100%;min-width:640px;height:auto;touch-action:none;user-select:none" role="img" aria-label="집행–성과 인과지도">${cldSvg()}</svg></div>
+   <div class="legend"><span><i style="border-color:var(--s1)"></i>+ 같은 방향</span><span><i style="border-color:var(--s2)"></i>− 반대 방향</span><span>‖ 시간 지연</span><button class="btn sm" data-act="cldreset">배치 되돌리기</button></div></div>
+  <div class="grid g2"><div class="panel"><h2>순환 구조<small>눌러서 경로 보기</small></h2>${CLD.loops.map(l=>{const pol=cldPol(l[2]);return `<button class="opt hm" data-act="cldloop" data-k="${l[0]}" aria-pressed="${sd.loop===l[0]}" style="text-align:left;cursor:pointer;background:${sd.loop===l[0]?"color-mix(in oklab,var(--area-t) 12%,var(--surface))":"var(--surface)"}"><span class="pill ${pol==="R"?"crit":"good"}">${pol==="R"?"강화":"균형"} ${l[0]}</span><span><b>${l[1]}</b><div class="note">${l[2].map(k=>CLD.n[k][0]).join(" → ")} → ${CLD.n[l[2][0]][0]}</div><div>${l[3]}</div></span></button>`}).join("")}</div>
+  <div style="display:flex;flex-direction:column;gap:16px;min-width:0"><div class="panel"><h2>선택한 변수</h2><div id="cldnode" style="display:flex;flex-direction:column;gap:8px">${cldNode()}</div></div>
+   <div class="panel"><h2>구조 진단<small>시스템 원형</small></h2><div><b>미봉책의 실패</b>에 해당함. 집행 독려(B1)는 지연을 빨리 줄이지만, 연말 몰림을 거쳐 품질과 성과를 깎는 부작용(R3)이 늦게 나타남.</div>
+    <div class="chk">${stPill("warn","모의 결과")}<span>독려 강도만 1.0에서 3.0으로 올리면 1차년 불용은 ${mil2(m0.lapse1)} → ${mil2(mp.lapse1)}백만원으로 바뀌고, 최대 재작업률은 ${p1(m0.rw)}% → ${p1(mp.rw)}%, 2차년 말 운영 품질은 ${m0.Q.toFixed(2)} → ${mp.Q.toFixed(2)}가 됨.</span></div>
+    <div class="note">전형적인 실패: 지연이 보일 때마다 독려만 더 세게 하는 것. 효과적인 개입: 부작용 경로를 끊는 것(사전점검으로 재작업 축소, 집행 계획 조기화로 몰림 완화).</div>
+    <a class="btn sm" style="text-decoration:none;align-self:flex-start" href="#sdsim">정책 시뮬레이션에서 확인</a></div></div></div>`};
+const mil2=v=>v.toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1});
+function initCld(){const svg=$("#cld");if(!svg)return;let drag=null,moved=0;const pt=e=>{const m=svg.getScreenCTM().inverse();return [e.clientX*m.a+e.clientY*m.c+m.e,e.clientX*m.b+e.clientY*m.d+m.f]};
+  svg.onpointerdown=e=>{const n=e.target.closest(".cnode");if(!n)return;drag=n.dataset.k;moved=0;svg.setPointerCapture(e.pointerId)};
+  svg.onpointermove=e=>{if(!drag)return;const [x,y]=pt(e);moved++;sd.pos[drag]=[Math.max(50,Math.min(790,x)),Math.max(24,Math.min(476,y))];svg.innerHTML=cldSvg()};
+  svg.onpointerup=()=>{if(drag&&moved<3){sd.node=drag;svg.innerHTML=cldSvg();$("#cldnode").innerHTML=cldNode()}drag=null}}
+
+/* ---- 저량·유량도와 자동 산식 ---- */
+const SFD={s:{B:[250,120],W:[510,120],E:[770,120],U:[380,250],D:[250,380],P:[720,380],Q:[250,490]},
+ f:{alloc:["alloc",120,120,[[50,120],[190,120]],1],req:["req",380,120,[[310,120],[450,120]]],exec:["exec",640,120,[[570,120],[710,120]]],lapseB:["lapseB",250,192,[[250,142],[250,250],[320,250]]],lapseW:["lapseW",510,192,[[510,142],[510,250],[440,250]]],
+  execD:["exec",120,380,[[50,380],[190,380]],1],mature:["mature",380,380,[[310,380],[450,380]],2],pgain:["pgain",590,380,[[520,380],[660,380]],1],qgain:["qgain",120,490,[[50,490],[190,490]],1],qdecay:["qdecay",380,490,[[310,490],[450,490]],2]},
+ a:{push:[330,36],gap:[450,36],rush:[120,215],load:[600,232],cap:[720,232],rw:[660,300]}};
+function sfdPos(k){if(SFD.s[k])return SFD.s[k];if(SFD.a[k])return SFD.a[k];const f=Object.values(SFD.f).find(x=>x[0]===k);return f?[f[1],f[2]]:null}
+function sfdSvg(r){const vars=sd.vars||SD_VARS0,comp=sdCompile(vars),sel=sd.sel;let g=`<defs><marker id="ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker><marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--s1)"/></marker></defs>`;
+  for(const c of comp){const to=sfdPos(c.k);if(!to)continue;for(const d of c.deps){const fr=sfdPos(d);if(!fr||d===c.k)continue;const on=sel===c.k||sel===d,mx=(fr[0]+to[0])/2-(to[1]-fr[1])*.18,my=(fr[1]+to[1])/2+(to[0]-fr[0])*.18;
+    g+=`<path d="M${fr[0]} ${fr[1]}Q${mx} ${my} ${to[0]} ${to[1]}" fill="none" stroke="${on?"var(--gold-t)":"var(--muted)"}" stroke-width="${on?1.8:1}" stroke-dasharray="3 4" opacity="${on?1:.38}" marker-end="url(#ai)"/>`}}
+  for(const [id,f] of Object.entries(SFD.f)){const pts=f[3],on=sel===f[0];g+=`<path d="M${pts.map(p=>p.join(" ")).join("L")}" fill="none" stroke="var(--s1)" stroke-width="7" opacity=".22"/><path class="flowing" d="M${pts.map(p=>p.join(" ")).join("L")}" fill="none" stroke="var(--s1)" stroke-width="2.4" marker-end="url(#af)"/>`;
+    if(f[4]){const c=f[4]===1?pts[0]:pts[pts.length-1];g+=`<path d="M${c[0]-16} ${c[1]+7}a9 9 0 0 1 3-17a11 11 0 0 1 21-1a8 8 0 0 1 4 18z" fill="var(--surface2)" stroke="var(--muted)" transform="translate(${f[4]===1?-14:14} 0)"/>`}
+    g+=`<g data-sdv="${f[0]}" style="cursor:pointer"><circle cx="${f[1]}" cy="${f[2]}" r="20" fill="transparent"/><path d="M${f[1]-11} ${f[2]-9}L${f[1]+11} ${f[2]+9}V${f[2]-9}L${f[1]-11} ${f[2]+9}Z" fill="${on?"var(--gold)":"var(--surface)"}" stroke="${on?"var(--gold-t)":"var(--s1)"}" stroke-width="2"/><text x="${f[1]}" y="${f[2]+(id.startsWith("lapse")?4:28)}" ${id.startsWith("lapse")?`dx="${id==="lapseB"?-18:18}" text-anchor="${id==="lapseB"?"end":"start"}"`:'text-anchor="middle"'} style="font:600 11.5px var(--body);fill:var(--fg)">${sdName(f[0])}${id==="execD"?"(동시 유입)":""}</text></g>`}
+  for(const [k,[x,y]] of Object.entries(SFD.s)){const on=sel===k,v=r[k][0];g+=`<g data-sdv="${k}" style="cursor:pointer"><rect x="${x-60}" y="${y-22}" width="120" height="44" rx="5" fill="${on?"color-mix(in oklab,var(--gold) 30%,var(--surface))":"var(--surface)"}" stroke="${on?"var(--gold-t)":"var(--area-t)"}" stroke-width="${on?3:2}"/><text x="${x}" y="${y-3}" text-anchor="middle" style="font:800 12.5px var(--body);fill:var(--fg)">${sdName(k)}</text><text x="${x}" y="${y+14}" text-anchor="middle">${k==="Q"?v.toFixed(2):mil2(v)}</text></g>`}
+  for(const [k,[x,y]] of Object.entries(SFD.a)){const on=sel===k;g+=`<g data-sdv="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="16" fill="transparent"/><circle cx="${x}" cy="${y}" r="8" fill="${on?"var(--gold)":"var(--surface)"}" stroke="${on?"var(--gold-t)":"var(--muted)"}" stroke-width="2"/><text x="${x}" y="${y-13}" text-anchor="middle" style="font:600 11.5px var(--body);fill:var(--fg)">${sdName(k)}</text></g>`}
+  return g}
+function sdUnitOk(s){const fl=[...s[4],...s[5]],vars=sd.vars||SD_VARS0;return fl.every(f=>(vars.find(v=>v[0]===f)||[])[2]===s[2]+"/월")}
+function sdDetail(r){const k=sd.sel,vars=sd.vars||SD_VARS0,st=SD_STOCKS.find(s=>s[0]===k),v=vars.find(x=>x[0]===k),comp=sdCompile(vars);if(!st&&!v)return "";
+  const x=sdX(r),uses=comp.filter(c=>c.deps.includes(k)).map(c=>sdName(c.k)),orig=v&&SD_VARS0.find(o=>o[0]===k)[4];
+  return `<div class="grid g2"><div class="tw"><table><tbody><tr><th>이름</th><td><b>${sdName(k)}</b> <span class="note">기호 ${k}</span></td></tr><tr><th>종류</th><td>${st?"저량(쌓이는 양)":v[3]==="f"?"유량(시간당 흐름)":"보조 변수"}</td></tr><tr><th>단위</th><td>${st?st[2]:v[2]}${st?` ${sdUnitOk(st)?stPill("good","유량 단위와 일치"):stPill("crit","유량 단위 불일치")}`:""}</td></tr>
+   <tr><th>산식</th><td class="eq">${st?`INTEG( ${[...st[4].map(f=>"<i>"+sdName(f)+"</i>"),...st[5].map(f=>"− <i>"+sdName(f)+"</i>")].join(" + ").replace(/\+ −/g,"−")} , 초기값 <i>${SD_CONST[st[3]]?SD_CONST[st[3]][0]:st[3]}</i> )`:sdPretty(v[4])}</td></tr>
+   <tr><th>현재 값</th><td class="n" style="text-align:left">${(+r[k][0]).toLocaleString("ko-KR",{maximumFractionDigits:3})}</td></tr>${v?`<tr><th>쓰는 변수</th><td>${comp.find(c=>c.k===k).deps.map(sdName).join(", ")||"없음"}</td></tr>`:""}<tr><th>쓰이는 곳</th><td>${st?[...st[4],...st[5]].map(sdName).join(", ")+" (유입·유출)":uses.join(", ")||"없음"}</td></tr></tbody></table></div><div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+  ${lineChart({xs:x.xs,h:170,fmt:n=>Math.abs(n)<10?n.toFixed(2):mil2(n),series:[{n:sdName(k)+" (기준 모의)",c:"var(--s1)",v:x.idx.map(i=>r[k][i]),zero:true}]})}
+  ${v&&S.role==="manager"?`<form data-form="sdeq" data-k="${k}" style="display:flex;flex-direction:column;gap:6px"><label class="fl" for="sdeq_in">산식 고치기 (기호로 입력)<input id="sdeq_in" value="${esc(v[4])}" spellcheck="false" style="font-family:ui-monospace,monospace"></label><div class="row"><button class="btn pri">적용</button>${v[4]!==orig?`<button type="button" class="btn" data-act="sdeqreset" data-k="${k}">기본 산식으로</button>${stPill("warn","고친 산식")}`:""}</div><span class="note" id="sdeqmsg">${esc(sd.err)}</span></form>`:""}</div></div>`}
+V.sdflow=()=>{const r=sdSim(SD0),cal=sdCalib(),vars=sd.vars||SD_VARS0,mg=S.role==="manager";
+  return head("저량·유량도와 산식","쌓이는 양(저량)과 흐르는 양(유량)으로 인과지도를 계산 가능한 모형으로 옮김. 산식은 모형 정의에서 자동으로 만들어지며, 요소를 누르면 산식·단위·현재 값과 앞으로의 변화가 표시됨.")+`
+  <div class="panel"><h2>저량·유량도<small>네모: 저량 · 나비 모양: 유량 · 동그라미: 보조 변수 · 점선: 정보 연결</small></h2>
+   <div class="tw"><svg viewBox="0 0 860 540" style="width:100%;min-width:620px;height:auto" role="img" aria-label="저량·유량도">${sfdSvg(r)}</svg></div><span class="note">연말 초기화 유량(집행 누계·달성률 초기화, 배정액 갱신)은 그림에서 생략하고 아래 산식 목록에 표시함.</span></div>
+  <div class="panel"><h2>선택한 요소</h2>${sdDetail(r)}</div>
+  <div class="panel"><h2>자동 산식 목록<small>저량 ${SD_STOCKS.length}개 · 유량·보조 ${vars.length}개 · 위에서 아래 순서로 계산</small></h2><div class="tw"><table class="eqt"><thead><tr><th>기호</th><th>이름</th><th>종류</th><th>단위</th><th>산식</th></tr></thead><tbody>
+   ${SD_STOCKS.map(s=>`<tr><td><button class="btn sm" data-act="sdsel" data-k="${s[0]}">${s[0]}</button></td><td>${s[1]}</td><td>저량</td><td>${s[2]} ${sdUnitOk(s)?"":stPill("crit","단위 확인")}</td><td class="eq">INTEG( ${[...s[4].map(f=>"<i>"+sdName(f)+"</i>"),...s[5].map(f=>"− <i>"+sdName(f)+"</i>")].join(" + ").replace(/\+ −/g,"−")} , 초기값 ${SD_CONST[s[3]]?"<i>"+SD_CONST[s[3]][0]+"</i>":s[3]} )</td></tr>`).join("")}
+   ${vars.map(v=>`<tr><td><button class="btn sm" data-act="sdsel" data-k="${v[0]}">${v[0]}</button></td><td>${v[1]} ${v[4]!==SD_VARS0.find(o=>o[0]===v[0])[4]?stPill("warn","고침"):""}</td><td>${v[3]==="f"?"유량":"보조"}</td><td>${v[2]}</td><td class="eq">${sdPretty(v[4])}</td></tr>`).join("")}</tbody></table></div>
+   <span class="note">단위 점검: 저량의 단위와 그 저량에 드나드는 유량의 단위(÷월)가 맞는지 자동으로 확인함. 계산 간격 0.125개월, 오일러 적분.</span></div>
+  <div class="panel"><h2>상수와 초기값<small>자료에서 자동으로 정한 값과 가정 값</small></h2><div class="tw"><table><thead><tr><th>기호</th><th>이름</th><th class="n">값</th><th>단위</th><th>정한 방법</th></tr></thead><tbody>
+   ${Object.entries(SD_CONST).filter(([k])=>!(k in SD_LEV)).map(([k,[n,u]])=>`<tr><td>${k}</td><td>${n}</td><td class="n">${mg?`<input type="number" step="any" id="sdc_${k}" data-act="sdc" data-k="${k}" value="${+cal.C[k].toPrecision(6)}" style="width:120px;text-align:right" aria-label="${n}">`:(+cal.C[k].toPrecision(5))}</td><td>${u}</td><td>${k in sd.ov?stPill("warn","직접 입력"):cal.how[k]?stPill("good","자료에서 자동")+" "+cal.how[k]:`<span class="note">가정 값 [확인필요]</span>`}</td></tr>`).join("")}</tbody></table></div>
+   ${mg?`<div class="row"><button class="btn" data-act="sdreset">모형을 처음 상태로</button><span class="note">산식과 상수를 고친 내용은 이 화면을 여는 동안만 유지됨.</span></div>`:""}</div>`};
+
+/* ---- 정책 시뮬레이션 ---- */
+function sdOut(){const r0=sdSim(SD0),r=sdSim(sd.lev),m0=sdM(r0),m=sdM(r),x=sdX(r),pick=(run,k,f=1)=>x.idx.map(i=>run[k][i]*f),sv=sd.saved.slice(-1)[0];
+  const ser=(k,f,plan)=>[...(plan?[{n:"계획 경로",c:"var(--muted)",v:pick(r,"plan",100),thin:true,label:false,zero:true}]:[]),{n:"기준(현행 유지)",c:"var(--s2)",v:pick(r0,k,f),dash:true,zero:true},...(sv?[{n:"저장한 안: "+sv.n,c:"var(--s3)",v:pick(sdSim(sv.lev),k,f),zero:true}]:[]),{n:"지금 설정",c:"var(--s1)",v:pick(r,k,f),zero:true}];
+  const ch=(t,k,f,fmt,plan)=>`<div class="panel"><h2>${t}</h2>${lineChart({xs:x.xs,h:210,fmt,series:ser(k,f,plan)})}</div>`;
+  const tile=(l,v,u,d,du,inv)=>`<div class="panel kpi"><span class="lab">${l}</span><span class="val">${v}<small>${u}</small></span><span class="sub">기준 대비 ${dl(d,du,inv)}</span></div>`;
+  const rows=[["기준(현행 유지)",SD0],["지금 설정",sd.lev],...sd.saved.map(s=>[s.n,s.lev])];
+  return `<div class="grid g4">${tile("1차년 말 집행률",p1(m.rate1),"%",m.rate1-m0.rate1,"%p")}${tile("1차년 불용액",mil2(m.lapse1),"백만원",m.lapse1-m0.lapse1,"",1)}${tile("2차년 말 성과 달성률",p1(m.P2),"%",m.P2-m0.P2,"%p")}${tile("최대 재작업률",p1(m.rw),"%",m.rw-m0.rw,"%p",1)}</div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))">${ch("집행률(당해 누적)","rate",100,v=>Math.round(v)+"%",1)}${ch("성과 달성률","P",1,v=>Math.round(v)+"%")}${ch("예산 잔액","B",1,v=>mil2(v))}${ch("재작업률","rw",100,v=>p1(v)+"%")}</div>
+  <div class="panel"><h2>정책안 비교</h2><div class="tw"><table><thead><tr><th>정책안</th><th>내용</th><th class="n">1차년 집행률</th><th class="n">1차년 불용</th><th class="n">2차년 집행률</th><th class="n">2차년 달성률</th><th class="n">차년도 배정</th><th class="n">최대 재작업률</th><th class="n">종합 점수</th></tr></thead><tbody>
+   ${rows.map(([n,l])=>{const q=sdM(sdSim(l));return `<tr><td><b>${esc(n)}</b></td><td>${levText(l)}</td><td class="n">${p1(q.rate1)}%</td><td class="n">${mil2(q.lapse1)}</td><td class="n">${p1(q.rate2)}%</td><td class="n">${p1(q.P2)}%</td><td class="n">${mil2(q.newA)}</td><td class="n">${p1(q.rw)}%</td><td class="n"><b>${p1(sdPay(q,l))}</b></td></tr>`}).join("")}</tbody></table></div>
+   <span class="note">종합 점수 = 2차년 말 달성률 − 2개년 불용률(%p) − 추가 인력 1명당 5점. 가중치는 검토용 가정임.</span></div>`}
+V.sdsim=()=>{const mg=S.role==="manager";
+  return head("정책 시뮬레이션","정책 손잡이를 움직이면 앞으로 약 두 사업연도의 집행·성과 변화가 바로 다시 계산됨. 주황 점선은 현행을 유지할 때의 경로임.",
+   `<div class="row">${[["base","현행 유지"],["push","독려만 강화"],["staff","인력 보강"],["check","사전점검 확대"],["mix","조기화 + 사전점검"],["best","탐색된 최적 조합"]].map(([k,n])=>`<button class="btn" data-act="sdpre" data-k="${k}">${n}</button>`).join("")}</div>`)+`
+  <div class="panel"><h2>정책 손잡이</h2><div class="form" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">${Object.entries(SD_LEV).map(([k,L])=>`<label for="lv_${k}"><span style="display:flex;justify-content:space-between;color:var(--fg);font-weight:700"><span>${L[0]}</span><output id="lo_${k}">${L[5](sd.lev[k])}</output></span><input type="range" id="lv_${k}" data-lev="${k}" min="${L[2]}" max="${L[3]}" step="${L[4]}" value="${sd.lev[k]}"><span>${L[1]}</span></label>`).join("")}
+    <label for="lv_s"><span style="display:flex;justify-content:space-between;color:var(--fg);font-weight:700"><span>가정: 성과 연동 배정 민감도</span><output id="lo_s">${sd.s.toFixed(1)}</output></span><input type="range" id="lv_s" data-lev="s" min="0" max="1" step="0.1" value="${sd.s}"><span>달성률이 차년도 배정에 반영되는 정도 [확인필요]</span></label></div>
+   ${mg?`<div class="row"><button class="btn" data-act="sdsave">이 안 저장</button><button class="btn pri" data-act="sddec">이 안을 결정 기록에 남기기</button><span class="note" id="sdmsg"></span></div>`:""}</div>
+  <div id="sdout" style="display:flex;flex-direction:column;gap:16px">${sdOut()}</div>
+  <span class="note">집행 예측·경보 화면은 최근 집행 속도가 그대로 이어진다고 본 단순 추정이고, 이 화면은 연말로 갈수록 요청이 몰리는 구조를 반영하므로 두 화면의 수치는 서로 다름.</span>
+  <span class="note">이 모의는 구조를 이해하고 정책 방향을 비교하기 위한 것임. 수치는 가정 값에 따라 달라지며 실제 결과를 보장하지 않음. 가정 값은 저량·유량도 화면에서 확인·수정함.</span>`};
+
+/* ---- 정책 탐색 ---- */
+function bandChart(xs,q,cur,fmt){const W=640,H=230,L=52,R=20,T=14,B=28,all=[...q[0],...q[4],...cur],lo=0,hi=Math.max(...all)*1.06||1,x=i=>L+(W-L-R)*i/(xs.length-1),y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
+  const area=(a,b)=>"M"+a.map((v,i)=>x(i)+" "+y(v)).join("L")+"L"+b.map((v,i)=>x(i)+" "+y(v)).reverse().join("L")+"Z",line=a=>"M"+a.map((v,i)=>x(i)+" "+y(v)).join("L");
+  let g="";for(let i=0;i<=4;i++){const v=hi*i/4;g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${fmt(v)}</text>`}
+  const st=Math.ceil(xs.length/7);xs.forEach((l,i)=>{if(i%st===0)g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${l}</text>`});
+  g+=`<path class="area" d="${area(q[0],q[4])}" fill="var(--s1)" fill-opacity=".14"/><path class="area" d="${area(q[1],q[3])}" fill="var(--s1)" fill-opacity=".22"/><path class="fadein" d="${line(q[2])}" fill="none" stroke="var(--s1)" stroke-width="1.5" stroke-dasharray="5 4"/><path class="draw" pathLength="1" d="${line(cur)}" fill="none" stroke="var(--s1)" stroke-width="2.5"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" style="width:100%;height:auto">${g}</svg><div class="legend"><span><i style="border-color:var(--s1)"></i>지금 설정</span><span><i class="d" style="border-color:var(--s1)"></i>중앙값</span><span><i class="sq" style="background:color-mix(in oklab,var(--s1) 36%,var(--surface))"></i>25~75% 범위</span><span><i class="sq" style="background:color-mix(in oklab,var(--s1) 14%,var(--surface))"></i>5~95% 범위</span></div>`}
+const SD_UNC=["c","prod","rw0","eff","td","tq","s","kappa","rushPen"];
+function sdMC(){const key="mc"+JSON.stringify([sdCalib(),sd.lev,sd.vars?1:0]);if(sd.cache[key])return sd.cache[key];const {C}=sdCalib(),base=sdSim(sd.lev),x=sdX(base),runs=[],lap=[];let seed=7;const rnd=()=>(seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296;
+  for(let n=0;n<150;n++){const ex={};for(const k of SD_UNC)ex[k]=C[k]*(.8+.4*rnd());try{const r=sdSim(sd.lev,ex,1);runs.push(x.idx.map(i=>r.P[i]));lap.push(sdM(r).lapse1)}catch(e){}}
+  const qs=[.05,.25,.5,.75,.95].map(p=>x.xs.map((_,i)=>{const a=runs.map(r=>r[i]).sort((a,b)=>a-b);return a[Math.floor(p*(a.length-1))]}));lap.sort((a,b)=>a-b);
+  return sd.cache[key]={x,qs,cur:x.idx.map(i=>base.P[i]),lap:[lap[Math.floor(.05*lap.length)],lap[Math.floor(.5*lap.length)],lap[Math.floor(.95*lap.length)]],n:runs.length}}
+V.sdlab=()=>{const m0=sdM(sdSim(SD0)),{C}=sdCalib(),outs={lapse:["2개년 불용 합계(백만원)",m=>m.lapse,1],P2:["2차년 말 달성률(%)",m=>m.P2,0],rate1:["1차년 말 집행률(%)",m=>m.rate1,0]},O=outs[sd.out],cur=O[1](sdM(sdSim(sd.lev)));
+  const strong={k:3,nAdd:2,a:1,q:.4,early:.4},lv=Object.keys(SD_LEV).map(k=>{const l={...SD0,[k]:strong[k]},m=sdM(sdSim(l));return {k,l,m}});
+  const tor=SD_UNC.map(k=>{const f=x=>O[1](sdM(sdSim(sd.lev,{[k]:C[k]*x},1)))-cur;return {k,up:f(1.2),dn:f(.8)}}).sort((a,b)=>Math.max(Math.abs(b.up),Math.abs(b.dn))-Math.max(Math.abs(a.up),Math.abs(a.dn))),mx=Math.max(...tor.map(t=>Math.max(Math.abs(t.up),Math.abs(t.dn))))||1;
+  const mc=sdMC(),opt=sdOpt(),half=(v,c)=>`<span style="display:block;height:12px;width:${Math.abs(v)/mx*100}%;background:${c};border-radius:${v<0?"4px 0 0 4px":"0 4px 4px 0"};margin-${v<0?"left":"right"}:auto"></span>`;
+  return head("정책 탐색","어느 개입이 구조적으로 효과가 큰지, 결론이 가정에 얼마나 흔들리는지, 어떤 조합이 가장 나은지를 모의 실험으로 찾음.")+`
+  <div class="panel"><h2>개입 지점별 효과<small>손잡이 하나만 강하게 움직였을 때 · 기준 대비</small></h2><div class="tw"><table><thead><tr><th>개입</th><th>설정</th><th>개입 수준</th><th>1차년 불용</th><th>2차년 달성률</th><th>최대 재작업률</th><th>종합 점수</th><th>판정</th></tr></thead><tbody>
+   ${lv.sort((a,b)=>sdPay(b.m,b.l)-sdPay(a.m,a.l)).map(({k,l,m})=>{const d=sdPay(m,l)-sdPay(m0,SD0),bad=m.rw-m0.rw>3||m.Q<m0.Q-.03;return `<tr><td><b>${SD_LEV[k][0]}</b></td><td>${SD_LEV[k][5](strong[k])}</td><td>${SD_LEV[k][6]}</td><td>${dl(m.lapse1-m0.lapse1,"",1)}</td><td>${dl(m.P2-m0.P2,"%p")}</td><td>${dl(m.rw-m0.rw,"%p",1)}</td><td>${dl(d,"")}</td><td>${d>1?(bad?stPill("warn","효과 있으나 부작용"):stPill("good","효과 큼")):d<-1?stPill("crit","역효과"):stPill("warn","효과 작음")}</td></tr>`}).join("")}</tbody></table></div>
+   <span class="note">개입 수준은 메도즈의 12단계 개입 지점에 대응시킨 해석임. 숫자가 작을수록 구조에 깊이 작용함.</span></div>
+  <div class="grid g2"><div class="panel"><h2>민감도<small>가정 값을 ±20% 바꿨을 때</small></h2><div class="fl"><label for="sdo">결과 지표</label><select id="sdo" data-act="sdo">${Object.entries(outs).map(([k,v])=>`<option value="${k}" ${k===sd.out?"selected":""}>${v[0]}</option>`).join("")}</select></div>
+   <div class="bars">${tor.map(t=>`<div class="bar" style="grid-template-columns:minmax(90px,150px) minmax(0,1fr) minmax(0,1fr)" data-tip="${esc(`${SD_CONST[t.k][0]}\n+20%: ${t.up>0?"+":""}${p1(t.up)}\n−20%: ${t.dn>0?"+":""}${p1(t.dn)}`)}"><span>${SD_CONST[t.k][0]}</span><span style="display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--fg)">${t.up<0?half(t.up,"var(--s1)"):"<span style='height:12px'></span>"}${t.dn<0?half(t.dn,"var(--s2)"):"<span style='height:12px'></span>"}</span><span style="display:flex;flex-direction:column;gap:2px">${t.up>=0?half(t.up,"var(--s1)"):"<span style='height:12px'></span>"}${t.dn>=0?half(t.dn,"var(--s2)"):"<span style='height:12px'></span>"}</span></div>`).join("")}</div>
+   <div class="legend"><span><i class="sq" style="background:var(--s1)"></i>가정 값 +20%</span><span><i class="sq" style="background:var(--s2)"></i>가정 값 −20%</span><span>가운데 선: 지금 설정 ${p1(cur)}</span></div>
+   <span class="note">막대가 긴 가정일수록 결과를 크게 좌우하므로 실제 자료로 먼저 확인해야 함.</span></div>
+  <div class="panel"><h2>불확실성 범위<small>성과 달성률 · 가정 ${SD_UNC.length}개를 ±20% 안에서 무작위로 바꾼 ${mc.n}회</small></h2>${bandChart(mc.x.xs,mc.qs,mc.cur,v=>Math.round(v)+"%")}
+   <div class="chk">${stPill("warn","1차년 불용액")}<span>5% ${mil2(mc.lap[0])} · 중앙값 ${mil2(mc.lap[1])} · 95% ${mil2(mc.lap[2])}백만원</span></div></div></div>
+  <div class="panel"><h2>조합 탐색 결과<small>손잡이 조합 324가지를 모두 계산한 상위 5개</small></h2><div class="tw"><table><thead><tr><th>순위</th><th>조합</th><th class="n">1차년 불용</th><th class="n">2차년 달성률</th><th class="n">최대 재작업률</th><th class="n">종합 점수</th><th></th></tr></thead><tbody>
+   ${opt.map((o,i)=>`<tr><td>${i+1}</td><td>${levText(o.lev)}</td><td class="n">${mil2(o.m.lapse1)}</td><td class="n">${p1(o.m.P2)}%</td><td class="n">${p1(o.m.rw)}%</td><td class="n"><b>${p1(o.pay)}</b> <span class="note">(기준 ${p1(sdPay(m0,SD0))})</span></td><td><button class="btn sm" data-act="sdapply" data-i="${i}">이 조합으로 모의</button></td></tr>`).join("")}</tbody></table></div>
+   <span class="note">탐색은 정해 둔 점수식과 격자 값 안에서의 최선이며, 정답이 아님. 상위 조합들의 공통점을 정책 방향으로 읽는 것이 적절함.</span></div>`};
+
+/* ---- 의사결정 훈련 ---- */
+function gameNew(){const {C,t0}=sdCalib();sd.game={C:{...C},t:t0,init:null,log:[],ends:[],h:{t:[],rate:[],P:[],rw:[],plan:[]},lev:{...SD0},U:0}}
+function gameStep(){const G=sd.game,tf=Math.min(24,G.t+3),r=sdRun({...G.C,...G.lev},G.t,tf,sd.vars||SD_VARS0,.125,G.init),L=r.t.length-1;
+  for(let i=G.h.t.length?1:0;i<=L;i++){G.h.t.push(r.t[i]);G.h.rate.push(r.rate[i]*100);G.h.P.push(r.P[i]);G.h.rw.push(r.rw[i]*100);G.h.plan.push(r.plan[i]*100)}
+  G.ends.push(...r.ends);G.log.push({from:G.t,to:tf,lev:{...G.lev},rate:Math.max(...r.rate)*100,rw:r.maxRw*100,B:r.B[L],W:r.W[L],P:r.P[L],Q:r.Q[L],lapse:sum(r.ends,e=>e.lapse)});G.init=r.state;G.t=tf;G.U=r.state.U}
+V.sdgame=()=>{if(!sd.game)gameNew();const G=sd.game,done=G.t>=24-1e-9,st=new Date(S.period.start+"T00:00:00Z"),lab=t=>{const d=new Date(st);d.setUTCMonth(d.getUTCMonth()+Math.floor(t+1e-9));return d.toISOString().slice(0,7)};
+  const last=G.log[G.log.length-1],cur=last||{B:G.C.B0,W:G.C.W0,P:G.C.P0,Q:1,rw:G.C.rw0*100,rate:G.C.E0/G.C.A*100};
+  let fin="";if(done){const a=G.ends[0]||{},b=G.ends[1]||a,lap=sum(G.ends,e=>e.lapse),avgN=sum(G.log,l=>l.lev.nAdd)/G.log.length,my=b.P-lap/(2*G.C.A)*100-5*avgN,m0=sdM(sdSim(SD0)),base=sdPay(m0,SD0),best=sdOpt()[0],mxk=Math.max(...G.log.map(l=>l.lev.k)),mxrw=Math.max(...G.log.map(l=>l.rw)),tips=[];
+    if(mxrw>18)tips.push("재작업률이 "+p1(mxrw)+"%까지 올랐음. 대기 업무가 쌓여 부하가 커지면 처리량이 오히려 줄어듦(R1 서두름의 악순환).");
+    if(mxk>=2&&b.Q<.95)tips.push("독려를 강하게 쓴 구간에서 운영 품질이 "+b.Q.toFixed(2)+"로 내려갔음. 독려는 지연을 빨리 줄이지만 몰림을 거쳐 품질을 깎음(R3 독려의 역효과).");
+    if(G.log.every(l=>l.lev.a<.5))tips.push("사전점검 적용률을 낮게 유지했음. 재작업을 줄이는 정보 흐름 개입은 비용 대비 효과가 큰 편임.");
+    if(G.log[0].lev.early===0&&G.log.some(l=>l.lev.early>0))tips.push("조기화를 뒤늦게 적용했음. 연초에 앞당길수록 효과가 큼(지연 구조).");
+    if(!tips.length)tips.push("부작용 경로를 잘 피했음. 어느 선택이 결과를 갈랐는지 정책 탐색 화면의 개입 지점별 효과와 비교해 볼 것.");
+    fin=`<div class="panel"><h2>결과와 되짚기</h2><div class="grid g4"><div class="kpi"><span class="lab">내 종합 점수</span><span class="val">${p1(my)}</span><span class="sub">현행 유지 ${p1(base)} · 탐색된 최선 ${p1(best.pay)}</span></div><div class="kpi"><span class="lab">2개년 불용 합계</span><span class="val">${mil2(lap)}<small>백만원</small></span><span class="sub">현행 유지 ${mil2(m0.lapse)}</span></div><div class="kpi"><span class="lab">2차년 말 달성률</span><span class="val">${p1(b.P||0)}<small>%</small></span><span class="sub">현행 유지 ${p1(m0.P2)}%</span></div></div>
+     ${tips.map(t=>`<div class="chk">${stPill("warn","되짚기")}<span>${t}</span></div>`).join("")}<div class="row"><button class="btn pri" data-act="gnew">다시 하기</button><a class="btn" style="text-decoration:none" href="#sdmap">인과지도에서 구조 확인</a></div></div>`}
+  const idx=[];for(let i=0;i<G.h.t.length;i+=4)idx.push(i);
+  return head("의사결정 훈련","석 달마다 정책을 정하고 결과를 확인하는 방식으로 사업 종료까지 운영해 봄. 지연과 누적 때문에 지금의 선택이 뒤늦게 나타나는 것을 직접 겪어 보는 화면임.")+`
+  <div class="panel"><h2>진행 상황</h2>${steps([...G.log.map((l,i)=>[lab(l.from)+" ~",(i+1)+"회차",0]),...(done?[["종료","완료",1]]:[[lab(G.t)+" ~",(G.log.length+1)+"회차",1]])])}</div>
+  <div class="grid g4"><div class="panel kpi"><span class="lab">당해 집행률</span><span class="val">${p1(last?G.h.rate[G.h.rate.length-1]:cur.rate)}<small>%</small></span><span class="sub">예산 잔액 ${mil2(cur.B)}백만원</span></div><div class="panel kpi"><span class="lab">집행 대기액</span><span class="val">${mil2(cur.W)}<small>백만원</small></span><span class="sub">구간 최대 재작업률 ${p1(cur.rw)}%</span></div>
+   <div class="panel kpi"><span class="lab">성과 달성률</span><span class="val">${p1(cur.P)}<small>%</small></span><span class="sub">운영 품질 ${cur.Q.toFixed(2)}</span></div><div class="panel kpi"><span class="lab">누적 불용액</span><span class="val">${mil2(G.U)}<small>백만원</small></span><span class="sub">연말에 남은 잔액과 대기액</span></div></div>
+  ${done?fin:`<div class="panel"><h2>${lab(G.t)}부터 석 달 동안의 정책</h2><div class="form" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">${Object.entries(SD_LEV).map(([k,L])=>`<label for="gv_${k}"><span style="display:flex;justify-content:space-between;color:var(--fg);font-weight:700"><span>${L[0]}</span><output id="go_${k}">${L[5](G.lev[k])}</output></span><input type="range" id="gv_${k}" data-glev="${k}" min="${L[2]}" max="${L[3]}" step="${L[4]}" value="${G.lev[k]}"><span>${L[1]}</span></label>`).join("")}</div>
+   <div class="row"><button class="btn pri" data-act="gstep">석 달 진행</button><button class="btn" data-act="gnew">처음부터</button></div></div>`}
+  ${G.h.t.length>1?`<div class="grid g2"><div class="panel"><h2>집행률</h2>${lineChart({xs:idx.map(i=>lab(G.h.t[i]).slice(2).replace("-",".")),h:200,fmt:v=>Math.round(v)+"%",series:[{n:"계획 경로",c:"var(--muted)",v:idx.map(i=>G.h.plan[i]),thin:true,label:false,zero:true},{n:"집행률",c:"var(--s1)",v:idx.map(i=>G.h.rate[i]),zero:true}]})}</div>
+   <div class="panel"><h2>성과 달성률과 재작업률</h2>${lineChart({xs:idx.map(i=>lab(G.h.t[i]).slice(2).replace("-",".")),h:200,fmt:v=>Math.round(v)+"%",series:[{n:"성과 달성률",c:"var(--s1)",v:idx.map(i=>G.h.P[i]),zero:true},{n:"재작업률",c:"var(--s2)",v:idx.map(i=>G.h.rw[i]),zero:true}]})}</div></div>
+  <div class="panel"><h2>회차 기록</h2><div class="tw"><table><thead><tr><th>회차</th><th>기간</th><th>정책</th><th class="n">최고 집행률</th><th class="n">최대 재작업률</th><th class="n">달성률</th><th class="n">연말 불용</th></tr></thead><tbody>${G.log.map((l,i)=>`<tr><td>${i+1}</td><td>${lab(l.from)} ~ ${lab(l.to-.01)}</td><td>${levText(l.lev)}</td><td class="n">${p1(l.rate)}%</td><td class="n">${p1(l.rw)}%</td><td class="n">${p1(l.P)}%</td><td class="n">${l.lapse?mil2(l.lapse):"–"}</td></tr>`).join("")}</tbody></table></div></div>`:""}`};
+
 /* ---- 운영 ---- */
 V.admin=()=>{if(S.role!=="manager")return head("자료·설정","담당자 권한에서만 사용할 수 있음.");
   const R=S.rules,st=S.stats,vs=Object.entries(st.views).sort((a,b)=>b[1]-a[1]),names=Object.fromEntries(NAV.flatMap(g=>g[1]));
@@ -851,14 +1101,14 @@ function renderNav(){const n=S.role==="manager"?insights().filter(i=>!S.review[i
   $("#navs").innerHTML=NAV.map(g=>g[1].some(x=>allowed(x[0]))?`<div class="navg" data-area="${g[2]}"><h6><i>${ico(g[2])}</i><span>${g[0]}</span></h6>${g[1].filter(x=>allowed(x[0])).map(x=>`<a class="nav" href="#${x[0]}" ${x[0]===cur?'aria-current="page"':""}>${x[1]}${x[0]==="insight"&&n?`<span class="cnt">${n}</span>`:""}</a>`).join("")}</div>`:"").join("")}
 function render(count){const hsh=location.hash.slice(1);cur=allowed(hsh)?hsh:(allowed(cur)?cur:"home");
   if(count){S.stats.views[cur]=(S.stats.views[cur]||0)+1;save()}
-  stop3d();document.body.dataset.area=AREA[cur].k;renderNav();$("#view").innerHTML=V[cur]();enhance(count);if(cur==="approval")aRefresh();if(cur==="cockpit")init3d();
+  stop3d();document.body.dataset.area=AREA[cur].k;renderNav();$("#view").innerHTML=V[cur]();enhance(count);if(cur==="approval")aRefresh();if(cur==="cockpit")init3d();if(cur==="sdmap")initCld();
   const ch=$(".chat");if(ch)ch.lastElementChild?.scrollIntoView({block:"nearest"})}
 function copy(text,el){const done=()=>{if(el)el.textContent="복사함. 엑셀이나 문서에 붙여넣을 수 있음."};
   try{navigator.clipboard.writeText(text).then(done,()=>fallback())}catch(e){fallback()}
   function fallback(){const t=document.createElement("textarea");t.value=text;document.body.append(t);t.select();try{document.execCommand("copy");done()}catch(e){}t.remove()}}
 
 addEventListener("hashchange",()=>{const go=()=>{render(true);scrollTo(0,0)};if(document.startViewTransition&&!REDUCE){try{document.startViewTransition(go);return}catch(e){}}go()});
-document.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b||b.tagName==="INPUT"||b.tagName==="SELECT")return;const a=b.dataset.act,d=b.dataset;
+document.addEventListener("click",e=>{const sv=e.target.closest("[data-sdv]");if(sv){sd.sel=sv.dataset.sdv;sd.err="";render();return}const b=e.target.closest("[data-act]");if(!b||b.tagName==="INPUT"||b.tagName==="SELECT")return;const a=b.dataset.act,d=b.dataset;
   if(a==="btab"){bTab=d.k;render()}
   else if(a==="atab"){aType=d.k;render()}
   else if(a==="aclear"){for(const k in aForm)delete aForm[k];render()}
@@ -887,9 +1137,20 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(
   else if(a==="rfill"){const t=S.tx.find(t=>t.id==d.id);if(t){$("#rf_d").value=t.date;$("#rf_p").value=t.prog;$("#rf_a").value=t.amount;$("#rf_v").value=t.vendor;$("#rf_d").focus()}}
   else if(a==="achdel"){S.achv=S.achv.filter(x=>x.id!=d.id);save();render()}
   else if(a==="simsave"){const c=simCalc();if(c&&c.x>0){const dd=new Date();dd.setDate(dd.getDate()+30);S.decisions.push({id:Math.max(0,...S.decisions.map(x=>x.id))+1,aid:"sim-"+Date.now(),date:ymd(new Date()),title:"예산 재배분 검토안",choice:`${c.a.p.name} → ${c.b.p.name} ${mil(c.x)}백만원`,reason:`전체 불용 예상 ${mil(c.rows[2][1]-c.rows[2][2])} → ${mil(c.rows[2][3]-c.rows[2][4])}백만원`,owner:"사업단 운영팀",review:ymd(dd),result:"대기"});save();$("#simmsg").textContent="결정 기록에 남김. 결정 안건 화면에서 확인할 수 있음."}else $("#simmsg").textContent="옮길 금액을 입력해야 함."}
+  else if(a==="cldloop"){sd.loop=sd.loop===d.k?"":d.k;render()}
+  else if(a==="cldreset"){sd.pos=null;sd.loop="";sd.node="";render()}
+  else if(a==="sdsel"){sd.sel=d.k;render();$("#view .panel")?.scrollIntoView({block:"start",behavior:REDUCE?"auto":"smooth"})}
+  else if(a==="sdeqreset"){const o=SD_VARS0.find(v=>v[0]===d.k);sd.vars=(sd.vars||SD_VARS0).map(v=>v[0]===d.k?[...o]:v);sd.cache={};render()}
+  else if(a==="sdreset"){sd.vars=null;sd.ov={};sd.cache={};render()}
+  else if(a==="sdpre"){sd.lev={base:{...SD0},push:{...SD0,k:3},staff:{...SD0,nAdd:2},check:{...SD0,a:1},mix:{...SD0,a:1,early:.4}}[d.k]||{...sdOpt()[0].lev};render()}
+  else if(a==="sdapply"){sd.lev={...sdOpt()[+d.i].lev};location.hash="sdsim"}
+  else if(a==="sdsave"){sd.saved.push({n:"안 "+(sd.saved.length+1),lev:{...sd.lev}});if(sd.saved.length>4)sd.saved.shift();$("#sdout").innerHTML=sdOut();$("#sdmsg").textContent="저장함. 비교표와 그래프에 표시됨."}
+  else if(a==="sddec"){const m0=sdM(sdSim(SD0)),m=sdM(sdSim(sd.lev)),dd=new Date();dd.setDate(dd.getDate()+90);S.decisions.push({id:Math.max(0,...S.decisions.map(x=>x.id))+1,aid:"sdsim-"+Date.now(),date:ymd(new Date()),title:"집행·성과 구조 개선 정책(모의 기반)",choice:levText(sd.lev),reason:`모의 결과 1차년 불용 ${mil2(m0.lapse1)} → ${mil2(m.lapse1)}백만원, 2차년 말 달성률 ${p1(m0.P2)} → ${p1(m.P2)}%`,owner:"사업단 운영팀",review:ymd(dd),result:"대기"});save();$("#sdmsg").textContent="결정 기록에 남김. 결정 안건 화면에서 이행 여부를 관리함."}
+  else if(a==="gstep"){gameStep();render()}
+  else if(a==="gnew"){gameNew();render()}
   else if(a==="reset"){if(!resetArm){resetArm=true;b.textContent="한 번 더 누르면 현재 자료를 지우고 되돌림";return}resetArm=false;S=sampleState();save();render()}
 });
-document.addEventListener("input",e=>{const t=e.target;if(t.dataset.f){aForm[t.dataset.f]=t.type==="checkbox"?t.checked:t.value;aRefresh()}});
+document.addEventListener("input",e=>{const t=e.target;if(t.dataset.lev){const k=t.dataset.lev;if(k==="s"){sd.s=+t.value;$("#lo_s").textContent=sd.s.toFixed(1)}else{sd.lev[k]=+t.value;$("#lo_"+k).textContent=SD_LEV[k][5](sd.lev[k])}$("#sdout").innerHTML=sdOut();return}if(t.dataset.glev){const k=t.dataset.glev;sd.game.lev[k]=+t.value;$("#go_"+k).textContent=SD_LEV[k][5](+t.value);return}if(t.dataset.f){aForm[t.dataset.f]=t.type==="checkbox"?t.checked:t.value;aRefresh()}});
 document.addEventListener("change",e=>{const t=e.target,a=t.dataset.act,d=t.dataset;
   if(t.id==="role"){S.role=t.value;syncRole();save();render()}
   else if(t.id==="roleDept"){S.roleDept=t.value;save();render()}
@@ -901,6 +1162,8 @@ document.addEventListener("change",e=>{const t=e.target,a=t.dataset.act,d=t.data
   else if(a==="path"){pathSel=t.value;render()}
   else if(a==="sim"){sim[d.k]=d.k==="amt"?+t.value||0:t.value;render()}
   else if(a==="dst"){S.decisions.find(x=>x.id==d.id).result=t.value;save();render()}
+  else if(a==="sdc"){if(t.value!==""&&isFinite(+t.value)){const old={...sd.ov};sd.ov[d.k]=+t.value;sd.cache={};try{sdSim(SD0,null,1);render()}catch(x){sd.ov=old;t.value="";t.placeholder="계산할 수 없는 값"}}}
+  else if(a==="sdo"){sd.out=t.value;render()}
   else if(a==="rule"){S.rules[d.k]=+t.value||0;save();renderNav()}
   else if(a==="period"){if(t.value){S.period[d.k]=t.value;save()}}
 });
@@ -912,6 +1175,7 @@ document.addEventListener("submit",e=>{e.preventDefault();const f=e.target,v=id=
   else if(f.dataset.form==="decide"){const id=f.dataset.id,o=f.querySelector("input[type=radio]:checked");if(o){S.decisions.push({id:Math.max(0,...S.decisions.map(x=>x.id))+1,aid:id,date:ymd(new Date()),title:f.dataset.title,choice:o.value,reason:v("dr_"+id),owner:v("do_"+id),review:v("dd_"+id),result:"대기"});save();render()}}
   else if(f.id==="rf"){const rec={id:Math.max(0,...S.receipts.map(x=>x.id))+1,date:v("rf_d"),prog:v("rf_p"),amount:+v("rf_a"),vendor:v("rf_v"),kind:v("rf_k"),img:""};thumb($("#rf_i").files[0],img=>{rec.img=img;S.receipts.push(rec);save();render()})}
   else if(f.id==="achf"){S.achv.push({id:Math.max(0,...S.achv.map(x=>x.id))+1,date:v("ach_d"),prog:v("ach_p"),title:v("ach_t"),evidence:v("ach_e")});save();render()}
+  else if(f.dataset.form==="sdeq"){const k=f.dataset.k,ex=v("sdeq_in"),nv=(sd.vars||SD_VARS0).map(x=>x[0]===k?[x[0],x[1],x[2],x[3],ex]:x);try{const {C,t0}=sdCalib();sdRun({...C,...SD0},t0,24,nv);sd.vars=nv;sd.cache={};sd.err="";render()}catch(x){$("#sdeqmsg").textContent="적용하지 못함. "+x.message}}
   else if(f.dataset.form==="evadd"){const x=v("eva_"+f.dataset.k);if(x){S.evid.push({id:Math.max(0,...S.evid.map(x=>x.id))+1,kpi:f.dataset.k,doc:x,ok:false});save();render()}}
 });
 const tip=$("#tip");
