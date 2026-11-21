@@ -32,6 +32,14 @@
 
 참고 자료: [AIR 2026 고등교육 동향](https://www.airweb.org/article/2026/01/22/higher-education-trends-and-implications-for-IR), [한국대학IR협의회 하계 포럼 보도](https://www.koreadaily.com/article/20260826193547707), [삼육대 SU-Keeper](https://www.syu.ac.kr/ircenter/?p=355), [EAB IR 데이터 전략](https://eab.com/resources/blog/data-analytics-blog/3-ways-ir-leaders-are-rethinking-their-data-strategy/)
 
+### 3차 보강 (화면 디자인)
+
+- 업무 영역 5개에 고유 색을 부여함(의사결정 청동, 사업비 관리 남색, 성과·IR 청록, 행정 인사이트 자주, 운영 회청). 메뉴 표지, 화면 머리띠, 패널 표식, 표 머리선, 주 버튼이 같은 색을 따름.
+- 서체: 제목·큰 숫자 Noto Serif KR, 본문 Noto Sans KR.
+- 인포그래픽: 예산 흐름 띠, 영역별 원형 게이지, 수치 타일의 원형 표시, 단계 흐름(결정·환류), 깔때기(조기 지원), 2×2 배치도(포트폴리오), 선 그래프 면 채움.
+- 모션(M1): 화면 진입 시 패널 순차 등장, 숫자 카운트업, 막대·게이지·선 그리기, 화면 전환 페이드. 저감 모션 설정에서는 최종 상태를 바로 표시함.
+- 대학 고유 색상·로고는 반영하지 않음 [확인필요]. 브랜드 지침이 있으면 `:root`의 `--navy`, `--gold`, `--a-*` 값만 바꾸면 됨.
+
 ## 2. 자료 올리기 양식
 
 | 자료 | 첫 행 열 이름 |
