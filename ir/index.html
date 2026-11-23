@@ -1212,7 +1212,7 @@ function render(nav){const h=location.hash.slice(1);cur=allowed(h)?h:(allowed(cu
 function syncRole(){$("#role").value=S.role;const d=$("#roleDept");d.hidden=S.role!=="dept";if(!S.depts.includes(S.roleDept))S.roleDept=S.depts[0]||"";d.innerHTML=optD(S.roleDept)}
 const nid=a=>Math.max(0,...a.map(x=>x.id))+1;
 function qlogPush(){const done=S.qual.filter(q=>q.judge==="충족"&&q.evidence.trim()).length,l=S.qlog[S.qlog.length-1];if(l&&l.date===TODAY)l.done=done;else S.qlog.push({date:TODAY,done})}
-addEventListener("hashchange",()=>{const go=()=>{render(true);scrollTo(0,0)};if(document.startViewTransition&&!REDUCE){try{document.startViewTransition(go);return}catch(e){}}go()});
+addEventListener("hashchange",()=>{const go=()=>{render(true);scrollTo(0,0)};if(document.startViewTransition&&!REDUCE){try{const vt=document.startViewTransition(go);[vt.ready,vt.finished,vt.updateCallbackDone].forEach(p=>p&&p.catch(()=>{}));return}catch(e){}}go()});
 document.addEventListener("click",e=>{const sv=e.target.closest("[data-sdv]");if(sv){sd.sel=sv.dataset.sdv;render();return}const b=e.target.closest("[data-act]");if(!b||b.tagName==="INPUT"||b.tagName==="SELECT"||b.disabled)return;const a=b.dataset.act,d=b.dataset;
   if(a==="goind"){ui.sel=d.id;ui.eff=0;if(cur==="kpi"){render();$("#indd")?.scrollIntoView({block:"start",behavior:REDUCE?"auto":"smooth"})}else location.hash="kpi"}
   else if(a==="indclose"){ui.sel="";render()}
