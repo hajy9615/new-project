@@ -383,6 +383,261 @@ a{color:var(--area-t)}
 @keyframes growy{from{transform:scaleY(0)}}
 @keyframes pulse{50%{opacity:.45}}
 @media (max-width:860px){.calwrap{grid-template-columns:minmax(0,1fr)}.calc{min-height:58px}.cale{display:none}.calc:has(.cale)::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--area-t)}.brow{grid-template-columns:40px minmax(0,1fr)}.bdots{grid-column:1/-1}.visrow{grid-template-columns:1fr}.vlab{justify-self:start;padding:4px 12px}.brand{flex-direction:row;align-items:center}}
+/*EXT-CSS-START 바탕화면형 구성(폴더·창·작업 표시줄·도우미)과 업무 도구 화면 */
+:root{--a-biz:#5b3fa6;--at-biz:#5b3fa6;--wall-a:#0c419a;--wall-b:#06204f;--wall-c:#041433;--glass:rgba(255,255,255,.1);--glass-l:rgba(255,255,255,.22)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--at-biz:#bcaaf5}}
+:root[data-theme="dark"]{--at-biz:#bcaaf5}
+[data-area="biz"]{--area:var(--a-biz);--area-t:var(--at-biz)}
+.win,.winbody{display:contents}
+#winbar,#taskbar,#asst{display:none}
+/* 바탕화면형 */
+body.dk{background:var(--wall-b)}
+body.dk::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(1100px 620px at 8% -6%,rgba(27,170,204,.5),transparent 62%),radial-gradient(900px 640px at 104% 108%,rgba(179,220,16,.3),transparent 60%),radial-gradient(700px 500px at 62% 38%,rgba(5,113,176,.42),transparent 66%),linear-gradient(155deg,var(--wall-a),var(--wall-b) 55%,var(--wall-c))}
+body.dk::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 40%,#000 20%,transparent 78%)}
+body.dk .app{grid-template-columns:minmax(0,1fr)}
+body.dk .side{display:none}
+body.dk.rolepop .side{display:flex;position:fixed;z-index:35;right:max(14px,env(safe-area-inset-right,0px));bottom:72px;top:auto;left:auto;width:270px;height:auto;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.2);box-shadow:0 20px 50px rgba(2,10,30,.55)}
+body.dk .side>.brand,body.dk .side>.navs,body.dk .rolebox [data-x="shell"]{display:none}
+body.dk .rolebox{margin:0;border:0;padding:0;flex-direction:column;align-items:stretch}
+body.dk .main{padding-block:14px 76px;position:relative}
+body.dk #taskbar{display:flex}
+body.dk #asst{display:block}
+body.dk:not([data-view="desk"]) .win{display:flex;flex-direction:column;max-width:1320px;margin:0 auto;height:calc(100vh - 90px);height:calc(100dvh - 90px);background:var(--bg);border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.16),0 30px 80px rgba(2,10,30,.55)}
+body.dk[data-view="cube"] .win,body.dk.max .win{max-width:none}
+body.dk:not([data-view="desk"]) .winbody{display:block;flex:1;min-height:0;overflow:auto;padding:18px;scrollbar-gutter:stable}
+body.dk:not([data-view="desk"]) #winbar{display:block;flex:none}
+#winbar{background:var(--surface2);border-bottom:1px solid var(--line);font-size:13px}
+.wb-tabs{display:flex;align-items:flex-end;gap:2px;padding:7px 8px 0;min-height:40px}
+.wb-home,.wb-b{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;border:0;background:none;color:var(--muted);cursor:pointer;text-decoration:none;font-size:15px;line-height:1;margin-bottom:3px}
+.wb-home:hover,.wb-b:hover{background:color-mix(in oklab,var(--fg) 9%,transparent);color:var(--fg)}
+.wb-b[aria-pressed="true"]{color:var(--warn-t)}
+.wb-tablist{display:flex;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none;align-items:flex-end}
+.wb-tab{display:flex;align-items:center;min-width:0;flex:0 1 190px;border-radius:10px 10px 0 0;color:var(--muted);border:1px solid transparent;border-bottom:0}
+.wb-tab a{display:flex;align-items:center;gap:7px;min-width:0;flex:1;padding:8px 4px 8px 12px;color:inherit;text-decoration:none}
+.wb-tab a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-tab svg{flex:none;color:var(--area-t)}
+.wb-tab button{flex:none;width:22px;height:22px;margin-right:5px;border:0;border-radius:6px;background:none;color:inherit;cursor:pointer;opacity:.55}
+.wb-tab button:hover{opacity:1;background:color-mix(in oklab,var(--fg) 10%,transparent)}
+.wb-tab:hover{background:color-mix(in oklab,var(--surface) 60%,transparent)}
+.wb-tab.on{background:var(--bg);color:var(--fg);font-weight:700;border-color:var(--line);box-shadow:inset 0 3px 0 var(--area-t)}
+.wb-sp{flex:1}
+.wb-addr{display:flex;align-items:center;gap:4px;padding:6px 10px;background:var(--bg);border-top:1px solid var(--line);margin-top:-1px}
+.wb-addr .wb-b{margin:0}
+.wb-crumb{flex:1;min-width:0;display:flex;align-items:center;gap:7px;height:32px;padding:0 14px;border-radius:16px;background:var(--surface2);color:var(--muted);white-space:nowrap;overflow:hidden}
+.wb-crumb svg{color:var(--area-t);flex:none}.wb-crumb b{color:var(--fg);overflow:hidden;text-overflow:ellipsis}.wb-crumb i{font-style:normal;opacity:.6}
+.wb-find{flex:none;height:32px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--muted);padding:0 12px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.wb-find:hover{color:var(--fg);border-color:var(--area-t)}
+kbd{font:600 11px var(--body);padding:1px 6px;border-radius:5px;border:1px solid var(--line);background:var(--surface2);color:var(--muted)}
+/* 작업 표시줄 */
+#taskbar{position:fixed;z-index:30;left:0;right:0;bottom:0;height:62px;padding:0 max(14px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px));align-items:center;gap:8px;color:#eef3fc;background:rgba(4,16,44,.72);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-top:1px solid rgba(255,255,255,.14)}
+.tb-start{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(135deg,rgba(27,170,204,.5),rgba(12,65,154,.6));color:#fff;font-weight:700;cursor:pointer;flex:none}
+.tb-start:hover{border-color:var(--lime)}
+.tb-apps{display:flex;gap:4px;min-width:0;overflow-x:auto;scrollbar-width:none;align-items:center}
+.tb-app{position:relative;flex:none;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 12px;border-radius:12px;color:#dbe6fa;text-decoration:none;font-size:13px;white-space:nowrap}
+.tb-app:hover{background:var(--glass)}
+.tb-app.open::after{content:"";position:absolute;left:50%;bottom:3px;width:14px;height:3px;border-radius:2px;translate:-50% 0;background:var(--cyan)}
+.tb-app.on{background:var(--glass-l);color:#fff;font-weight:700}.tb-app.on::after{background:var(--lime);width:22px}
+.tb-b{flex:none;height:36px;padding:0 12px;border-radius:10px;border:0;background:none;color:#dbe6fa;cursor:pointer;font-size:13px;white-space:nowrap}
+.tb-b:hover{background:var(--glass);color:#fff}
+.tb-logo{height:30px;width:auto;flex:none;margin-left:6px}
+.tb-clock{flex:none;text-align:right;font-size:12px;line-height:1.35;font-variant-numeric:tabular-nums;color:#c6d4ef;min-width:92px}
+.tb-clock b{display:block;font-size:14px;color:#fff}
+/* 바탕화면 */
+body.dk[data-view="desk"] .wrap{max-width:1640px}
+.dk-wrap{display:grid;grid-template-columns:232px minmax(0,1fr) 336px;gap:26px;align-items:start;color:#fff;min-height:calc(100vh - 110px)}
+body:not(.dk) .dk-wrap{background:linear-gradient(155deg,var(--wall-a),var(--wall-b) 60%,var(--wall-c));border-radius:18px;padding:22px;min-height:0}
+.dk-icons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 4px;padding-top:6px}
+.dk-ic{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 4px 10px;border:1px solid transparent;border-radius:14px;background:none;color:#fff;cursor:pointer;text-decoration:none;font-size:13px;text-align:center;line-height:1.35;transition:background-color var(--dur-fast) var(--ease-glide),translate var(--dur-fast) var(--ease-settle)}
+.dk-ic:hover,.dk-ic:focus-visible{background:var(--glass);border-color:rgba(255,255,255,.2);translate:0 -2px}
+.dk-tile{position:relative;width:62px;height:54px;border-radius:13px;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:9px 8px 7px;background:linear-gradient(160deg,color-mix(in oklab,var(--area) 70%,#fff),var(--area));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 22px rgba(2,10,30,.4)}
+.dk-tile::before{content:"";position:absolute;left:0;top:-6px;width:28px;height:11px;border-radius:7px 7px 0 0;background:color-mix(in oklab,var(--area) 62%,#fff)}
+.dk-tile i{display:grid;place-items:center;border-radius:5px;background:rgba(255,255,255,.9);color:var(--area)}
+.dk-tile i svg{width:11px;height:11px}
+.dk-ic.one .dk-tile{display:grid;grid-template-columns:1fr;place-items:center;padding:0;background:linear-gradient(160deg,rgba(255,255,255,.96),rgba(226,236,250,.92));color:var(--area)}
+.dk-ic.one .dk-tile::before{display:none}.dk-ic.one .dk-tile svg{width:26px;height:26px}
+.dk-lab{text-shadow:0 1px 6px rgba(2,10,30,.6);font-weight:600}
+.dk-hero h1{margin:0;font:800 clamp(22px,2.6vw,34px)/1.25 var(--display);letter-spacing:-.02em}
+.dk-hero h1 em{font-style:normal;background:linear-gradient(90deg,#9be0f2,var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dk-hero p{margin:6px 0 0;color:#c6d4ef;font-size:14px;max-width:60ch}
+.dk-eye{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--lime);margin-bottom:8px}
+.dk-eye::before{content:"";width:22px;height:2px;background:var(--lime)}
+.dk-mid{display:flex;flex-direction:column;gap:18px;min-width:0;padding-top:6px}
+.dk-quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.dk-q{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:var(--glass);color:#fff;text-decoration:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:translate var(--dur-fast) var(--ease-settle),border-color var(--dur-fast)}
+.dk-q:hover{translate:0 -3px;border-color:var(--lime)}
+.dk-q>i{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.94);color:var(--area)}
+.dk-q>i svg{width:19px;height:19px}
+.dk-q b{display:block;font-size:14px}.dk-q span{font-size:12px;color:#c6d4ef}
+.dk-card{border-radius:16px;padding:16px 18px;background:rgba(255,255,255,.96);color:#0b1c3d;box-shadow:0 14px 40px rgba(2,10,30,.35);display:flex;flex-direction:column;gap:10px;min-width:0}
+.dk-card h2{margin:0;font:700 14px/1.4 var(--display);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.dk-card h2 small{font:500 12px var(--body);color:#51607c}
+.dk-card a{color:inherit}
+.dk-todo{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #e3e9f3;text-decoration:none;font-size:13.5px}
+.dk-todo:first-of-type{border-top:0}
+.dk-todo .n{flex:none;min-width:34px;height:26px;padding:0 8px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-variant-numeric:tabular-nums;background:#e8edf5;color:#0b1c3d}
+.dk-todo.hot .n{background:#d03b3b;color:#fff}.dk-todo.do .n{background:#0c419a;color:#fff}.dk-todo.ok .n{background:#dff3df;color:#006300}
+.dk-todo span{flex:1;min-width:0}.dk-todo::after{content:"›";color:#8a97b1;font-size:18px}
+.dk-todo:hover span{text-decoration:underline}
+.dk-chips{display:flex;flex-wrap:wrap;gap:6px}
+.dk-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:var(--glass);color:#fff;text-decoration:none;font-size:13px}
+.dk-chip:hover{border-color:var(--lime)}
+.dk-sub{font-size:12px;font-weight:700;letter-spacing:.06em;color:#a9bbdc}
+.dk-w{display:flex;flex-direction:column;gap:12px;min-width:0}
+.dk-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dk-stat{font:800 28px/1.15 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:#0c419a}
+.dk-stat small{font:600 13px var(--body);color:#51607c;margin-left:3px}
+.dk-meter{height:6px;border-radius:3px;background:#e3e9f3;overflow:hidden}.dk-meter i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#0571b0,#1baacc)}
+.dk-cap{font-size:12px;color:#51607c}
+.dk-ring{display:flex;align-items:center;gap:14px}
+.dk-ring svg{flex:none}
+.dk-leg{display:grid;grid-template-columns:auto 1fr auto;gap:3px 8px;font-size:12.5px;align-items:center;flex:1}
+.dk-leg i{width:9px;height:9px;border-radius:50%}.dk-leg b{font-variant-numeric:tabular-nums;text-align:right}
+.dk-feed{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-top:1px solid #e3e9f3;font-size:13px;text-decoration:none}
+.dk-feed:first-of-type{border-top:0}
+.dk-feed .tg{flex:none;font-size:11px;font-weight:700;padding:1px 7px;border-radius:9px;background:#e8edf5;color:#0b1c3d;white-space:nowrap}
+.dk-feed .tg.crit{background:#fbe3e3;color:#a82828}.dk-feed .tg.warn{background:#fdf0cf;color:#7a5200}
+.dk-feed span:last-child{min-width:0}
+.dk-more{align-self:flex-end;font-size:12.5px;font-weight:700;color:#0c419a!important;text-decoration:none}
+/* 도우미 */
+#asst{position:fixed;z-index:32;right:max(16px,env(safe-area-inset-right,0px));bottom:76px}
+.as-btn{display:flex;align-items:center;gap:8px;height:46px;padding:0 16px 0 8px;border-radius:23px;border:1px solid rgba(255,255,255,.3);background:linear-gradient(135deg,#0571b0,#0c419a);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 10px 26px rgba(2,10,30,.45)}
+.as-btn i,.as-face{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#fff;color:#0c419a;font-style:normal}
+.as-card{width:min(332px,calc(100vw - 32px));border-radius:18px;padding:16px;background:rgba(255,255,255,.98);color:#0b1c3d;box-shadow:0 0 0 1px rgba(12,65,154,.14),0 22px 60px rgba(2,10,30,.5);display:flex;flex-direction:column;gap:10px}
+.as-top{display:flex;gap:10px;align-items:center}.as-top b{font:700 15px/1.4 var(--display)}
+.as-face{width:38px;height:38px;background:linear-gradient(135deg,#1baacc,#0c419a);color:#fff}
+.as-find{display:flex;gap:6px}.as-find input{background:#fff;color:#0b1c3d;border-color:#d3dbe9}
+.as-find button,.as-go{border:0;border-radius:9px;background:#0c419a;color:#fff;font-weight:700;padding:0 14px;cursor:pointer;white-space:nowrap}
+.as-list{display:flex;flex-direction:column}
+.as-list a,.as-list button{display:flex;align-items:center;gap:9px;padding:8px 6px;border:0;border-radius:8px;background:none;color:#0b1c3d;text-decoration:none;font:inherit;font-size:13.5px;text-align:left;cursor:pointer}
+.as-list a::before,.as-list button::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:#1baacc}
+.as-list a:hover,.as-list button:hover{background:#eef2f8}
+.as-tip{font-size:12.5px;padding:9px 11px;border-radius:10px;background:#eef6e0;color:#3d5300}
+.as-tip b{margin-right:6px}
+.as-foot{display:flex;justify-content:space-between;gap:8px}
+.as-foot button{border:1px solid #d3dbe9;border-radius:8px;background:#fff;color:#0b1c3d;padding:5px 12px;cursor:pointer;font-size:12.5px}
+/* 겹침 창: 전체 메뉴·찾기·폴더·안내 */
+#ovl{position:fixed;inset:0;z-index:40;display:grid;place-items:start center;padding:8vh 16px 80px;overflow:auto}
+#ovl[hidden]{display:none}
+.ov-back{position:fixed;inset:0;background:rgba(3,10,28,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.ov-card{position:relative;width:min(760px,100%);border-radius:18px;background:var(--surface);color:var(--fg);box-shadow:0 30px 90px rgba(2,10,30,.6);border:1px solid var(--line);overflow:hidden}
+.ov-card.wide{width:min(980px,100%)}
+.ov-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.ov-head h2{margin:0;font:700 16px var(--display);flex:1;display:flex;align-items:center;gap:8px}
+.ov-head h2 svg{color:var(--area-t)}
+.ov-head input{flex:1;font-size:15px;height:40px}
+.ov-body{padding:14px 16px 18px;max-height:min(66vh,640px);overflow:auto}
+.ov-g{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:12px 0 4px}
+.ov-g:first-child{margin-top:0}
+.ov-r{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;color:var(--fg);text-decoration:none;cursor:pointer;border:0;background:none;width:100%;text-align:left;font:inherit}
+.ov-r:hover,.ov-r.sel{background:var(--surface2)}
+.ov-r.sel{box-shadow:inset 3px 0 0 var(--area-t)}
+.ov-r>i{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:color-mix(in oklab,var(--area-t) 14%,var(--surface));color:var(--area-t)}
+.ov-r b{display:block;font-size:14px}.ov-r small{display:block;color:var(--muted);font-size:12px}
+.ov-r>span{min-width:0;flex:1}
+.ov-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.ov-step{display:grid;grid-template-columns:36px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.ov-step:first-child{border-top:0}
+.ov-step>i{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--area);color:#fff;font:800 15px var(--display);font-style:normal}
+.ov-step b{font-size:15px}.ov-step p{margin:2px 0 0;color:var(--muted);font-size:13px}
+/* 업무 도구 공통 */
+.callout{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r);border:1px solid color-mix(in oklab,var(--area-t) 40%,var(--line));background:color-mix(in oklab,var(--area-t) 7%,var(--surface))}
+.callout>i{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--area);color:#fff;font:800 14px var(--display);font-style:normal}
+.callout b{font-weight:800}.callout p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.demo-tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:11px;background:var(--warn);color:#3d2900;font-size:12px;font-weight:700}
+.stk{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--surface2)}
+.stk i{display:block;height:100%}
+.mini{display:grid;grid-template-columns:minmax(0,1fr) 54px;gap:8px;align-items:center}
+.mini .track{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;position:relative}
+.mini .track i{display:block;height:100%;border-radius:4px;background:var(--s1)}
+.mini .track.warn i{background:var(--warn)}.mini .track.crit i{background:var(--crit)}.mini .track.good i{background:var(--good)}
+.mini b{text-align:right;font-variant-numeric:tabular-nums}
+.lgd{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.lgd i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.num{text-align:right;white-space:nowrap}
+/* 서류 도우미 */
+.dc-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.dc-p{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;color:var(--fg);font:inherit;box-shadow:var(--shadow);transition:translate var(--dur-fast) var(--ease-settle),border-color var(--dur-fast)}
+.dc-p:hover{translate:0 -3px;border-color:var(--area-t)}
+.dc-p>i{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:color-mix(in oklab,var(--area-t) 14%,var(--surface));color:var(--area-t);font:800 15px var(--display);font-style:normal}
+.dc-p b{font:700 15px var(--display)}.dc-p span{font-size:12.5px;color:var(--muted)}
+.dc-p em{font-style:normal;font-size:12px;color:var(--area-t);font-weight:700;margin-top:auto}
+.dc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+.dc-rows{display:flex;flex-direction:column;gap:6px}
+.dc-row{display:grid;gap:6px;align-items:center}
+.dc-row button{width:32px;height:32px;padding:0;justify-content:center}
+.sheet{background:#fff;color:#111;border:1px solid #c9d1df;border-radius:6px;padding:34px 36px;font:13.5px/1.7 var(--body);box-shadow:0 8px 26px rgba(11,28,61,.12);min-height:420px;overflow-x:auto}
+.sheet h3{margin:0 0 18px;text-align:center;font:800 21px/1.4 var(--display);letter-spacing:.12em;color:#111}
+.sheet table{width:100%;border-collapse:collapse;margin:0 0 14px}
+.sheet th,.sheet td{border:1px solid #333;padding:6px 9px;vertical-align:middle;color:#111;background:#fff}
+.sheet th{background:#eef1f6;font-weight:700;text-align:center;white-space:nowrap}
+.sheet .sig{height:34px;min-width:90px}
+.sheet .pre{white-space:pre-wrap;margin:0;font:inherit}
+.sheet .foot{margin-top:22px;text-align:center}
+.sheet .blank{color:#9aa5b8}
+.ck{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:6px 0}
+.ck::before{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff}
+.ck.bad::before{content:"!";background:var(--crit)}.ck.ok::before{content:"✓";background:var(--good)}.ck.info::before{content:"i";background:var(--s1)}
+/* 기준 묻기 */
+.qa{display:flex;flex-direction:column;gap:12px}
+.qa-q{align-self:flex-end;max-width:80%;padding:8px 14px;border-radius:14px 14px 4px 14px;background:var(--area);color:#fff;font-weight:600}
+.qa-a{display:flex;flex-direction:column;gap:8px;max-width:92%}
+.qa-c{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.qa-c h4{margin:0;font:700 14px var(--display);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.qa-c dl{margin:0;display:grid;grid-template-columns:84px 1fr;gap:4px 10px;font-size:13px}
+.qa-c dt{color:var(--muted)}.qa-c dd{margin:0;white-space:pre-line}
+.qa-src{font-size:12px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13px;text-decoration:none}
+.chip:hover,.chip.on{border-color:var(--area-t);color:var(--area-t);font-weight:700}
+/* 용어 사전 */
+.gl-wrap{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px;align-items:start}
+.gl-side{display:flex;flex-direction:column;gap:2px;position:sticky;top:0}
+.gl-side button{display:flex;justify-content:space-between;gap:8px;padding:7px 12px;border:0;border-radius:9px;background:none;color:var(--fg);cursor:pointer;font:inherit;text-align:left}
+.gl-side button:hover{background:var(--surface2)}.gl-side button.on{background:var(--area);color:#fff;font-weight:700}
+.gl-side small{font-variant-numeric:tabular-nums;opacity:.75}
+.gl-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.gl-t{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;text-align:left;color:var(--fg);font:inherit}
+.gl-t:hover{border-color:var(--area-t)}
+.gl-t b{font:700 15px var(--display)}.gl-t span{font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gl-def{font-size:16px;line-height:1.75}
+.gl-vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;font:700 15px var(--display)}
+.gl-vs i{font-style:normal;font-size:12px;color:var(--muted)}
+.gl-vs button{border:1px solid var(--line);border-radius:10px;background:var(--surface2);padding:8px;cursor:pointer;color:var(--fg);font:inherit}
+/* 문의 게시판 */
+.bd{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.bd:first-of-type{border-top:0}
+.bd h4{margin:0;font:700 15px var(--display);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bd p{margin:0;white-space:pre-line;font-size:13.5px}
+.bd .re{padding:10px 12px;border-radius:10px;background:color-mix(in oklab,var(--area-t) 8%,var(--surface));border-left:3px solid var(--area-t)}
+@media (max-width:1180px){.dk-wrap{grid-template-columns:200px minmax(0,1fr)}.dk-w{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}}
+@media (max-width:860px){
+  body.dk .main{padding:8px 8px 72px}
+  body.dk:not([data-view="desk"]) .win{height:auto;overflow:visible;border-radius:12px}
+  body.dk:not([data-view="desk"]) .winbody{overflow:visible;padding:12px}
+  .dk-wrap{grid-template-columns:minmax(0,1fr);gap:18px}
+  .dk-icons{grid-template-columns:repeat(4,minmax(0,1fr));order:2}.dk-mid{order:1}.dk-w{order:3}
+  .wb-find kbd,.tb-clock,.tb-b.tbo,.tb-start span,.tb-app span{display:none}
+  .tb-app{padding:0 10px}.tb-start{padding:0 12px}
+  .dc-grid,.gl-wrap{grid-template-columns:minmax(0,1fr)}
+  .gl-side{position:static;flex-direction:row;overflow-x:auto}.gl-side button{flex:none}
+  .sheet{padding:18px 14px}
+}
+@media (max-width:420px){.dk-icons{grid-template-columns:repeat(3,minmax(0,1fr))}.dk-two{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){
+  body.dk[data-view="desk"] .enter .dk-ic,body.dk[data-view="desk"] .enter .dk-card,body.dk[data-view="desk"] .enter .dk-q{animation:dkin var(--dur-base) var(--ease-settle) both;animation-delay:calc(var(--k,0)*22ms)}
+  .ov-card{animation:dkin var(--dur-base) var(--ease-settle) both}
+  .as-card{animation:dkin var(--dur-base) var(--ease-spring) both}
+  @keyframes dkin{from{opacity:0;translate:0 14px;scale:.985}to{opacity:1;translate:0 0;scale:1}}
+}
+@media print{
+  body.dk,body{background:#fff!important}
+  body *{visibility:hidden}
+  .sheet,.sheet *{visibility:visible}
+  .win,.winbody{display:block!important;height:auto!important;overflow:visible!important;box-shadow:none!important}
+  .sheet{position:absolute;left:0;top:0;width:100%;border:0;box-shadow:none;padding:0}
+  #taskbar,#asst,#ovl,#winbar,.side{display:none!important}
+}
+/*EXT-CSS-END*/
 </style>
 
 <div class="app">
@@ -1309,6 +1564,386 @@ document.addEventListener("dragover",e=>{if(e.target.closest(".drop"))e.preventD
 document.addEventListener("drop",e=>{const z=e.target.closest(".drop");if(z){e.preventDefault();upload(e.dataTransfer.files[0])}});
 const tip=$("#tip");
 document.addEventListener("pointermove",e=>{const t=e.target.closest?.("[data-tip]");if(!t||!t.dataset.tip){tip.hidden=true;return}tip.textContent=t.dataset.tip;tip.hidden=false;tip.style.left=Math.max(4,Math.min(innerWidth-tip.offsetWidth-4,e.clientX+12))+"px";tip.style.top=Math.max(4,e.clientY-tip.offsetHeight-10)+"px"});
+/*EXT-JS-START 바탕화면형 구성과 업무 도구. 참고: 청강문화산업대학교 사업 대시보드의 화면 구성(폴더·창·작업 표시줄·도우미)을 본 대학 체계에 맞게 다시 만듦 */
+NAV.splice(5,0,["사업과 서류",[["biz","사업 현황"],["review","자체평가 결과"],["docs","서류 도우미"],["ask","기준 묻기"]],"biz"]);
+NAV[0][1].unshift(["desk","바탕화면"]);
+NAV[NAV.length-1][1].splice(1,0,["gloss","용어 사전"],["board","문의 게시판"]);
+NAV.forEach(g=>g[1].forEach(x=>AREA[x[0]]={k:g[2],n:g[0]}));
+ICO.biz='<circle cx="8" cy="8" r="6"/><path d="M8 2v6l4.2 4.2"/>';
+const VN={};NAV.forEach(g=>g[1].forEach(x=>VN[x[0]]=x[1]));
+const ICV={desk:'<rect x="2" y="2.5" width="12" height="8.5" rx="1.2"/><path d="M6 14h4M8 11v3"/>',cube:'<path d="M8 1.8 13.5 5v6L8 14.2 2.5 11V5Z"/><path d="M2.5 5 8 8l5.5-3M8 8v6.2"/>',notif:'<path d="M4 11V7.5a4 4 0 0 1 8 0V11l1.2 1.5H2.800Z"/><path d="M6.800 14h2.400"/>',
+ kpi:'<path d="M2.500 13.500h11"/><path d="M4.500 13V8M8 13V4M11.500 13V6.500"/>',trend:'<path d="M2 11.500 6 7l3 2.500 5-6"/><path d="M10.500 3.500H14V7"/>',major:'<path d="M1.500 6 8 3l6.500 3L8 9Z"/><path d="M4.500 7.600V11c1 1 2.200 1.500 3.500 1.500s2.500-.5 3.500-1.500V7.600"/>',
+ qual:'<path d="M4 2h6l2.500 2.500V14H4Z"/><path d="M6 7h4.500M6 9.500h4.500M6 12h3"/>',dept:'<circle cx="5.500" cy="5.500" r="2"/><circle cx="11" cy="6" r="1.600"/><path d="M1.800 13c.3-2.200 1.800-3.500 3.700-3.500s3.400 1.300 3.700 3.500M10.500 9.600c1.800-.2 3.300 1 3.700 3"/>',entry:'<path d="M3 2.500h10v11H3Z"/><path d="m5.300 8 1.800 1.800 3.600-3.900"/>',fb:'<path d="M3 3h10v7H7l-3 3v-3H3Z"/><path d="M6 6.500h4"/>',
+ brief:'<path d="M3 2h10v12H3Z"/><path d="M5.500 5h5M5.500 7.500h5M5.500 10h3"/>',guide:'<circle cx="8" cy="8" r="6"/><path d="M8 7.300V11M8 5v.2"/>',links:'<path d="M2 4.500h4.500L8 6h6v7H2Z"/>',admin:'<path d="M8 11V3M5 6l3-3 3 3"/><path d="M2.500 10.500V13h11v-2.500"/>',
+ biz:ICO.biz,review:'<path d="M3 14V2.500h8.500L10 5.300l1.500 2.700H3"/>',docs:'<path d="M4 2h6l2.500 2.500V14H4Z"/><path d="m6 9.500 1.500 1.500 3-3.200"/>',ask:'<path d="M2.500 3h11v8H8l-3 2.500V11H2.500Z"/><path d="M6.600 6.100c.2-1.100 2.800-1.200 2.800.2 0 .9-1.400 1-1.400 2M8 9.700v.2"/>',gloss:'<path d="M3 2.500h8.500A1.500 1.500 0 0 1 13 4v9.500H4.500A1.500 1.500 0 0 1 3 12Z"/><path d="M3 12a1.500 1.500 0 0 1 1.500-1.500H13M6 5.500h4"/>',board:'<rect x="2" y="2.500" width="12" height="11" rx="1.200"/><path d="M4.500 6h7M4.500 8.500h7M4.500 11h4"/>'};
+const vico=(v,s=14)=>`<svg viewBox="0 0 16 16" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICV[v]||ICO[AREA[v].k]}</svg>`;
+const VD={desk:"폴더·위젯으로 전체 업무를 한 화면에서 시작함",home:"전략별 달성 현황과 핵심 지표를 요약해 봄",cube:"전략·지표 달성률을 입체 방사형 그래프로 봄",notif:"기한 임박, 미입력, 신호 악화 알림을 모아 봄",
+ vision:"사명·비전, 7대 전략과 과제·세부과제를 봄",kpi:"성과지표 실적을 입력하고 신호등·예측을 확인함",trend:"연도별 변화와 눈에 띄는 지표를 찾음",major:"학과별 실적을 견줘 봄",acc:"인증 수치 지표의 충족 여부를 확인함",qual:"인증 서술 평가 항목의 준비 상태를 관리함",
+ dept:"부서가 맡은 지표와 세부과제를 봄",entry:"실적 입력 진행 상황을 보고 확정함",cal:"제출·평가·회의 일정을 관리함",fb:"평가·점검에서 나온 개선 과제를 추적함",
+ sdbuild:"변수를 골라 인과지도와 예측 모형을 만듦",sdmap:"대학 운영 변수의 원인·결과 관계를 봄",sdflow:"모형의 계산 구조와 공식을 확인함",sdsim:"전략 투자 강도를 바꿔 결과를 비교함",sdlab:"목표에 맞는 전략 조합을 찾음",
+ biz:"사업별 예산 집행률과 착수·진도를 확인함",review:"점검 차수별 자체평가 점수와 의견을 봄",docs:"회의록·여비 정산·수당 내역·기안문·결과보고서를 작성하고 점검함",ask:"집행 기준과 용어, 지표를 물어보고 근거를 확인함",
+ decide:"자료를 근거로 결정할 안건을 정리함",brief:"보고서와 성과 소식 초안을 만듦",guide:"지표의 정의·산식·자료원을 확인함",gloss:"업무 용어와 헷갈리는 말을 찾아봄",board:"궁금한 점과 요청을 남기고 답변을 확인함",links:"계획·평가·공시 관련 문서와 주소를 모아 둠",admin:"엑셀·CSV 자료를 올리고 백업함"};
+const X=()=>{S.biz??={snaps:[],ps:"",pe:""};S.rev??=[];S.kb??=[];S.board??=[];S.usage??={};S.docs??={};S.gl??=[];S.fav??=[];S.shell??="desk";S.tabs??=[];S.vote??={};return S};
+const xu={ov:"",q:"",pi:0,asst:null,bizI:-1,bizBy:"dept",bizQ:"",bizSt:"",bizD:"",bizDemo:false,revR:"",revDemo:false,doc:"",ask:[],glC:"",glQ:"",glSel:"",bdF:"",bdDraft:null};
+const pcx=(a,b)=>b?a/b*100:0, px1=n=>(Math.round(n*10)/10).toLocaleString("ko-KR",{minimumFractionDigits:1,maximumFractionDigits:1}), mw=n=>(n/1e6).toLocaleString("ko-KR",{maximumFractionDigits:1}), won=n=>Math.round(n||0).toLocaleString("ko-KR");
+const go2=v=>{if(cur===v)render(true);else location.hash=v};
+(function(){const v=$("#view"),w=document.createElement("div");w.className="win";v.parentNode.insertBefore(w,v);w.innerHTML='<div id="winbar"></div><div class="winbody"></div>';w.lastChild.append(v);
+ document.body.insertAdjacentHTML("beforeend",'<div id="taskbar" role="toolbar" aria-label="작업 표시줄"></div><div id="asst"></div><div id="ovl" hidden></div>');
+ $(".rolebox").insertAdjacentHTML("beforeend",'<button class="btn sm" data-x="shell" data-k="desk" style="margin-top:4px;justify-content:center">바탕화면형으로 보기</button>')})();
+const LOGO=$(".brand img").src;
+const TIPS=["Ctrl+K를 누르면 화면·지표·용어를 한 번에 찾을 수 있음.","별표를 누른 화면은 작업 표시줄에 고정됨.","서류 도우미의 「예시로 채우기」로 결과 모양을 먼저 볼 수 있음.","사업 현황은 기준일이 다른 자료를 올릴 때마다 추이가 쌓임.","자체평가의 차기 확인사항은 개선 과제로 바로 보낼 수 있음.","기준 묻기에서 답을 찾지 못하면 문의 게시판으로 바로 넘길 수 있음.","용어 사전의 지표 용어는 지표 관리 화면과 연결됨."];
+function chrome(){const dk=S.shell==="desk",wb=$("#winbar"),tb=$("#taskbar"),b=document.body;b.classList.toggle("dk",dk);b.classList.toggle("max",!!xu.max);b.classList.toggle("rolepop",dk&&!!xu.role);
+ if(!dk){wb.innerHTML=tb.innerHTML=$("#asst").innerHTML="";ovl();return}
+ const a=AREA[cur],tabs=S.tabs.filter(allowed),fav=S.fav.filter(allowed);
+ wb.innerHTML=cur==="desk"?"":`<div class="wb-tabs"><a class="wb-home" href="#desk" aria-label="바탕화면" data-tip="바탕화면">${vico("desk",16)}</a><div class="wb-tablist">${tabs.map(t=>`<span class="wb-tab ${t===cur?"on":""}" data-area="${AREA[t].k}"><a href="#${t}" ${t===cur?'aria-current="page"':""}>${vico(t)}<span>${VN[t]}</span></a><button data-x="tabx" data-k="${t}" aria-label="${VN[t]} 닫기">×</button></span>`).join("")}</div><button class="wb-b" data-x="ov" data-k="start" aria-label="다른 화면 열기" data-tip="다른 화면 열기">+</button><span class="wb-sp"></span><a class="wb-b" href="#desk" aria-label="바탕화면으로 내리기" data-tip="바탕화면으로">–</a><button class="wb-b" data-x="max" aria-label="창 넓히기" data-tip="${xu.max?"기본 너비로":"창 넓히기"}">${xu.max?"❐":"□"}</button><button class="wb-b" data-x="tabx" data-k="${cur}" aria-label="창 닫기" data-tip="닫기">×</button></div>
+  <div class="wb-addr"><button class="wb-b" data-x="back" aria-label="뒤로">←</button><button class="wb-b" data-x="fwd" aria-label="앞으로">→</button><div class="wb-crumb" data-area="${a.k}">${ico(a.k)}<span>${a.n}</span><i>›</i><b>${VN[cur]}</b></div><button class="wb-b" data-x="fav" data-k="${cur}" aria-pressed="${fav.includes(cur)}" aria-label="작업 표시줄에 고정" data-tip="${fav.includes(cur)?"고정 해제":"작업 표시줄에 고정"}">${fav.includes(cur)?"★":"☆"}</button><button class="wb-find" data-x="ov" data-k="find">찾기 <kbd>Ctrl K</kbd></button></div>`;
+ const pins=[...fav,...tabs.filter(t=>!fav.includes(t))];
+ tb.innerHTML=`<button class="tb-start" data-x="ov" data-k="start" aria-label="전체 메뉴"><svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><rect x="1.500" y="1.500" width="5.500" height="5.500" rx="1.200"/><rect x="9" y="1.500" width="5.500" height="5.500" rx="1.200"/><rect x="1.500" y="9" width="5.500" height="5.500" rx="1.200"/><rect x="9" y="9" width="5.500" height="5.500" rx="1.200"/></svg><span>전체 메뉴</span></button>
+  <div class="tb-apps"><a class="tb-app ${cur==="desk"?"on":""}" href="#desk" aria-label="바탕화면">${vico("desk",16)}</a>${pins.map(t=>`<a class="tb-app ${tabs.includes(t)?"open":""} ${t===cur?"on":""}" href="#${t}" data-tip="${VN[t]}">${vico(t,16)}<span>${VN[t]}</span></a>`).join("")}</div><span class="wb-sp"></span>
+  <button class="tb-b" data-x="ov" data-k="find">찾기</button><button class="tb-b tbo" data-x="ov" data-k="help">이용 안내</button><button class="tb-b" data-x="rolepop" aria-expanded="${!!xu.role}" data-tip="열람 권한 미리보기">${ROLE[S.role]}${S.role==="dept"&&S.roleDept?" · "+esc(S.roleDept):""} ▾</button><button class="tb-b tbo" data-x="shell" data-k="menu">메뉴형 보기</button><img class="tb-logo" src="${LOGO}" alt="순천제일대학교"><div class="tb-clock" id="tbclock"></div>`;
+ tick();asst();ovl()}
+function tick(){const el=$("#tbclock");if(!el)return;const d=new Date(),h=d.getHours();el.innerHTML=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}(${"일월화수목금토"[d.getDay()]})<b>${h<12?"오전":"오후"} ${h%12||12}:${String(d.getMinutes()).padStart(2,"0")}</b>`}
+setInterval(tick,20000);
+function asst(){const el=$("#asst"),open=xu.asst===true,n=Object.values(S.usage).reduce((a,b)=>a+b,0);
+ el.innerHTML=!open?`<button class="as-btn" data-x="asst" data-k="1" aria-label="도우미 열기"><i>${vico("ask",17)}</i>도우미</button>`:`<div class="as-card" role="dialog" aria-label="도우미"><div class="as-top"><span class="as-face">${vico("ask",19)}</span><b>${n>3?"다시 오셨네요. 무엇을 도와 드릴까요?":"안녕하세요. 하려는 일을 골라 보세요."}</b></div>
+  <form class="as-find" data-xform="asfind"><input id="asq" placeholder="예: 취업률, 여비 정산, 집행률" aria-label="찾을 말"><button>찾기</button></form>
+  <div class="as-list"><button data-x="ov" data-k="help">처음 쓰는 분을 위한 이용 안내</button><a href="#entry">이번 학년도 실적 입력하기</a><a href="#docs">서류 만들기(회의록·여비·기안문)</a><a href="#ask">집행 기준·용어 물어보기</a><a href="#biz">사업 집행 현황 보기</a></div>
+  <div class="as-tip"><b>팁</b>${TIPS[n%TIPS.length]}</div><div class="as-foot"><button data-x="ov" data-k="start">전체 메뉴 보기</button><button data-x="asst" data-k="0">닫기</button></div></div>`}
+// 찾기: 화면·지표·용어·집행 기준·자료
+function findAll(q){q=q.trim().toLowerCase();const out=[],hit=s=>String(s||"").toLowerCase().includes(q);if(!q)return out;
+ for(const v in VN)if(allowed(v)&&(hit(VN[v])||hit(VD[v])))out.push({g:"화면",t:VN[v],s:VD[v],k:"view",id:v,ic:v});
+ S.inds.filter(i=>hit(i.name)||hit(i.code)).slice(0,6).forEach(i=>out.push({g:"성과지표",t:i.name,s:`${i.code||i.id} · ${i.dept} · 목표 ${tT(i)}`,k:"ind",id:i.id,ic:"kpi"}));
+ glAll().filter(t=>hit(t.t)||hit(t.d)).sort((a,b)=>hit(b.t)-hit(a.t)).slice(0,6).forEach(t=>out.push({g:"용어",t:t.t,s:t.d,k:"term",id:t.t,ic:"gloss"}));
+ S.kb.filter(k=>hit(k.item)||hit(k.desc)||hit(k.rule)).slice(0,5).forEach(k=>out.push({g:"집행 기준",t:k.item,s:k.desc||k.rule,k:"kb",id:k.item,ic:"ask"}));
+ S.links.filter(l=>hit(l.title)).slice(0,4).forEach(l=>out.push({g:"자료실",t:l.title,s:l.kind,k:"view",id:"links",ic:"links"}));
+ S.board.filter(p=>hit(p.title)||hit(p.body)).slice(0,3).forEach(p=>out.push({g:"문의 게시판",t:p.title,s:p.reply?"답변 완료":"답변 대기",k:"view",id:"board",ic:"board"}));return out}
+const resHTML=(R)=>{if(!R.length)return `<div class="empty"><b>찾은 내용이 없음</b><span>다른 낱말로 찾아보거나 문의 게시판에 남겨 둘 수 있음.</span><button class="btn" data-x="tobd">문의 게시판에 남기기</button></div>`;let g="";return R.map((r,i)=>`${r.g!==g?`<div class="ov-g">${g=r.g}</div>`:""}<button class="ov-r ${i===xu.pi?"sel":""}" data-x="go" data-g="${r.k}" data-k="${esc(r.id)}" data-area="${AREA[r.ic].k}"><i>${vico(r.ic,16)}</i><span><b>${esc(r.t)}</b><small>${esc(String(r.s||"").slice(0,90))}</small></span></button>`).join("")};
+const appBtn=v=>`<a class="ov-r" href="#${v}" data-area="${AREA[v].k}"><i>${vico(v,16)}</i><span><b>${VN[v]}</b><small>${VD[v]}</small></span></a>`;
+function ovl(){const el=$("#ovl"),k=xu.ov;if(!k){el.hidden=true;el.innerHTML="";return}el.hidden=false;let h="";
+ if(k==="find"||k==="start"){const q=xu.q,body=q?resHTML(findAll(q)):NAV.map(g=>{const L=g[1].filter(x=>allowed(x[0]));return L.length?`<div class="ov-g">${g[0]}</div><div class="ov-apps">${L.map(x=>appBtn(x[0])).join("")}</div>`:""}).join("");
+  h=`<div class="ov-card wide" role="dialog" aria-label="찾기와 전체 메뉴"><div class="ov-head"><input id="ovq" value="${esc(q)}" placeholder="화면, 지표, 용어, 집행 기준을 찾음" aria-label="찾을 말" autocomplete="off"><button class="btn" data-x="ovx">닫기</button></div><div class="ov-body" id="ovres">${body}</div></div>`}
+ else if(k.startsWith("folder:")){const g=NAV[+k.slice(7)],L=g[1].filter(x=>allowed(x[0])&&x[0]!=="desk");h=`<div class="ov-card" role="dialog" aria-label="${g[0]}" data-area="${g[2]}"><div class="ov-head"><h2>${ico(g[2])}${g[0]}<small class="note">${L.length}개 화면</small></h2><button class="btn" data-x="ovx">닫기</button></div><div class="ov-body">${L.map(x=>appBtn(x[0])).join("")}</div></div>`}
+ else if(k==="help")h=`<div class="ov-card" role="dialog" aria-label="이용 안내"><div class="ov-head"><h2>${vico("guide",16)}이용 안내 한 장</h2><button class="btn" data-x="ovx">닫기</button></div><div class="ov-body">
+  ${[["자료를 올림","담당자가 「자료 올리기」에서 지표 실적 엑셀을, 「사업 현황」에서 예산 집행 엑셀을 올림. 양식은 각 화면의 「양식 복사」로 받음."],["현황을 확인함","바탕화면 위젯과 「전체 현황」, 「3D로 보기」에서 달성·주의·미달을 색으로 확인함. 지표를 누르면 추이와 예측이 나옴."],["부서가 입력하고 확정함","「입력 현황」에서 부서별 입력률을 보고, 검토를 마친 값은 확정해 잠금."],["서류와 기준을 스스로 해결함","「서류 도우미」로 회의록·여비 정산·기안문을 만들고, 「기준 묻기」와 「용어 사전」에서 근거를 확인함. 답이 없으면 「문의 게시판」에 남김."],["결정과 보고로 이어 감","「미래 예측」으로 전략 효과를 견주고, 「결정할 일」과 「보고서 만들기」로 정리함."]].map((s,i)=>`<div class="ov-step"><i>${i+1}</i><div><b>${s[0]}</b><p>${s[1]}</p></div></div>`).join("")}
+  <div class="note" style="margin-top:8px">자료는 이 브라우저에만 저장됨. 여러 사람이 같은 자료를 함께 쓰려면 「자료 올리기」의 백업·복원을 이용하거나 학교 서버 연동이 필요함.</div></div></div>`;
+ el.innerHTML=`<div class="ov-back" data-x="ovx"></div>${h}`;const i=$("#ovq");if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+function goRes(g,k){xu.ov="";xu.q="";if(g==="view")go2(k);else if(g==="ind"){ui.sel=k;ui.eff=0;go2("kpi")}else if(g==="term"){xu.glSel=k;go2("gloss")}else if(g==="kb"){askRun(k);go2("ask")}ovl()}
+// 바탕화면
+const ring=(c,size=92)=>{const tot=c.good+c.warn+c.crit+c.none||1,R=36,C=2*Math.PI*R;let off=0;const seg=(n,col)=>{if(!n)return "";const l=n/tot*C,s=`<circle cx="46" cy="46" r="${R}" fill="none" stroke="${col}" stroke-width="11" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 46 46)"/>`;off+=l;return s};
+ return `<svg viewBox="0 0 92 92" width="${size}" height="${size}" role="img" aria-label="달성 ${c.good}, 주의 ${c.warn}, 미달 ${c.crit}, 미입력 ${c.none}"><circle cx="46" cy="46" r="${R}" fill="none" stroke="#e3e9f3" stroke-width="11"/>${seg(c.good,"#0ca30c")}${seg(c.warn,"#fab219")}${seg(c.crit,"#d03b3b")}<text x="46" y="44" text-anchor="middle" font-size="19" font-weight="800" fill="#0b1c3d">${c.good}</text><text x="46" y="59" text-anchor="middle" font-size="10" fill="#51607c">/ ${tot} 달성</text></svg>`};
+V.desk=()=>{const L=scopeInds(),c=cnt(L,stInd),A=scopeAcc(),ca=cnt(A,stAcc),ent=L.filter(i=>S.vals[i.id]&&S.vals[i.id][S.year]!=null).length,N=notices(),up=upcoming(30),bz=bizNow(),hot=N.filter(n=>n.lv==="crit").length,noRe=S.board.filter(p=>!p.reply).length,
+  ag=mg()?agendas().filter(a=>!S.decisions.some(d=>d.aid===a.id)).length:0,fbOpen=S.fb.filter(f=>f.status!=="완료").length;
+ const todo=[[L.length-ent,`${S.year}학년도 실적을 아직 입력하지 않은 지표`,"entry","do"],[hot,"바로 조치가 필요한 알림","notif","hot"],[up.length,"30일 안에 다가오는 일정","cal","do"],[fbOpen,"진행 중인 개선 과제","fb",""],[noRe,"답변을 기다리는 문의","board","do"]];if(mg())todo.push([ag,"자료를 근거로 결정할 안건","decide","do"]);
+ const use=Object.entries(S.usage).filter(([v])=>v!=="desk"&&allowed(v)).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]),freq=use.length>=3?use:["kpi","entry","biz","docs","ask","cal"].filter(allowed);let k=0;
+ return `<section class="dk-wrap">
+  <nav class="dk-icons" aria-label="업무 폴더">${NAV.map((g,gi)=>{const Lg=g[1].filter(x=>allowed(x[0])&&x[0]!=="desk");return Lg.length?`<button class="dk-ic" style="--k:${k++}" data-x="ov" data-k="folder:${gi}" data-area="${g[2]}"><span class="dk-tile">${Lg.slice(0,4).map(x=>`<i>${vico(x[0])}</i>`).join("")}</span><span class="dk-lab">${g[0]}</span></button>`:""}).join("")}
+   ${["gloss","board"].map(v=>`<a class="dk-ic one" style="--k:${k++}" href="#${v}" data-area="${AREA[v].k}"><span class="dk-tile">${vico(v)}</span><span class="dk-lab">${VN[v]}</span></a>`).join("")}</nav>
+  <div class="dk-mid"><header class="dk-hero"><div class="dk-eye">SUNCHEON JEIL COLLEGE · INSTITUTIONAL RESEARCH</div><h1>순천제일대학교 <em>IR 성과관리 플랫폼</em></h1><p>발전계획 지표와 인증 평가, 사업 집행 현황을 확인하고 서류 작성과 기준 확인까지 한곳에서 처리함.</p></header>
+   <div class="dk-quick">${[["entry","실적 입력","이번 학년도 지표 값 넣기"],["docs","서류 만들기","회의록·여비·기안문"],["ask","기준 묻기","집행 기준·용어 확인"]].filter(x=>allowed(x[0])).map(x=>`<a class="dk-q" style="--k:${k++}" href="#${x[0]}" data-area="${AREA[x[0]].k}"><i>${vico(x[0])}</i><span><b>${x[1]}</b><span>${x[2]}</span></span></a>`).join("")}</div>
+   <div class="dk-card" style="--k:${k++}"><h2>오늘 확인할 일<small>${TODAY} · ${ROLE[S.role]}${S.role==="dept"&&S.roleDept?" · "+esc(S.roleDept):""}</small></h2>${todo.map(t=>`<a class="dk-todo ${t[0]?t[3]:"ok"}" href="#${t[2]}"><b class="n">${t[0]||"✓"}</b><span>${t[1]}${t[0]?"":" 없음"}</span></a>`).join("")}</div>
+   <div><div class="dk-sub" style="margin-bottom:8px">${use.length>=3?"자주 쓰는 화면":"먼저 써 볼 화면"}</div><div class="dk-chips">${freq.map(v=>`<a class="dk-chip" href="#${v}">${vico(v)}${VN[v]}</a>`).join("")}</div></div></div>
+  <aside class="dk-w" aria-label="현황 위젯">
+   <a class="dk-card" style="--k:${k++};text-decoration:none" href="#home"><h2>성과지표 달성 현황<small>${S.year}학년도</small></h2><div class="dk-ring">${ring(c)}<div class="dk-leg"><i style="background:#0ca30c"></i>달성<b>${c.good}</b><i style="background:#fab219"></i>주의<b>${c.warn}</b><i style="background:#d03b3b"></i>미달<b>${c.crit}</b><i style="background:#9aa5b8"></i>미입력<b>${c.none}</b></div></div></a>
+   <div class="dk-two"><a class="dk-card" style="--k:${k++};text-decoration:none" href="#entry"><h2>실적 입력률</h2><div class="dk-stat">${px1(pcx(ent,L.length))}<small>%</small></div><div class="dk-meter"><i style="width:${pcx(ent,L.length)}%"></i></div><div class="dk-cap">${ent} / ${L.length}개 입력</div></a>
+    <a class="dk-card" style="--k:${k++};text-decoration:none" href="#acc"><h2>인증 지표 충족</h2><div class="dk-stat">${ca.good}<small>/ ${A.length}</small></div><div class="dk-meter"><i style="width:${pcx(ca.good,A.length)}%;background:linear-gradient(90deg,#1a9431,#6eb92b)"></i></div><div class="dk-cap">미충족 ${ca.crit} · 미입력 ${ca.none}</div></a></div>
+   <a class="dk-card" style="--k:${k++};text-decoration:none" href="#biz"><h2>사업 집행률<small>${bz?bz.date+" 기준":"자료 없음"}</small></h2>${bz?(()=>{const a=bzAgg(bz.rows);return `<div class="dk-stat">${px1(a.rate)}<small>% · 착수율 ${px1(a.start)}%</small></div><div class="dk-meter"><i style="width:${Math.min(100,a.rate)}%"></i></div><div class="dk-cap">${a.n}개 사업 · 잔액 ${mw(a.budget-a.spent)}백만원</div>`})():`<div class="dk-cap">예산 집행 엑셀을 올리면 집행률·착수율이 여기에 나타남.</div>`}</a>
+   <div class="dk-card" style="--k:${k++}"><h2>알림과 일정<small>${N.length?`알림 ${N.length}건`:""}</small></h2>${[...N.filter(n=>n.type!=="일정 임박").slice(0,3).map(n=>`<a class="dk-feed" href="#notif"><span class="tg ${n.lv}">${esc(n.type)}</span><span>${esc(n.text)}</span></a>`),...up.slice(0,3).map(e=>`<a class="dk-feed" href="#cal"><span class="tg">${e.date.slice(5).replace("-",".")}</span><span>${esc(e.title)}</span></a>`)].join("")||`<div class="dk-cap">알림과 30일 안 일정이 없음.</div>`}<a class="dk-more" href="#notif">알림 전체 보기 ›</a></div>
+  </aside></section>`};
+// 사업 현황: 예산 집행 엑셀(기준일별 스냅샷)로 집행률·착수율·진도율을 계산함
+const TPLX={biz:"기준일\t영역\t부서\t사업명\t예산\t집행액\t상태\t진도\n"+TODAY+"\t\t\t\t\t\t진행중\t",rev:"차수\t영역\t평가항목\t배점\t점수\t의견\t차기확인사항\n\t상황\t\t\t\t\t",kb:"항목\t설명\t기준\t증빙\t유의사항\t출처\n회의비\t\t\t\t\t"};
+const stN=s=>/완료|종료/.test(s)?"done":/미실시|미착수|예정|대기/.test(s)?"no":"ing", STL={done:"완료",ing:"진행중",no:"미실시"};
+function bizDemoData(){const dp=S.depts.slice(0,6),ar=["교육 혁신","산학협력","학생 지원","사업 관리"],y=S.year;let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+ const base=Array.from({length:24},(_,i)=>({area:ar[i%4],dept:dp[i%dp.length],name:`예시 사업 ${i+1}`,budget:Math.round(20+rnd()*180)*1e6,sp:rnd(),lag:rnd()}));
+ return {ps:y+"-03-01",pe:(y+1)+"-02-28",snaps:[y+"-07-31",y+"-09-30",y+"-11-25"].map((d,k)=>({date:d,rows:base.map(b=>{const no=b.lag<.14&&k<2||b.lag<.05,r=no?0:k===2&&b.sp>.72?1:Math.min(1,[.16,.38,.6][k]*(.4+b.sp*1.15));return {area:b.area,dept:b.dept,name:b.name,budget:b.budget,spent:Math.round(b.budget*r/1e4)*1e4,status:no?"미실시":r>.92?"완료":"진행중",prog:null}})}))}}
+let _bd=null;const bizD=()=>xu.bizDemo?(_bd??=bizDemoData()):S.biz;
+const bizNow=()=>{const s=S.biz.snaps;return s.length?s[s.length-1]:null};
+function bzAgg(rows){const o={n:rows.length,budget:0,spent:0,done:0,ing:0,no:0,pg:0};for(const r of rows){o.budget+=r.budget||0;o.spent+=r.spent||0;const s=stN(r.status);o[s]++;o.pg+=r.prog!=null?r.prog:s==="done"?100:s==="ing"?50:0}o.rate=pcx(o.spent,o.budget);o.start=pcx(o.done+o.ing,o.n);o.prog=o.n?o.pg/o.n:0;return o}
+const bzPeriod=B=>{const ps=B.ps||S.year+"-03-01",pe=B.pe||(S.year+1)+"-02-28";return {ps,pe,len:Math.max(1,(new Date(pe)-new Date(ps))/864e5)}};
+const bzEl=(B,d)=>{const P=bzPeriod(B);return Math.max(0,Math.min(100,(new Date(d)-new Date(P.ps))/864e5/P.len*100))};
+const paceLv=(rate,el)=>!el?"none":rate>=el*.9?"good":rate>=el*.7?"warn":"crit", PACE={good:"정상",warn:"주의",crit:"지연",none:"–"};
+function bzChart(B,rows){const P=bzPeriod(B),W=640,H=230,l=42,r=14,t=14,b=28,x=d=>l+Math.max(0,Math.min(1,(new Date(d)-new Date(P.ps))/864e5/P.len))*(W-l-r),y=v=>t+(1-Math.min(100,v)/100)*(H-t-b),pts=B.snaps.map(s=>({d:s.date,v:bzAgg(rows(s)).rate}));
+ const ms=[];for(let d=new Date(P.ps);d<=new Date(P.pe);d.setMonth(d.getMonth()+1))ms.push(ymd(d));
+ return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="누적 집행률 추이. ${pts.map(p=>p.d+" "+px1(p.v)+"%").join(", ")}" style="font:11px var(--body);fill:var(--muted)">${[0,25,50,75,100].map(v=>`<line x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end">${v}%</text>`).join("")}${ms.filter((_,i)=>i%2===0).map(d=>`<text x="${x(d)}" y="${H-8}" text-anchor="middle">${+d.slice(5,7)}월</text>`).join("")}
+  <line x1="${x(P.ps)}" y1="${y(0)}" x2="${x(P.pe)}" y2="${y(100)}" stroke="var(--none)" stroke-width="1.500" stroke-dasharray="5 5"/><polyline points="${pts.map(p=>x(p.d)+","+y(p.v)).join(" ")}" fill="none" stroke="var(--s1)" stroke-width="2.500" stroke-linejoin="round"/>${pts.map(p=>`<circle cx="${x(p.d)}" cy="${y(p.v)}" r="4.500" fill="var(--surface)" stroke="var(--s1)" stroke-width="2.500" data-tip="${p.d}\n집행률 ${px1(p.v)}%"/>`).join("")}${pts.length?`<text x="${Math.min(W-r-30,x(pts[pts.length-1].d)+8)}" y="${y(pts[pts.length-1].v)-9}" font-weight="700" fill="var(--fg)">${px1(pts[pts.length-1].v)}%</text>`:""}</svg>`}
+V.biz=()=>{const B=bizD(),ds=S.role==="dept"&&S.roleDept?S.roleDept:"",rowsOf=s=>ds?s.rows.filter(r=>r.dept===ds):s.rows,has=B.snaps.length>0;
+ const tools=`<label class="pill" style="cursor:pointer"><input type="checkbox" data-xc="bizDemo" ${xu.bizDemo?"checked":""}> 예시로 해 보기</label>${xu.bizDemo?`<span class="demo-tag">가상의 예시 자료임. 실제 수치가 아님</span>`:""}`;
+ const mng=mg()?`<div class="panel"><h2>자료 관리<small>.xlsx · .xls · .csv</small></h2><div class="row"><input type="file" data-xup="biz" accept=".xlsx,.xls,.csv" aria-label="예산 집행 자료 파일" style="max-width:300px"><button class="btn" data-x="xtpl" data-k="biz">양식 복사</button><span class="note" id="xupmsg" role="status"></span></div>
+   <span class="note">열 이름: 기준일, 영역, 부서, 사업명, 예산, 집행액, 상태(완료·진행중·미실시), 진도(%·선택). 기준일이 같은 자료를 다시 올리면 바뀌고, 다른 기준일은 추이에 쌓임. 금액 단위는 원.</span>
+   <div class="form"><label>사업기간 시작<input type="date" data-xs="ps" value="${esc(bzPeriod(S.biz).ps)}"></label><label>사업기간 끝<input type="date" data-xs="pe" value="${esc(bzPeriod(S.biz).pe)}"></label></div>
+   ${S.biz.snaps.length?`<div class="chips">${S.biz.snaps.map((s,i)=>`<span class="pill">${s.date} · ${s.rows.length}건 <button class="btn sm danger" data-x="bzdel" data-k="${i}" aria-label="${s.date} 자료 삭제">삭제</button></span>`).join("")}</div>`:""}</div>`:"";
+ if(!has)return head("사업 현황","사업별 예산 배정·집행과 착수·진행 상황을 한 화면에서 확인함. 엑셀 자료를 올리면 기준일마다 추이가 쌓임.",tools)+`<div class="empty">${vico("biz",40)}<b>아직 올린 예산 집행 자료가 없음</b><span>담당자가 아래에서 엑셀을 올리면 집행률, 착수율, 부서별·영역별 현황과 사업 목록이 나타남. 화면 모양은 위의 「예시로 해 보기」로 먼저 볼 수 있음.</span></div>${mng}`;
+ const si=xu.bizI>=0&&xu.bizI<B.snaps.length?xu.bizI:B.snaps.length-1,sn=B.snaps[si],rows=rowsOf(sn),a=bzAgg(rows),el=bzEl(B,sn.date),prev=si>0?bzAgg(rowsOf(B.snaps[si-1])):null,P=bzPeriod(B);
+ const left=Math.max(0,(new Date(P.pe)-new Date(sn.date))/864e5),fc=prev?Math.min(100,a.rate+(a.rate-prev.rate)/Math.max(1,(new Date(sn.date)-new Date(B.snaps[si-1].date))/864e5)*left):el?Math.min(100,a.rate/el*100):null;
+ const key=xu.bizBy==="area"?"area":"dept",G=Object.entries(groupBy(rows,key)).map(([k,l])=>({k,...bzAgg(l)})).sort((x,y)=>x.rate-y.rate),lo=G[0],hi=G[G.length-1],lv=paceLv(a.rate,el);
+ const depts=[...new Set(rows.map(r=>r.dept))],q=xu.bizQ.toLowerCase(),list=rows.filter(r=>(!xu.bizD||r.dept===xu.bizD)&&(!xu.bizSt||stN(r.status)===xu.bizSt)&&(!q||r.name.toLowerCase().includes(q))).sort((x,y)=>(y.budget-y.spent)-(x.budget-x.spent));
+ return head("사업 현황","사업별 예산 배정·집행과 착수·진행 상황을 한 화면에서 확인함. 엑셀 자료를 올리면 기준일마다 추이가 쌓임.",`<label class="fl" style="flex-direction:row;align-items:center;gap:6px">기준일<select data-xc="bizI" style="width:auto">${B.snaps.map((s,i)=>`<option value="${i}" ${i===si?"selected":""}>${s.date}</option>`).join("")}</select></label>`+tools)+`
+  <div class="callout"><i>!</i><div><b>한 줄 결론</b> · 전체 집행률 ${px1(a.rate)}%, 사업 착수율 ${px1(a.start)}%(전체 ${a.n}개 중 ${a.done+a.ing}개 시작)임. 사업기간 경과율 ${px1(el)}%에 견주면 집행 속도는 <b>${PACE[lv]}</b>임.
+   <p>${G.length>1?`${key==="area"?"영역":"부서"} 가운데 집행률이 가장 낮은 곳은 「${esc(lo.k)}」(${px1(lo.rate)}%), 가장 높은 곳은 「${esc(hi.k)}」(${px1(hi.rate)}%)임. `:""}${fc!=null?`지금 속도가 이어지면 사업기간 말 집행률은 약 ${px1(fc)}%로 추정됨.`:""}</p></div></div>
+  <div class="grid g4"><div class="panel kpi"><span class="lab">전체 집행률</span><span class="val">${px1(a.rate)}<small>%</small></span><span class="sub">${prev?`직전 기준일 대비 ${a.rate>=prev.rate?"+":""}${px1(a.rate-prev.rate)}%p`:"집행액 ÷ 예산"}</span></div>
+   <div class="panel kpi"><span class="lab">잔액</span><span class="val">${mw(a.budget-a.spent)}<small>백만원</small></span><span class="sub">예산 ${mw(a.budget)} · 집행 ${mw(a.spent)}</span></div>
+   <div class="panel kpi"><span class="lab">사업 착수율</span><span class="val">${px1(a.start)}<small>%</small></span><span class="sub">완료 ${a.done} · 진행중 ${a.ing} · 미실시 ${a.no}</span></div>
+   <div class="panel kpi"><span class="lab">사업 진도율</span><span class="val">${px1(a.prog)}<small>%</small></span><span class="sub">기간 경과율 ${px1(el)}%</span></div></div>
+  <div class="grid g2"><div class="panel"><h2>누적 집행률 추이<small>점선은 기간에 비례한 기준선</small></h2>${bzChart(B,rowsOf)}<div class="lgd"><span><i style="background:var(--s1)"></i>누적 집행률</span><span><i style="background:var(--none)"></i>기간 경과 기준선</span></div></div>
+   <div class="panel"><h2>사업 진행 상태<small>${a.n}개 사업</small></h2><div class="stk" role="img" aria-label="완료 ${a.done}, 진행중 ${a.ing}, 미실시 ${a.no}"><i style="width:${pcx(a.done,a.n)}%;background:var(--good)"></i><i style="width:${pcx(a.ing,a.n)}%;background:var(--s1)"></i><i style="width:${pcx(a.no,a.n)}%;background:var(--none)"></i></div><div class="lgd"><span><i style="background:var(--good)"></i>완료 ${a.done}</span><span><i style="background:var(--s1)"></i>진행중 ${a.ing}</span><span><i style="background:var(--none)"></i>미실시 ${a.no}</span></div>
+    <h2>미실시 사업<small>먼저 챙길 사업</small></h2>${rows.filter(r=>stN(r.status)==="no").slice(0,6).map(r=>`<div class="chk"><span style="flex:1"><b>${esc(r.name)}</b><div class="note">${esc(r.dept)} · ${esc(r.area)}</div></span><span class="num">${mw(r.budget)}백만원</span></div>`).join("")||`<span class="note">미실시 사업이 없음.</span>`}</div></div>
+  <div class="panel"><h2>${key==="area"?"영역별":"부서별"} 요약<small>집행률이 낮은 순</small><span class="row" style="margin-left:auto"><button class="chip ${key==="dept"?"on":""}" data-x="set" data-k="bizBy" data-v="dept">부서별</button><button class="chip ${key==="area"?"on":""}" data-x="set" data-k="bizBy" data-v="area">영역별</button></span></h2>
+   <div class="tw"><table><thead><tr><th>${key==="area"?"영역":"부서"}</th><th class="num">사업 수</th><th class="num">예산(백만원)</th><th class="num">잔액(백만원)</th><th style="min-width:170px">집행률</th><th class="num">착수율</th><th>집행 속도</th></tr></thead><tbody>${G.map(g=>{const v=paceLv(g.rate,el);return `<tr><td><b>${esc(g.k)}</b></td><td class="num">${g.n}</td><td class="num">${mw(g.budget)}</td><td class="num">${mw(g.budget-g.spent)}</td><td><div class="mini"><div class="track ${v}"><i style="width:${Math.min(100,g.rate)}%"></i></div><b>${px1(g.rate)}%</b></div></td><td class="num">${px1(g.start)}%</td><td><span class="pill ${v==="none"?"":v}">${PACE[v]}</span></td></tr>`}).join("")}</tbody></table></div>
+   <span class="note">집행 속도는 집행률을 사업기간 경과율과 견줘 봄. 경과율의 90% 이상이면 정상, 70% 이상이면 주의, 그보다 낮으면 지연으로 표시함. 진도율은 「진도」 열이 있으면 그 값을, 없으면 완료 100·진행중 50·미실시 0으로 계산한 평균임.</span></div>
+  <div class="panel"><h2>사업 목록<small>${list.length}건 · 잔액이 큰 순</small></h2><div class="form"><label>부서<select data-xc="bizD"><option value="">전체</option>${depts.map(d=>`<option ${xu.bizD===d?"selected":""}>${esc(d)}</option>`).join("")}</select></label><label>상태<select data-xc="bizSt"><option value="">전체</option>${Object.entries(STL).map(([k,v])=>`<option value="${k}" ${xu.bizSt===k?"selected":""}>${v}</option>`).join("")}</select></label><label>사업명 찾기<input id="bizq" data-xi="bizQ" value="${esc(xu.bizQ)}" placeholder="사업명"></label></div>
+   <div class="tw"><table><thead><tr><th>사업명</th><th>부서</th><th>영역</th><th class="num">예산</th><th class="num">집행액</th><th class="num">잔액</th><th style="min-width:130px">집행률</th><th>상태</th></tr></thead><tbody>${list.slice(0,80).map(r=>{const rt=pcx(r.spent,r.budget),s=stN(r.status);return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.dept)}</td><td>${esc(r.area)}</td><td class="num">${mw(r.budget)}</td><td class="num">${mw(r.spent)}</td><td class="num">${mw(r.budget-r.spent)}</td><td><div class="mini"><div class="track"><i style="width:${Math.min(100,rt)}%"></i></div><b>${px1(rt)}%</b></div></td><td><span class="pill ${s==="done"?"good":s==="no"?"crit":""}">${STL[s]}</span></td></tr>`}).join("")}</tbody></table></div>${list.length>80?`<span class="note">80건까지 표시함. 부서·상태·사업명으로 좁혀 볼 것.</span>`:""}<span class="note">금액 단위: 백만원</span></div>${xu.bizDemo?"":mng}`};
+// 자체평가 결과: 점검 차수별 점수와 의견
+const revDemo=()=>{const A=["상황","투입","과정","성과"],it=["계획의 타당성","추진 체계","예산 편성","프로그램 운영","성과 달성","환류 실적"];return ["예시 1차 점검","예시 2차 점검"].flatMap((r,k)=>A.flatMap((a,i)=>[0,1].map(j=>({round:r,area:a,item:`${a} 영역 · ${it[(i+j)%6]}`,max:10,score:[7,6.5,8,7,6,7.5,8,7][i*2+j]+k*.8,op:j?"":`${a} 영역 예시 의견임.`,next:k&&!j?`${a} 영역 예시 확인사항임.`:""}))))};
+V.review=()=>{const R=xu.revDemo?revDemo():S.rev,rounds=[...new Set(R.map(r=>r.round))],tools=`<label class="pill" style="cursor:pointer"><input type="checkbox" data-xc="revDemo" ${xu.revDemo?"checked":""}> 예시로 해 보기</label>${xu.revDemo?`<span class="demo-tag">가상의 예시 자료임. 실제 점수가 아님</span>`:""}`;
+ const mng=mg()&&!xu.revDemo?`<div class="panel"><h2>자료 관리</h2><div class="row"><input type="file" data-xup="rev" accept=".xlsx,.xls,.csv" aria-label="자체평가 결과 파일" style="max-width:300px"><button class="btn" data-x="xtpl" data-k="rev">양식 복사</button><span class="note" id="xupmsg" role="status"></span></div><span class="note">열 이름: 차수, 영역(상황·투입·과정·성과 등), 평가항목, 배점, 점수, 의견, 차기확인사항. 같은 차수를 다시 올리면 그 차수 자료가 바뀜.</span>${rounds.length?`<div class="chips">${rounds.map(r=>`<span class="pill">${esc(r)} <button class="btn sm danger" data-x="rvdel" data-k="${esc(r)}">삭제</button></span>`).join("")}</div>`:""}</div>`:"";
+ const hd=t=>head("자체평가 결과","점검 차수별 자체평가 점수와 위원 의견, 다음 점검에서 확인할 사항을 한 화면에서 봄. 확인사항은 개선 과제로 바로 넘길 수 있음.",t);
+ if(!rounds.length)return hd(tools)+`<div class="empty">${vico("review",40)}<b>아직 올린 자체평가 결과가 없음</b><span>점검 차수별 평가항목 점수와 의견을 엑셀로 올리면 영역별 점수, 직전 차수 대비 변화, 차기 확인사항이 정리됨.</span></div>${mng}`;
+ const rd=rounds.includes(xu.revR)?xu.revR:rounds[rounds.length-1],L=R.filter(r=>r.round===rd),pi=rounds.indexOf(rd),PL=pi>0?R.filter(r=>r.round===rounds[pi-1]):[],sum=l=>({s:l.reduce((a,r)=>a+(r.score||0),0),m:l.reduce((a,r)=>a+(r.max||0),0)}),T=sum(L),PT=sum(PL),areas=Object.entries(groupBy(L,"area")),nx=L.filter(r=>r.next),ops=L.filter(r=>r.op);
+ return hd(`<label class="fl" style="flex-direction:row;align-items:center;gap:6px">점검 차수<select data-xc="revR" style="width:auto">${rounds.map(r=>`<option ${r===rd?"selected":""}>${esc(r)}</option>`).join("")}</select></label>`+tools)+`
+  <div class="grid g4"><div class="panel kpi"><span class="lab">종합 득점률</span><span class="val">${px1(pcx(T.s,T.m))}<small>%</small></span><span class="sub">${num(T.s)} / ${num(T.m)}점${PT.m?` · 직전 차수 대비 ${pcx(T.s,T.m)>=pcx(PT.s,PT.m)?"+":""}${px1(pcx(T.s,T.m)-pcx(PT.s,PT.m))}%p`:""}</span></div>
+   <div class="panel kpi"><span class="lab">평가항목</span><span class="val">${L.length}<small>개</small></span><span class="sub">${areas.length}개 영역</span></div><div class="panel kpi"><span class="lab">주요 의견</span><span class="val">${ops.length}<small>건</small></span><span class="sub">항목별 의견</span></div><div class="panel kpi"><span class="lab">차기 확인사항</span><span class="val">${nx.length}<small>건</small></span><span class="sub">다음 점검에서 확인</span></div></div>
+  <div class="grid g2"><div class="panel"><h2>영역별 득점률</h2><div class="bars">${areas.map(([k,l])=>{const s=sum(l),p=pcx(s.s,s.m),ps=sum(PL.filter(r=>r.area===k)),d=ps.m?p-pcx(ps.s,ps.m):null;return `<div class="bar"><span><b>${esc(k)}</b></span><div class="track"><div class="fill" style="width:${Math.min(100,p)}%"></div></div><span class="v" data-tip="${num(s.s)} / ${num(s.m)}점">${px1(p)}%${d!=null?` <small class="note">${d>=0?"+":""}${px1(d)}</small>`:""}</span></div>`}).join("")}</div><span class="note">득점률 = 점수 ÷ 배점. 작은 숫자는 직전 차수 대비 변화(%p)임.</span></div>
+   <div class="panel"><h2>차기 점검 확인사항<small>${nx.length}건</small></h2>${nx.map(r=>{const t=`[${rd}] ${r.next}`,sent=S.fb.some(f=>f.text===t);return `<div class="chk"><span style="flex:1">${esc(r.next)}<div class="note">${esc(r.area)} · ${esc(r.item)}</div></span>${mg()&&!xu.revDemo?`<button class="btn sm" data-x="rvfb" data-k="${esc(t)}" ${sent?"disabled":""}>${sent?"개선 과제에 있음":"개선 과제로 보내기"}</button>`:""}</div>`}).join("")||`<span class="note">등록된 확인사항이 없음.</span>`}</div></div>
+  <div class="panel"><h2>평가항목별 점수와 의견</h2><div class="tw"><table><thead><tr><th>영역</th><th>평가항목</th><th class="num">배점</th><th class="num">점수</th><th style="min-width:130px">득점률</th><th>의견</th></tr></thead><tbody>${L.map(r=>{const p=pcx(r.score,r.max);return `<tr><td>${esc(r.area)}</td><td><b>${esc(r.item)}</b></td><td class="num">${num(r.max)}</td><td class="num">${num(r.score)}</td><td><div class="mini"><div class="track ${p>=80?"good":p>=60?"":"warn"}"><i style="width:${Math.min(100,p)}%"></i></div><b>${px1(p)}%</b></div></td><td>${esc(r.op)}</td></tr>`}).join("")}</tbody></table></div></div>${mng}`};
+// 서류 도우미: 칸을 채우면 인쇄용 서류가 만들어지고, 빠진 곳을 점검함
+const FORMS={
+ meeting:{t:"회의록·참석자 서명부",d:"회의 개요와 참석자 명단을 넣으면 서명란이 있는 회의록이 만들어짐.",f:[["title","회의명","text",1],["date","일자","date",1],["time","시간","text"],["place","장소","text",1],["agenda","안건","area",1],["result","회의 결과","area"],["cost","회의비 지출액(원)","num"],["unit","1인당 한도(원)","num"]],rows:["참석자",["소속","직위","성명"]],
+  ex:{title:"2026학년도 성과지표 점검 회의",date:TODAY,time:"14:00~15:30",place:"본관 회의실",agenda:"1. 학년도 성과지표 입력 현황 점검\n2. 미입력 지표 제출 일정 확정",result:"미입력 지표는 부서별로 정한 기한까지 입력하기로 함.",cost:"60000",unit:"30000",rows:[["기획처","팀장","홍길동"],["교육혁신원","팀원","김예시"]]},
+  chk:(d,r)=>{const o=[],c=+d.cost||0,u=+d.unit||0;if(r.length<2)o.push(["bad","참석자가 2명 미만임."]);if(c&&u)o.push(c>u*r.length?["bad",`회의비 ${won(c)}원이 한도(${won(u)}원 × ${r.length}명 = ${won(u*r.length)}원)를 넘음.`]:["ok",`회의비가 한도(${won(u*r.length)}원) 안에 있음.`]);else if(c)o.push(["info","1인당 한도를 넣으면 한도 초과 여부를 확인함."]);return o},
+  sh:(d,r)=>`<h3>회의록</h3><table><tr><th>회의명</th><td colspan="3">${bl(d.title)}</td></tr><tr><th>일시</th><td>${bl(d.date)} ${esc(d.time||"")}</td><th>장소</th><td>${bl(d.place)}</td></tr><tr><th>안건</th><td colspan="3"><div class="pre">${bl(d.agenda)}</div></td></tr><tr><th>회의 결과</th><td colspan="3"><div class="pre">${bl(d.result)}</div></td></tr>${+d.cost?`<tr><th>회의비</th><td colspan="3">금 ${won(d.cost)}원 (참석 ${r.length}명)</td></tr>`:""}</table><table><tr><th style="width:44px">연번</th><th>소속</th><th>직위</th><th>성명</th><th>서명</th></tr>${(r.length?r:[["","",""]]).map((x,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${esc(x[0])}</td><td>${esc(x[1])}</td><td>${esc(x[2])}</td><td class="sig"></td></tr>`).join("")}</table>`},
+ trip:{t:"출장 여비 정산서",d:"출장 내용과 경비 항목을 넣으면 합계가 계산된 정산서가 만들어짐.",f:[["name","출장자","text",1],["dept","소속","dept",1],["pos","직위","text"],["purpose","출장 목적","text",1],["place","출장지","text",1],["s","시작일","date",1],["e","종료일","date",1],["trans","교통편","text"]],rows:["경비",["항목","산출 내역","금액(원)"]],
+  ex:{name:"홍길동",dept:"",pos:"팀장",purpose:"사업 성과 공유회 참석",place:"서울",s:TODAY,e:TODAY,trans:"KTX",rows:[["운임","순천↔서울 왕복","90000"],["일비","1일","20000"],["식비","1일","20000"]]},
+  chk:(d,r)=>{const o=[];if(d.s&&d.e&&d.e<d.s)o.push(["bad","종료일이 시작일보다 빠름."]);if(!r.length)o.push(["bad","경비 항목이 없음."]);if(r.some(x=>x[0]&&!+x[2]))o.push(["bad","금액이 비어 있는 경비 항목이 있음."]);if(r.some(x=>/숙박/.test(x[0])))o.push(["info","숙박비는 영수증 등 증빙을 함께 냄."]);return o},
+  sh:(d,r)=>{const days=d.s&&d.e&&d.e>=d.s?Math.round((new Date(d.e)-new Date(d.s))/864e5)+1:"",sum=r.reduce((a,x)=>a+(+x[2]||0),0);return `<h3>출장 여비 정산서</h3><table><tr><th>출장자</th><td>${bl(d.name)}</td><th>소속·직위</th><td>${bl(d.dept)} ${esc(d.pos||"")}</td></tr><tr><th>출장 목적</th><td colspan="3">${bl(d.purpose)}</td></tr><tr><th>출장지</th><td>${bl(d.place)}</td><th>교통편</th><td>${esc(d.trans||"")}</td></tr><tr><th>출장 기간</th><td colspan="3">${bl(d.s)} ~ ${bl(d.e)}${days?` (${days}일)`:""}</td></tr></table><table><tr><th>항목</th><th>산출 내역</th><th>금액(원)</th></tr>${r.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1])}</td><td style="text-align:right">${won(x[2])}</td></tr>`).join("")}<tr><th colspan="2">합계</th><td style="text-align:right"><b>${won(sum)}</b></td></tr></table><p class="foot">위와 같이 출장 여비를 정산함.<br><br>${bl(d.e||"")}　　정산자: ${esc(d.name||"")}　(서명)</p>`}},
+ fee:{t:"수당 지급 내역·영수 확인서",d:"강의·자문·심사 수당의 지급액과 공제액, 실지급액을 계산함.",f:[["name","지급 대상(성명)","text",1],["org","소속·직위","text",1],["kind","구분","sel:강의|자문|심사|회의 참석|원고",1],["what","내용","text",1],["date","일자","date",1],["hours","시간 또는 횟수","num",1],["unit","단가(원)","num",1],["rate","공제율(%)","num"]],
+  ex:{name:"김예시",org:"○○대학교 교수",kind:"자문",what:"교육과정 개편 자문",date:TODAY,hours:"2",unit:"100000",rate:"8.8"},
+  chk:d=>{const o=[];if(d.rate==="")o.push(["info","공제율이 비어 있음. 소득 구분에 맞는 공제율을 확인해 넣을 것."]);if(+d.hours>8)o.push(["info","하루 8을 넘는 시간(횟수)임. 입력 값을 확인할 것."]);return o},
+  sh:d=>{const g=(+d.hours||0)*(+d.unit||0),t=Math.floor(g*(+d.rate||0)/100/10)*10;return `<h3>수당 지급 내역 및 영수 확인서</h3><table><tr><th>성명</th><td>${bl(d.name)}</td><th>소속·직위</th><td>${bl(d.org)}</td></tr><tr><th>구분</th><td>${bl(d.kind)}</td><th>일자</th><td>${bl(d.date)}</td></tr><tr><th>내용</th><td colspan="3">${bl(d.what)}</td></tr></table><table><tr><th>시간(횟수)</th><th>단가(원)</th><th>지급액(원)</th><th>공제액(원)</th><th>실지급액(원)</th></tr><tr><td style="text-align:center">${esc(d.hours||"")}</td><td style="text-align:right">${won(d.unit)}</td><td style="text-align:right">${won(g)}</td><td style="text-align:right">${won(t)}${d.rate?` (${esc(d.rate)}%)`:""}</td><td style="text-align:right"><b>${won(g-t)}</b></td></tr></table><table><tr><th>입금 계좌</th><td class="sig" style="width:70%"></td></tr></table><p class="foot">위 금액을 정히 영수함.<br><br>${bl(d.date)}　　영수인: ${esc(d.name||"")}　(서명)</p>`}},
+ draft:{t:"기안문 초안",d:"항목을 채우면 공문서 형식의 기안문 본문이 만들어짐.",f:[["title","제목","text",1],["ref","관련 근거","text"],["why","목적(…하기 위하여)","text",1],["what","추진 사항","text",1],["when","일시","text"],["where","장소","text"],["who","대상","text"],["body","세부 내용(한 줄에 하나)","area"],["cost","소요예산(원)","num"],["acct","예산 과목","text"],["att","붙임(한 줄에 하나)","area"]],
+  ex:{title:"2026학년도 성과지표 점검 회의 개최",ref:"대학 중장기 발전계획 성과관리 계획",why:"2026학년도 성과지표 추진 현황을 점검하기 위하여",what:"점검 회의를 개최",when:"2026. 12. 3.(목) 14:00",where:"본관 회의실",who:"지표 담당부서 담당자",body:"성과지표 입력 현황 점검\n미입력 지표 제출 일정 협의",cost:"60000",acct:"",att:"회의 계획(안)"},
+  chk:d=>{const o=[];if(d.title&&/[.。]$/.test(d.title))o.push(["bad","제목 끝에는 마침표를 찍지 않음."]);if(+d.cost&&!d.acct)o.push(["info","소요예산이 있으면 예산 과목을 함께 적음."]);if(!d.att)o.push(["info","붙임이 없으면 본문 마지막에 ‘끝.’만 붙임."]);return o},
+  sh:d=>{const K="가나다라마바사아",it=[];if(d.when)it.push("일시: "+d.when);if(d.where)it.push("장소: "+d.where);if(d.who)it.push("대상: "+d.who);const bd=(d.body||"").split("\n").map(s=>s.trim()).filter(Boolean);if(bd.length)it.push("내용\n"+bd.map((s,i)=>`    ${i+1}) ${s}`).join("\n"));if(+d.cost)it.push(`소요예산: 금 ${won(d.cost)}원${d.acct?` (${d.acct})`:""}`);const at=(d.att||"").split("\n").map(s=>s.trim()).filter(Boolean),n=d.ref?2:1;
+   const tx=`제목  ${d.title||"[제목]"}\n\n${d.ref?`1. 관련: ${d.ref}\n\n`:""}${n}. ${d.why||"[목적]"} 아래와 같이 ${d.what||"[추진 사항]"}하고자 합니다.\n${it.map((s,i)=>`  ${K[i]}. ${s}`).join("\n")}${at.length?`\n\n붙임  ${at.map((s,i)=>(at.length>1?`${i+1}. `:"")+s+" 1부.").join("\n      ")}  끝.`:"  끝."}`;return `<h3>기 안 문</h3><div class="pre">${esc(tx)}</div>`}},
+ report:{t:"사업 결과보고서",d:"사업 내용을 넣으면 연계 지표의 목표·실적을 자동으로 붙여 결과보고서를 만듦.",f:[["title","사업명","text",1],["dept","담당부서","dept",1],["s","시작일","date",1],["e","종료일","date",1],["ind","연계 성과지표","ind"],["goal","사업 목적","area",1],["act","추진 내용","area",1],["out","추진 성과","area",1],["budget","예산(원)","num"],["spent","집행액(원)","num"],["issue","문제점 및 개선사항","area"],["next","향후 계획","area"]],
+  ex:{title:"예시 프로그램 운영",dept:"",s:S.year+"-09-01",e:TODAY,ind:"",goal:"학생의 직무 역량 향상",act:"프로그램 3회 운영\n참여 학생 대상 만족도 조사",out:"참여 학생 60명\n만족도 조사 결과 정리",budget:"5000000",spent:"4200000",issue:"홍보 기간이 짧았음. 다음 학기에는 2주 전부터 안내함.",next:"다음 학기 확대 운영 검토"},
+  chk:d=>{const o=[];if(d.s&&d.e&&d.e<d.s)o.push(["bad","종료일이 시작일보다 빠름."]);if(+d.spent>+d.budget&&+d.budget)o.push(["bad","집행액이 예산보다 큼."]);if(!d.ind)o.push(["info","연계 성과지표를 고르면 목표와 실적이 자동으로 들어감."]);if(!d.issue)o.push(["info","문제점 및 개선사항은 환류 근거가 되므로 적는 것이 좋음."]);return o},
+  sh:d=>{const i=S.inds.find(x=>x.id===d.ind),st=i?stInd(i):null,li=s=>(s||"").split("\n").map(x=>x.trim()).filter(Boolean).map(x=>`  ○ ${esc(x)}`).join("\n")||'  ○ <span class="blank">[입력 필요]</span>';
+   return `<h3>사업 결과보고서</h3><table><tr><th>사업명</th><td colspan="3">${bl(d.title)}</td></tr><tr><th>담당부서</th><td>${bl(d.dept)}</td><th>사업 기간</th><td>${bl(d.s)} ~ ${bl(d.e)}</td></tr>${+d.budget?`<tr><th>예산</th><td>${won(d.budget)}원</td><th>집행액(집행률)</th><td>${won(d.spent)}원 (${px1(pcx(+d.spent,+d.budget))}%)</td></tr>`:""}${i?`<tr><th>연계 지표</th><td colspan="3">${esc(i.name)} · 목표 ${esc(tT(i))} · 최근 실적 ${st.l?num(st.l.v)+esc(i.unit)+` (${st.l.y}학년도, ${st.label})`:"미입력"}</td></tr>`:""}</table><div class="pre">1. 사업 목적\n${li(d.goal)}\n\n2. 추진 내용\n${li(d.act)}\n\n3. 추진 성과\n${li(d.out)}\n\n4. 문제점 및 개선사항\n${li(d.issue)}\n\n5. 향후 계획\n${li(d.next)}</div>`}}};
+const bl=v=>v?esc(v):'<span class="blank">[입력 필요]</span>';
+const docD=k=>{const d=(S.docs[k]??={});d.rows??=[];return d};
+function docOut(k){const F=FORMS[k],d=docD(k),r=d.rows.filter(x=>x.some(Boolean)),miss=F.f.filter(f=>f[3]&&!d[f[0]]).map(f=>["bad",`「${f[1]}」이(가) 비어 있음.`]),ck=[...miss,...F.chk(d,r)];if(!ck.some(c=>c[0]==="bad"))ck.unshift(["ok","필수 항목이 모두 채워짐."]);return {sheet:F.sh(d,r),ck:ck.map(c=>`<div class="ck ${c[0]}">${esc(c[1])}</div>`).join("")}}
+V.docs=()=>{const k=xu.doc,hd=head("서류 도우미","칸을 채우면 인쇄용 서류가 만들어지고 빠지거나 맞지 않는 곳을 알려 줌. 처음이면 「예시로 채우기」로 결과 모양부터 볼 수 있음.");
+ if(!FORMS[k])return hd+`<div class="dc-pick">${Object.entries(FORMS).map(([id,F],i)=>`<button class="dc-p" data-x="set" data-k="doc" data-v="${id}"><i>${i+1}</i><b>${F.t}</b><span>${F.d}</span><em>${Object.keys(S.docs[id]||{}).some(x=>x!=="rows"&&S.docs[id][x])?"쓰던 내용 이어서 작성 ›":"작성하기 ›"}</em></button>`).join("")}</div>
+  <div class="panel"><h2>쓰는 방법</h2><div class="ck info">서류를 고르고 칸을 채우면 오른쪽 미리보기가 바로 바뀜.</div><div class="ck info">「점검」에 빨간 표시가 없어지면 인쇄하거나 내용을 복사해 결재 문서에 붙임.</div><div class="ck info">쓰던 내용은 이 브라우저에만 저장됨. 서식은 일반 양식이므로 대학 지정 서식이 있으면 그 서식을 따름.</div></div>`;
+ const F=FORMS[k],d=docD(k),o=docOut(k),inp=f=>{const [id,l,t,rq]=f,v=esc(d[id]??""),a=`id="df_${id}" data-df="${id}"`,lab=`<span>${l}${rq?' <b style="color:var(--crit-t)">*</b>':""}</span>`;
+  return t==="area"?`<label class="wide">${lab}<textarea ${a} rows="3">${v}</textarea></label>`:t==="dept"?`<label>${lab}<select ${a}><option value="">선택</option>${S.depts.map(x=>`<option ${d[id]===x?"selected":""}>${esc(x)}</option>`).join("")}</select></label>`:t==="ind"?`<label class="wide">${lab}<select ${a}><option value="">선택 안 함</option>${S.inds.map(x=>`<option value="${x.id}" ${d[id]===x.id?"selected":""}>${esc((x.code||x.id)+" "+x.name)}</option>`).join("")}</select></label>`:t.startsWith("sel:")?`<label>${lab}<select ${a}><option value="">선택</option>${t.slice(4).split("|").map(x=>`<option ${d[id]===x?"selected":""}>${x}</option>`).join("")}</select></label>`:`<label>${lab}<input ${a} type="${t==="num"?"number":t}" value="${v}" ${t==="num"?'min="0" inputmode="numeric"':""}></label>`};
+ return hd+`<div class="tools"><button class="btn" data-x="set" data-k="doc" data-v="">‹ 서류 고르기</button><b style="font:700 16px var(--display)">${F.t}</b><span class="wb-sp"></span><button class="btn" data-x="docex">예시로 채우기</button><button class="btn danger" data-x="docclr">비우기</button><button class="btn" data-x="doccopy">내용 복사</button><button class="btn pri" data-x="docprint">인쇄 · PDF 저장</button><span class="note" id="docmsg" role="status"></span></div>
+  <div class="dc-grid"><div class="panel"><h2>작성<small>* 표시는 필수</small></h2><div class="form">${F.f.map(inp).join("")}</div>
+   ${F.rows?`<h2>${F.rows[0]}<small>${d.rows.length}행</small></h2><div class="dc-rows">${d.rows.map((r,i)=>`<div class="dc-row" style="grid-template-columns:repeat(${F.rows[1].length},minmax(0,1fr)) 32px">${F.rows[1].map((c,j)=>`<input id="dr_${i}_${j}" data-dr="${i}.${j}" value="${esc(r[j]??"")}" placeholder="${c}" aria-label="${F.rows[0]} ${i+1} ${c}">`).join("")}<button class="btn sm danger" data-x="docrow" data-k="${i}" aria-label="${i+1}행 삭제">×</button></div>`).join("")}</div><div><button class="btn sm" data-x="docrow" data-k="add">+ ${F.rows[0]} 추가</button></div>`:""}
+   <h2>점검</h2><div id="dchk">${o.ck}</div></div>
+   <div><div class="sheet" id="sheet">${o.sheet}</div><span class="note">인쇄 창에서 「PDF로 저장」을 고르면 파일로 보관할 수 있음. 서식은 일반 양식이며 대학 지정 서식과 다를 수 있음.</span></div></div>`};
+// 기준 묻기: 올려 둔 집행 기준·용어 사전·지표에서 찾아 근거와 함께 답함(AI 호출 없음)
+function askRun(q){q=String(q).trim();if(!q)return;const lo=q.toLowerCase(),tok=lo.split(/\s+/).filter(t=>t.length>1),m=s=>{s=String(s||"").toLowerCase();return s&&(lo.includes(s)||s.includes(lo)||tok.some(t=>s.includes(t)))},A=[];
+ S.kb.filter(k=>m(k.item)).slice(0,3).forEach(k=>A.push({t:"kb",k}));
+ glAll().filter(t=>m(t.t)).sort((a,b)=>(b.t.toLowerCase()===lo)-(a.t.toLowerCase()===lo)||a.t.length-b.t.length).slice(0,2).forEach(g=>A.push({t:"gl",g}));
+ S.inds.filter(i=>m(i.name)).slice(0,2).forEach(i=>A.push({t:"ind",i}));
+ if(!A.length)S.kb.filter(k=>tok.some(t=>(k.desc+k.rule+k.note).toLowerCase().includes(t))).slice(0,2).forEach(k=>A.push({t:"kb",k}));
+ xu.ask.push({q,A});if(xu.ask.length>12)xu.ask.shift()}
+const askCard=a=>a.t==="kb"?`<div class="qa-c"><h4><span class="pill">집행 기준</span>${esc(a.k.item)}</h4><dl>${[["설명",a.k.desc],["기준",a.k.rule],["증빙",a.k.evid],["유의사항",a.k.note]].filter(x=>x[1]).map(x=>`<dt>${x[0]}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl>${a.k.src?`<div class="qa-src">출처: ${esc(a.k.src)}</div>`:""}</div>`
+ :a.t==="gl"?`<div class="qa-c"><h4><span class="pill">용어</span>${esc(a.g.t)}</h4><div>${esc(a.g.d)}</div><div><button class="btn sm" data-x="go" data-g="term" data-k="${esc(a.g.t)}">용어 사전에서 보기</button></div></div>`
+ :(()=>{const s=stInd(a.i);return `<div class="qa-c"><h4><span class="pill">성과지표</span>${esc(a.i.name)}</h4><dl><dt>담당부서</dt><dd>${esc(a.i.dept)}</dd><dt>목표</dt><dd>${esc(tT(a.i))}</dd><dt>최근 실적</dt><dd>${s.l?num(s.l.v)+esc(a.i.unit)+` (${s.l.y}학년도 · ${s.label})`:"미입력"}</dd></dl><div><button class="btn sm" data-x="go" data-g="ind" data-k="${a.i.id}">지표 관리에서 보기</button></div></div>`})();
+V.ask=()=>{const chips=(S.kb.length?S.kb.map(k=>k.item):["집행률","이월","전결","원천징수","달성률","충족 기준","여비","환류"]).slice(0,12);
+ return head("기준 묻기","항목이나 낱말을 넣으면 올려 둔 집행 기준과 용어 사전, 성과지표에서 찾아 근거와 함께 보여 줌. 등록된 자료에서만 답하며 인공지능이 지어내지 않음.")+`
+  <div class="panel"><h2>물어보기<small>집행 기준 ${S.kb.length}건 · 용어 ${glAll().length}개 · 지표 ${S.inds.length}개에서 찾음</small></h2>
+   <div class="qa" id="qa" aria-live="polite">${xu.ask.map(x=>`<div class="qa-q">${esc(x.q)}</div><div class="qa-a">${x.A.map(askCard).join("")||`<div class="qa-c"><h4>등록된 자료에서 답을 찾지 못함</h4><div class="note">낱말을 바꿔 다시 묻거나 문의 게시판에 남기면 담당자가 답함.</div><div><button class="btn sm" data-x="tobd" data-k="${esc(x.q)}">문의 게시판에 남기기</button></div></div>`}${x.A.length?`<div class="row note">이 답이 도움이 됐는지 <button class="btn sm" data-x="vote" data-k="${esc(x.q)}" data-v="1" ${S.vote[x.q]===1?"disabled":""}>도움이 됨</button><button class="btn sm" data-x="vote" data-k="${esc(x.q)}" data-v="-1" ${S.vote[x.q]===-1?"disabled":""}>도움이 안 됨</button>${S.vote[x.q]===-1?`<button class="btn sm" data-x="tobd" data-k="${esc(x.q)}">문의 게시판에 남기기</button>`:""}</div>`:""}</div>`).join("")||`<div class="note">아래에서 고르거나 궁금한 낱말을 넣어 볼 것. 예: 회의비, 여비, 집행률, 취업률</div>`}</div>
+   <div class="chips">${chips.map(c=>`<button class="chip" data-x="askq" data-k="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+   <form class="row" data-xform="ask"><input id="xaskq" placeholder="궁금한 항목이나 낱말" aria-label="질문" style="flex:1;min-width:200px" autocomplete="off"><button class="btn pri">묻기</button>${xu.ask.length?`<button type="button" class="btn" data-x="askclr">대화 지우기</button>`:""}</form>
+   <span class="note">답은 참고용임. 실제 집행 가능 여부는 사업 계획과 당해 연도 지침, 학교 규정에 따라 담당 부서가 판단함.</span></div>
+  ${S.kb.length?"":`<div class="callout"><i>!</i><div><b>집행 기준 자료가 아직 등록되지 않음</b><p>지금은 용어 사전과 성과지표에서만 답함. 담당자가 사업비 항목별 기준(항목, 설명, 기준, 증빙, 유의사항, 출처)을 엑셀로 올리면 항목명으로 바로 찾을 수 있음. 기준 내용은 지침 원문에서 옮겨 적어야 하며 이 시스템이 만들어 넣지 않음.</p></div></div>`}
+  ${mg()?`<div class="panel"><h2>집행 기준 자료 관리<small>${S.kb.length}건</small></h2><div class="row"><input type="file" data-xup="kb" accept=".xlsx,.xls,.csv" aria-label="집행 기준 파일" style="max-width:300px"><button class="btn" data-x="xtpl" data-k="kb">양식 복사</button>${S.kb.length?`<button class="btn danger" data-x="kbclr">등록 자료 모두 지우기</button>`:""}<span class="note" id="xupmsg" role="status"></span></div><span class="note">열 이름: 항목, 설명, 기준, 증빙, 유의사항, 출처. 같은 항목을 다시 올리면 새 내용으로 바뀜.</span>
+   ${Object.keys(S.vote).length?`<h2>답변 평가<small>도움이 안 된 질문은 자료 보완 대상임</small></h2>${Object.entries(S.vote).filter(v=>v[1]<0).map(v=>`<div class="chk"><span class="pill crit">보완 필요</span><span>${esc(v[0])}</span></div>`).join("")||`<span class="note">도움이 안 됐다는 평가가 없음.</span>`}`:""}</div>`:""}`};
+// 용어 사전: 일반적인 업무 용어 풀이(참고용). 세부 기준은 당해 연도 지침·학교 규정을 따름
+const GLC={P:"계획·성과관리",E:"평가·인증",I:"공시 지표",F:"재정지원사업",B:"예산·집행",D:"문서·결재",S:"데이터·예측"};
+const GL0=`P|중장기 발전계획|대학이 사명과 비전을 이루기 위해 여러 해에 걸쳐 추진할 전략과 과제, 성과지표를 정한 계획임.|핵심전략,전략과제,성과지표
+P|핵심전략|비전을 이루기 위한 큰 방향임. 이 시스템에서는 PROGRESS 7대 전략을 가리킴.|전략과제,중장기 발전계획
+P|전략과제|핵심전략을 실행하기 위해 나눈 과제임. 전략과제 아래에 세부과제를 둠.|핵심전략,세부과제
+P|세부과제|전략과제를 실제 추진 단위로 나눈 것으로, 추진내용과 담당부서를 가짐.|전략과제,담당부서
+P|성과지표|과제가 목표한 결과를 냈는지 수치로 확인하는 기준임.|핵심성과지표,목표값,실적
+P|핵심성과지표|성과지표 가운데 대학 차원에서 중점 관리하는 지표임. KPI라고도 함.|성과지표,자율성과지표
+P|자율성과지표|재정지원사업에서 대학이 스스로 정해 관리하는 성과지표임.|핵심성과지표,재정지원사업
+P|목표값|지표가 해당 학년도에 도달해야 하는 값임.|연차별 목표,충족 기준,달성률
+P|연차별 목표|계획 기간의 각 연도에 정한 목표값임.|목표값
+P|실적|해당 학년도에 실제로 나온 지표 값임.|목표값,달성률
+P|달성률|실적을 목표에 견준 비율임. 높을수록 좋은 지표는 실적÷목표, 낮을수록 좋은 지표는 목표÷실적으로 계산함.|목표값,실적,신호등
+P|신호등|달성 정도를 달성·주의·미달 세 단계 색으로 보여 주는 표시임.|달성률
+P|환류|평가나 점검 결과를 다음 계획과 운영에 다시 반영하는 일임.|개선 과제,성과관리
+P|성과관리|목표 설정, 실적 점검, 분석, 개선을 되풀이하는 관리 과정임.|환류,성과지표
+P|담당부서|지표 실적을 입력하고 관리할 책임이 있는 부서임.|세부과제
+P|기준 학년도|화면에서 실적을 입력하고 판정하는 기준이 되는 학년도임.|실적
+E|기관평가인증|대학이 교육기관으로서 갖춰야 할 요건을 충족하는지 평가해 인증하는 제도임.|자체평가,정량지표,충족 기준
+E|자체평가|대학이 스스로 교육과 운영 전반을 점검하고 그 결과를 공개하는 평가임.|기관평가인증,환류
+E|평가준거|평가에서 충족 여부를 판단하는 세부 기준임.|평가요소
+E|평가요소|평가준거를 확인하기 위해 살펴보는 세부 항목임.|평가준거
+E|정량지표|수치로 충족 여부를 판단하는 지표임.|정성평가,충족 기준
+E|정성평가|수치가 아니라 운영 실태와 근거자료를 보고 판단하는 평가임.|정량지표,근거자료
+E|충족 기준|인증 정량지표에서 충족으로 인정받는 기준값임.|목표값,정량지표
+E|근거자료|서술한 내용을 증명하는 문서나 기록임. 증빙자료라고도 함.|정성평가,증빙
+E|개선 과제|평가·점검에서 나온 지적이나 권고를 고치기 위해 정한 과제임.|환류
+E|CIPP|상황(Context)·투입(Input)·과정(Process)·성과(Product) 네 영역으로 사업을 평가하는 모형임.|자체평가,중간점검
+E|중간점검|사업 기간 중간에 추진 상황과 성과를 확인하는 점검임.|연차평가,CIPP
+I|대학정보공시|대학이 학생·교원·재정 등 주요 정보를 정해진 시기에 공개하는 제도임. 대학알리미에서 볼 수 있음.|신입생 충원율,취업률
+I|신입생 충원율|모집 인원 대비 실제 입학한 학생의 비율임.|재학생 충원율,입학정원
+I|재학생 충원율|편제정원 대비 재학생의 비율임.|신입생 충원율,편제정원
+I|중도탈락률|재적 학생 가운데 자퇴·미등록·미복학 등으로 학업을 그만둔 학생의 비율임.|등록유지율
+I|등록유지율|등록한 학생이 다음 학기나 학년도에도 계속 등록한 비율임. 산식은 지표 정의서를 따름.|중도탈락률
+I|취업률|졸업자 가운데 취업한 사람의 비율임. 진학자 등 취업 대상이 아닌 사람은 산식에서 뺌.|유지취업률
+I|유지취업률|취업한 졸업자가 일정 기간 뒤에도 취업 상태를 유지하는 비율임.|취업률
+I|전임교원 확보율|교원 법정 정원 대비 전임교원 수의 비율임.|정량지표
+I|교육비환원율|등록금 수입 대비 교육에 쓴 비용의 비율임.|학생 1인당 교육비
+I|학생 1인당 교육비|총교육비를 재학생 수로 나눈 금액임.|교육비환원율
+I|장학금 지급률|등록금 수입 대비 장학금 지급액의 비율임.|교육비환원율
+I|편제정원|학과별 입학정원을 수업연한만큼 합한 정원임.|입학정원,재학생 충원율
+I|입학정원|한 학년도에 모집할 수 있도록 정해진 학생 수임.|편제정원,정원 외
+I|정원 외|입학정원과 별도로 선발할 수 있는 전형으로 들어온 학생을 이름.|입학정원
+F|재정지원사업|정부나 지방자치단체가 대학에 사업비를 지원하는 사업을 통틀어 이르는 말임.|기본계획,사업계획서
+F|전문대학 혁신지원사업|전문대학이 스스로 세운 계획에 따라 교육 혁신을 추진하도록 지원하는 일반재정지원사업임.|재정지원사업,자율성과지표
+F|AID 전환 중점 전문대학 지원사업|전문대학의 교육과 행정을 인공지능·디지털 기반으로 바꾸도록 지원하는 사업임. 세부 내용은 당해 연도 기본계획을 따름.|재정지원사업
+F|RISE|지역혁신중심 대학지원체계임. 지방자치단체가 지역 발전 전략과 연계해 대학을 지원함.|재정지원사업
+F|기본계획|사업 주관 부처가 내는 사업 운영 계획임. 지원 규모와 평가, 집행 기준의 근거가 됨.|사업계획서
+F|사업계획서|대학이 사업 기간에 추진할 내용과 예산, 성과 목표를 적어 낸 계획 문서임.|기본계획
+F|연차평가|해마다 사업 실적과 성과를 평가하는 일임.|중간점검
+F|전담기관|부처를 대신해 사업 관리와 평가, 정산 업무를 맡는 기관임.|정산
+F|성과 확산|사업으로 얻은 성과를 교내외에 알리고 다른 부서나 대학이 쓸 수 있게 하는 일임.|환류
+B|편성|쓸 예산을 항목별로 짜는 일임.|배정,집행
+B|배정|편성된 예산을 부서나 사업에 나눠 주는 일임.|편성,집행
+B|집행|배정된 예산을 실제로 쓰는 일임.|집행률,정산
+B|집행률|예산 대비 집행액의 비율임.|사업 진도율,잔액
+B|잔액|예산에서 집행액을 뺀 나머지임.|이월,집행률
+B|이월|그 해에 쓰지 못한 예산을 다음 해로 넘기는 일임.|잔액
+B|정산|사업이 끝난 뒤 집행 내역을 증빙과 맞춰 확정하는 일임.|증빙,전담기관
+B|증빙|지출이 실제로, 기준에 맞게 이뤄졌음을 보여 주는 서류임.|근거자료,정산
+B|비목|예산을 쓰임새에 따라 나눈 항목임.|편성
+B|교비회계|학교 운영에 속하는 수입과 지출을 다루는 회계임.|산학협력단회계,회계연도
+B|산학협력단회계|산학협력단의 수입과 지출을 다루는 회계임.|교비회계
+B|회계연도|예산과 결산의 기준이 되는 기간임. 사립대학은 3월 1일부터 다음 해 2월 말일까지임.|교비회계
+B|사업 착수율|전체 사업 가운데 시작한(진행 중이거나 끝난) 사업의 비율임.|사업 진도율
+B|사업 진도율|사업이 계획 대비 얼마나 진행됐는지 나타낸 비율임.|사업 착수율,집행률
+D|기안|결정이 필요한 사항에 대해 문서 초안을 작성하는 일임.|품의,결재
+D|품의|지출이나 사업 추진에 앞서 결재권자의 승인을 구하는 일임.|기안,결재
+D|결재|결재권자가 안건을 승인하는 일임.|결제,전결
+D|결제|대금을 치르는 일임.|결재
+D|전결|기관장의 결재 권한을 위임받은 사람이 자기 권한으로 결재하는 일임.|대결,결재
+D|대결|결재권자가 자리에 없을 때 직무를 대리하는 사람이 대신 결재하는 일임.|전결
+D|붙임|본문에 딸린 문서를 적는 자리임. 본문 다음 줄에 적고 마지막에 ‘끝.’을 붙임.|기안
+D|개조식|문장을 짧게 끊어 항목별로 적는 문서 작성 방식임.|기안
+D|시행문|결재가 끝난 문서를 받는 곳에 보내기 위해 만든 문서임.|결재
+D|서명부|회의나 행사 참석자가 참석 사실을 확인하며 서명하는 명부임.|증빙
+D|여비|출장에 드는 운임·일비·식비·숙박비를 통틀어 이르는 말임.|증빙
+D|제수당|강의·자문·심사·회의 참석 등에 지급하는 각종 수당을 통틀어 이르는 말임.|원천징수
+D|원천징수|소득을 지급하는 쪽이 세금을 미리 떼어 내는 일임.|제수당
+S|IR|Institutional Research. 대학 자료를 모으고 분석해 의사결정을 돕는 활동임.|대시보드,벤치마킹
+S|대시보드|주요 수치를 한 화면에 모아 보여 주는 화면임.|IR
+S|시스템 다이내믹스|변수들이 서로 주고받는 영향과 시간 지연을 모형으로 만들어 변화를 예측하는 방법임.|인과지도,저량,유량
+S|인과지도|변수 사이의 원인·결과 관계를 화살표로 그린 그림임.|피드백 루프
+S|피드백 루프|원인과 결과가 고리처럼 이어져 처음 변수로 되돌아오는 구조임. 강화 루프와 균형 루프가 있음.|인과지도
+S|저량|일정 시점에 쌓여 있는 양임. 재학생 수가 예임.|유량
+S|유량|일정 기간에 저량을 늘리거나 줄이는 양임. 신입생 수와 중도탈락자 수가 예임.|저량
+S|시뮬레이션|모형에 값을 넣어 앞으로의 변화를 계산해 보는 일임.|민감도 분석
+S|민감도 분석|입력값을 바꿨을 때 결과가 얼마나 달라지는지 살피는 분석임.|시뮬레이션
+S|벤치마킹|비교 대상 대학의 값과 견줘 우리 대학의 위치를 살피는 일임.|IR
+S|스냅샷|특정 시점의 자료를 그대로 저장해 둔 것임.|대시보드`.split("\n").map(l=>{const [c,t,d,r]=l.split("|");return {c,t,d,r:r?r.split(","):[]}});
+const GLV=[["결재","결제","승인하면 결재, 돈을 치르면 결제임."],["편성","배정","예산을 짜면 편성, 짠 예산을 부서에 나눠 주면 배정임."],["집행률","사업 진도율","돈을 쓴 정도는 집행률, 일이 진행된 정도는 진도율임."],["신입생 충원율","재학생 충원율","입학 시점의 모집 대비는 신입생 충원율, 전체 정원 대비는 재학생 충원율임."],["취업률","유지취업률","취업했는지는 취업률, 그 취업이 이어지는지는 유지취업률임."],["정량지표","정성평가","수치로 판단하면 정량, 운영 실태와 근거자료로 판단하면 정성임."],["전결","대결","권한을 위임받아 하면 전결, 자리에 없는 사람을 대신하면 대결임."],["저량","유량","쌓여 있는 양은 저량, 드나드는 양은 유량임."],["핵심성과지표","자율성과지표","대학 차원의 중점 지표는 핵심성과지표, 사업에서 대학이 스스로 정한 지표는 자율성과지표임."],["목표값","충족 기준","대학이 계획에서 정한 값은 목표값, 인증에서 요구하는 값은 충족 기준임."],["이월","잔액","남은 돈은 잔액, 그 돈을 다음 해로 넘기면 이월임."],["기안","품의","문서 초안을 쓰면 기안, 지출·추진의 승인을 구하면 품의임."]];
+const glAll=()=>[...GL0,...(S.gl||[]).map(g=>({...g,user:1}))];
+const CHO="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ",cho=s=>{const c=s.charCodeAt(0)-44032;return c>=0&&c<11172?CHO[Math.floor(c/588)].replace("ㄲ","ㄱ").replace("ㄸ","ㄷ").replace("ㅃ","ㅂ").replace("ㅆ","ㅅ").replace("ㅉ","ㅈ"):"A"};
+const glB=t=>`<button class="gl-t" data-x="set" data-k="glSel" data-v="${esc(t.t)}"><b>${esc(t.t)}</b><span>${esc(t.d)}</span></button>`;
+V.gloss=()=>{const G=glAll(),sel=G.find(t=>t.t===xu.glSel),q=xu.glQ.trim().toLowerCase(),day=Math.floor(Date.now()/864e5),
+  L=G.filter(t=>(!xu.glC||(xu.glC.length===1&&/[ㄱ-ㅎA]/.test(xu.glC)?cho(t.t)===xu.glC:t.c===xu.glC))&&(!q||t.t.toLowerCase().includes(q)||t.d.toLowerCase().includes(q))).sort((a,b)=>a.t.localeCompare(b.t,"ko"));
+ const side=`<div class="gl-side"><button class="${!xu.glC&&!sel?"on":""}" data-x="set" data-k="glC" data-v="">전체<small>${G.length}</small></button>${Object.entries(GLC).map(([k,v])=>`<button class="${xu.glC===k?"on":""}" data-x="set" data-k="glC" data-v="${k}">${v}<small>${G.filter(t=>t.c===k).length}</small></button>`).join("")}</div>`;
+ let main;
+ if(sel){const vs=GLV.filter(v=>v[0]===sel.t||v[1]===sel.t),inds=S.inds.filter(i=>i.name.includes(sel.t)||sel.t.includes(i.name)).slice(0,5);
+  main=`<div class="panel"><div class="row"><button class="btn sm" data-x="set" data-k="glSel" data-v="">‹ 목록</button><span class="pill">${GLC[sel.c]||"직접 추가"}</span></div><h2 style="font-size:24px">${esc(sel.t)}</h2><div class="gl-def">${esc(sel.d)}</div>
+   ${vs.map(v=>`<div class="callout"><i>?</i><div><b>헷갈리는 말 · ${esc(v[0])} 대 ${esc(v[1])}</b><p>${esc(v[2])}</p></div></div>`).join("")}
+   ${sel.r.length?`<h2>관련 용어</h2><div class="chips">${sel.r.filter(r=>G.some(t=>t.t===r)).map(r=>`<button class="chip" data-x="set" data-k="glSel" data-v="${esc(r)}">${esc(r)}</button>`).join("")}</div>`:""}
+   ${inds.length?`<h2>연결된 성과지표</h2>${inds.map(i=>`<div class="chk"><span style="flex:1"><b>${esc(i.name)}</b><div class="note">${esc(i.dept)} · 목표 ${esc(tT(i))}</div></span><button class="btn sm" data-x="go" data-g="ind" data-k="${i.id}">지표 보기</button></div>`).join("")}`:""}
+   ${sel.user&&mg()?`<div><button class="btn sm danger" data-x="gldel" data-k="${esc(sel.t)}">이 용어 삭제</button></div>`:""}</div>`}
+ else{const td=G[day%G.length],tv=GLV[day%GLV.length];
+  main=`${!q&&!xu.glC?`<div class="grid g2"><div class="panel"><h2>오늘의 용어</h2><b style="font:800 20px var(--display)">${esc(td.t)}</b><div>${esc(td.d)}</div><div><button class="btn sm" data-x="set" data-k="glSel" data-v="${esc(td.t)}">자세히 ›</button></div></div>
+    <div class="panel"><h2>오늘의 헷갈리는 말</h2><div class="gl-vs"><button data-x="set" data-k="glSel" data-v="${esc(tv[0])}">${esc(tv[0])}</button><i>대</i><button data-x="set" data-k="glSel" data-v="${esc(tv[1])}">${esc(tv[1])}</button></div><div>${esc(tv[2])}</div></div></div>`:""}
+   <div class="panel"><h2>${xu.glC?(GLC[xu.glC]||xu.glC):"전체 용어"}<small>${L.length}개</small></h2><div class="gl-list">${L.map(glB).join("")||`<div class="empty"><b>찾는 용어가 없음</b><span>문의 게시판에 남기면 담당자가 추가할 수 있음.</span></div>`}</div></div>
+   ${!q&&!xu.glC?`<div class="panel"><h2>헷갈리는 말 모음<small>${GLV.length}쌍</small></h2>${GLV.map(v=>`<div class="chk"><b style="flex:none;min-width:200px">${esc(v[0])} · ${esc(v[1])}</b><span>${esc(v[2])}</span></div>`).join("")}</div>`:""}`}
+ return head("용어 사전","발전계획·평가·공시·예산·결재 업무에서 쓰는 용어와 헷갈리는 말을 풀어 둠. 지표 이름과 같은 용어는 지표 관리 화면으로 이어짐.")+`
+  <div class="tools"><input id="glq" data-xi="glQ" value="${esc(xu.glQ)}" placeholder="용어나 풀이에서 찾기" aria-label="용어 찾기" style="max-width:320px"><div class="chips">${[..."ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ","A"].map(c=>`<button class="chip ${xu.glC===c?"on":""}" data-x="set" data-k="glC" data-v="${xu.glC===c?"":c}" aria-label="${c==="A"?"영문":c}">${c==="A"?"A–Z":c}</button>`).join("")}</div></div>
+  <div class="gl-wrap">${side}<div style="display:flex;flex-direction:column;gap:16px;min-width:0">${main}
+   ${mg()&&!sel?`<div class="panel"><h2>용어 추가<small>직접 추가 ${S.gl.length}개</small></h2><form class="form" data-xform="gladd"><label>용어<input id="gl_t" required></label><label>분류<select id="gl_c">${Object.entries(GLC).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label><label class="wide">풀이<input id="gl_d" required></label><div><button class="btn pri">추가</button></div></form></div>`:""}
+   <span class="note">용어 풀이는 업무 이해를 돕는 참고용이며, 세부 기준과 산식은 당해 연도 기본계획·편람·학교 규정을 따름.</span></div></div>`};
+// 문의 게시판
+const BDK=["이용 문의","자료 요청","오류 신고","기준 문의"];
+V.board=()=>{const L=S.board.filter(p=>!xu.bdF||(xu.bdF==="대기"?!p.reply:!!p.reply)).slice().reverse(),dr=xu.bdDraft||{};
+ return head("문의 게시판","궁금한 점이나 자료 요청, 오류를 남기면 담당자가 답함. 기준 묻기에서 답을 찾지 못한 질문도 여기로 이어짐.",`<div class="chips">${[["","전체"],["대기","답변 대기"],["완료","답변 완료"]].map(x=>`<button class="chip ${xu.bdF===x[0]?"on":""}" data-x="set" data-k="bdF" data-v="${x[0]}">${x[1]}${x[0]==="대기"?` ${S.board.filter(p=>!p.reply).length}`:""}</button>`).join("")}</div>`)+`
+  <div class="grid g2"><div class="panel"><h2>문의 남기기</h2><form class="form" data-xform="bdadd"><label>분류<select id="bd_k">${BDK.map(k=>`<option ${dr.kind===k?"selected":""}>${k}</option>`).join("")}</select></label><label>부서<select id="bd_d"><option value="">선택 안 함</option>${S.depts.map(d=>`<option ${S.roleDept===d&&S.role==="dept"?"selected":""}>${esc(d)}</option>`).join("")}</select></label><label class="wide">제목<input id="bd_t" value="${esc(dr.title||"")}" required></label><label class="wide">내용<textarea id="bd_b" rows="4" required>${esc(dr.body||"")}</textarea></label><div><button class="btn pri">등록</button></div></form>
+    <span class="note">개인정보(주민등록번호, 계좌번호 등)는 적지 말 것. 글은 이 브라우저에만 저장되므로, 여러 사람이 함께 쓰려면 학교 서버 연동이 필요함.</span></div>
+   <div class="panel"><h2>문의 목록<small>${L.length}건</small></h2>${L.map(p=>`<div class="bd"><h4><span class="pill ${p.reply?"good":"warn"}">${p.reply?"답변 완료":"답변 대기"}</span><span class="pill">${esc(p.kind)}</span>${esc(p.title)}</h4><div class="note">${p.date}${p.dept?" · "+esc(p.dept):""}</div><p>${esc(p.body)}</p>${p.reply?`<div class="re"><b>답변</b> <span class="note">${p.rdate||""}</span><p>${esc(p.reply)}</p></div>`:""}
+    ${mg()?`<form class="row" data-xform="bdre" data-id="${p.id}"><input id="bd_r${p.id}" placeholder="${p.reply?"답변 고치기":"답변 쓰기"}" aria-label="답변" style="flex:1;min-width:160px"><button class="btn sm">답변 등록</button><button type="button" class="btn sm danger" data-x="bddel" data-k="${p.id}">삭제</button></form>`:""}</div>`).join("")||`<div class="empty">${vico("board",36)}<b>등록된 문의가 없음</b><span>왼쪽에서 첫 문의를 남겨 볼 것.</span></div>`}</div></div>`};
+// 자료 올리기(사업 현황·자체평가·집행 기준)
+function xImport(kind,rows){const g=(r,k)=>{for(const x in r)if(x.trim().replace(/\s/g,"")===k)return r[x];return ""},n=v=>{const s=String(v).replace(/[^\d.\-]/g,"");return s===""||isNaN(+s)?null:+s},t=v=>String(v??"").trim(),dt=v=>v instanceof Date?ymd(new Date(v.getTime()-v.getTimezoneOffset()*6e4)):t(v).replace(/[./]/g,"-").replace(/-$/,"").replace(/\s/g,"").slice(0,10);let ok=0,skip=0;
+ if(kind==="biz"){const by={};for(const r of rows){const name=t(g(r,"사업명")),b=n(g(r,"예산"));if(!name||b==null){skip++;continue}const d=dt(g(r,"기준일")),date=/^\d{4}-\d{2}-\d{2}$/.test(d)?d:TODAY;(by[date]??=[]).push({area:t(g(r,"영역"))||"미분류",dept:t(g(r,"부서"))||"미지정",name,budget:b,spent:n(g(r,"집행액"))||0,status:t(g(r,"상태"))||"진행중",prog:n(g(r,"진도"))});ok++}
+  for(const d in by){S.biz.snaps=S.biz.snaps.filter(s=>s.date!==d);S.biz.snaps.push({date:d,rows:by[d]})}S.biz.snaps.sort((a,b)=>a.date.localeCompare(b.date));xu.bizI=-1;return `사업 ${ok}건을 반영함(기준일 ${Object.keys(by).length}개).${skip?` 읽지 못한 ${skip}건은 제외함(사업명 또는 예산 없음).`:""}`}
+ if(kind==="rev"){const L=[];for(const r of rows){const round=t(g(r,"차수")),item=t(g(r,"평가항목")),max=n(g(r,"배점")),score=n(g(r,"점수"));if(!round||!item||max==null||score==null){skip++;continue}L.push({round,area:t(g(r,"영역"))||"기타",item,max,score,op:t(g(r,"의견")),next:t(g(r,"차기확인사항"))});ok++}
+  const rs=new Set(L.map(x=>x.round));S.rev=[...S.rev.filter(x=>!rs.has(x.round)),...L];return `평가항목 ${ok}건을 반영함(차수 ${rs.size}개).${skip?` 읽지 못한 ${skip}건은 제외함(차수·평가항목·배점·점수 필요).`:""}`}
+ for(const r of rows){const item=t(g(r,"항목"));if(!item){skip++;continue}S.kb=S.kb.filter(k=>k.item!==item);S.kb.push({item,desc:t(g(r,"설명")),rule:t(g(r,"기준")),evid:t(g(r,"증빙")),note:t(g(r,"유의사항")),src:t(g(r,"출처"))});ok++}return `집행 기준 ${ok}건을 반영함.${skip?` 항목이 없는 ${skip}건은 제외함.`:""}`}
+// 이벤트
+document.addEventListener("click",e=>{const b=e.target.closest("[data-x]");if(!b||b.disabled)return;const a=b.dataset.x,k=b.dataset.k,msg=id=>$("#"+id);
+ if(a==="ov"){xu.ov=xu.ov===k?"":k;xu.q="";xu.pi=0;ovl()}
+ else if(a==="ovx"){xu.ov="";xu.q="";ovl()}
+ else if(a==="go")goRes(b.dataset.g,k)
+ else if(a==="tobd"){xu.bdDraft={kind:"기준 문의",title:k||xu.q||"",body:""};xu.ov="";xu.q="";ovl();go2("board")}
+ else if(a==="shell"){S.shell=k;save();render(true)}
+ else if(a==="tabx"){S.tabs=S.tabs.filter(t=>t!==k);save();if(k===cur)location.hash=S.tabs[S.tabs.length-1]||"desk";else chrome()}
+ else if(a==="max"){xu.max=!xu.max;chrome()}
+ else if(a==="rolepop"){xu.role=!xu.role;chrome()}
+ else if(a==="back")history.back();else if(a==="fwd")history.forward()
+ else if(a==="fav"){S.fav=S.fav.includes(k)?S.fav.filter(t=>t!==k):[...S.fav,k];save();chrome()}
+ else if(a==="asst"){xu.asst=k==="1";asst()}
+ else if(a==="asstoff"){S.asstOff=!S.asstOff;save();asst()}
+ else if(a==="set"){xu[k]=b.dataset.v;if(k==="glC"){xu.glSel=""}render()}
+ else if(a==="xtpl")copy(TPLX[k],msg("xupmsg"))
+ else if(a==="bzdel"){S.biz.snaps.splice(+k,1);xu.bizI=-1;save();render()}
+ else if(a==="rvdel"){S.rev=S.rev.filter(r=>r.round!==k);save();render()}
+ else if(a==="rvfb"){S.fb.push({id:nid(S.fb),src:"자체평가",dept:"",text:k,inds:[],status:"접수",due:"",evidence:""});save();render()}
+ else if(a==="kbclr"){S.kb=[];save();render()}
+ else if(a==="askq"){askRun(k);render();$("#qa")?.lastElementChild?.scrollIntoView({block:"nearest"})}
+ else if(a==="askclr"){xu.ask=[];render()}
+ else if(a==="vote"){S.vote[k]=+b.dataset.v;save();render()}
+ else if(a==="gldel"){S.gl=S.gl.filter(g=>g.t!==k);xu.glSel="";save();render()}
+ else if(a==="bddel"){S.board=S.board.filter(p=>p.id!==+k);save();render()}
+ else if(a==="docex"){const ex=JSON.parse(JSON.stringify(FORMS[xu.doc].ex));if("dept" in ex&&!ex.dept)ex.dept=S.depts[0]||"";ex.rows??=[];S.docs[xu.doc]=ex;save();render()}
+ else if(a==="docclr"){S.docs[xu.doc]={rows:[]};save();render()}
+ else if(a==="docrow"){const d=docD(xu.doc);if(k==="add")d.rows.push(FORMS[xu.doc].rows[1].map(()=>""));else d.rows.splice(+k,1);save();render();if(k==="add")$(`#dr_${d.rows.length-1}_0`)?.focus()}
+ else if(a==="doccopy")copy($("#sheet").innerText,null),msg("docmsg").textContent="서류 내용을 복사함."
+ else if(a==="docprint"){try{window.print()}catch(x){}msg("docmsg").textContent="인쇄 창이 열리지 않으면 「내용 복사」로 옮겨 쓸 수 있음."}});
+document.addEventListener("input",e=>{const t=e.target;
+ if(t.id==="ovq"){xu.q=t.value;xu.pi=0;{const r=$("#ovres");r.innerHTML=xu.q?resHTML(findAll(xu.q)):NAV.map(g=>{const L=g[1].filter(x=>allowed(x[0]));return L.length?`<div class="ov-g">${g[0]}</div><div class="ov-apps">${L.map(x=>appBtn(x[0])).join("")}</div>`:""}).join("")}}
+ else if(t.dataset.df||t.dataset.dr){const d=docD(xu.doc);if(t.dataset.df)d[t.dataset.df]=t.value;else{const [i,j]=t.dataset.dr.split(".");d.rows[+i][+j]=t.value}save();const o=docOut(xu.doc);$("#sheet").innerHTML=o.sheet;$("#dchk").innerHTML=o.ck}
+ else if(t.dataset.xi){xu[t.dataset.xi]=t.value;if(t.dataset.xi==="glQ")xu.glSel="";render();const n=document.getElementById(t.id);if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}}});
+document.addEventListener("change",e=>{const t=e.target,d=t.dataset;
+ if(t.id==="role"||t.id==="roleDept"){setTimeout(chrome,0);return}
+ if(d.xc){xu[d.xc]=t.type==="checkbox"?t.checked:d.xc==="bizI"?+t.value:t.value;if(d.xc==="bizDemo"){_bd=null;xu.bizI=-1}render()}
+ else if(d.xs){S.biz[d.xs]=t.value;save();render()}
+ else if(d.xup&&t.files[0]){const m=$("#xupmsg"),kind=d.xup,fr=new FileReader();if(typeof XLSX==="undefined"){m.textContent="엑셀을 읽는 기능을 불러오지 못함. 인터넷 연결을 확인할 것.";return}
+  fr.onload=()=>{try{const wb=XLSX.read(new Uint8Array(fr.result),{type:"array",cellDates:true}),res=xImport(kind,XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""}));save();render();$("#xupmsg").textContent=res}catch(x){m.textContent="파일을 읽지 못함. 첫 번째 시트의 첫 행에 열 이름이 있는지 확인할 것."}};fr.readAsArrayBuffer(t.files[0])}});
+document.addEventListener("submit",e=>{const f=e.target,k=f.dataset.xform;if(!k)return;e.preventDefault();const v=id=>$("#"+id).value.trim();
+ if(k==="asfind"){xu.ov="find";xu.q=v("asq");xu.pi=0;ovl()}
+ else if(k==="ask"){askRun(v("xaskq"));render();$("#xaskq")?.focus();$("#qa")?.lastElementChild?.scrollIntoView({block:"nearest"})}
+ else if(k==="gladd"){const t=v("gl_t");if(!glAll().some(g=>g.t===t)){S.gl.push({c:v("gl_c"),t,d:v("gl_d"),r:[]});save()}xu.glSel=t;render()}
+ else if(k==="bdadd"){S.board.push({id:nid(S.board),date:TODAY,kind:v("bd_k"),dept:v("bd_d"),title:v("bd_t"),body:v("bd_b"),reply:""});xu.bdDraft=null;save();render()}
+ else if(k==="bdre"){const p=S.board.find(x=>x.id===+f.dataset.id),r=v("bd_r"+f.dataset.id);if(p&&r){p.reply=r;p.rdate=TODAY;save();render()}}});
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();xu.ov=xu.ov==="find"?"":"find";xu.q="";xu.pi=0;ovl();return}
+ if(!xu.ov)return;if(e.key==="Escape"){xu.ov="";xu.q="";ovl()}
+ else if(e.target.id==="ovq"&&(e.key==="ArrowDown"||e.key==="ArrowUp"||e.key==="Enter")){const R=$$("#ovres .ov-r");if(!R.length)return;e.preventDefault();if(e.key==="Enter"){R[xu.pi]?.click();return}xu.pi=(xu.pi+(e.key==="ArrowDown"?1:-1)+R.length)%R.length;R.forEach((r,i)=>r.classList.toggle("sel",i===xu.pi));R[xu.pi].scrollIntoView({block:"nearest"})}});
+// 그리기 연결: 탭·사용 기록·창 틀
+const _render=render;
+render=function(nav){X();_render(nav);if(nav){xu.ov="";xu.q="";S.usage[cur]=(S.usage[cur]||0)+1;if(cur!=="desk"&&!S.tabs.includes(cur)){S.tabs.push(cur);if(S.tabs.length>6)S.tabs.shift()}save();const wb=$(".winbody");if(wb)wb.scrollTop=0}chrome()};
+X();if(!location.hash)cur=S.shell==="desk"?"desk":"home";
+/*EXT-JS-END*/
 syncRole();render(true);
 
 </script>
